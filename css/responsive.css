@@ -34,5 +34,12 @@
 
     nav .search-box {
         display: none;
+        margin: 0;
+    }
+
+    nav .search-box .back-btn { 
+        display: inline;
+        background: white;
+        border: 0;
     }
 }

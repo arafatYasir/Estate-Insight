@@ -70,6 +70,10 @@ nav .search-box {
     margin: 0 50px;
 }
 
+nav .search-box .back-btn {
+    display: none;
+}
+
 .nav-input {
     width: 100%;
     padding: 12px 48px 12px 16px;
