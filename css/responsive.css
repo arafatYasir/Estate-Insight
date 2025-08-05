@@ -1,3 +1,4 @@
+/* Screen Size Up to 575px */
 @media screen and (max-width: 575px) {
     .container {
         padding: 10px !important;
@@ -41,5 +42,138 @@
         display: inline;
         background: white;
         border: 0;
+    }
+}
+
+
+
+/* Screen Size Up to 767px */
+@media screen and (min-width: 576px) and (max-width: 767px) {
+    .container {
+        padding: 10px !important;
+    }
+
+    /* ----Navbar---- */
+    nav .mobile-special-nav {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    nav .menu-btn {
+        display: inline;
+        background: white;
+        border: 0;
+    }
+
+    nav .search-icon-btn {
+        display: inline;
+        background-color: white;
+        border: 0;
+    }
+
+    nav .nav-options {
+        display: none;
+    }
+
+    nav .logo {
+        /* width: 140px; */
+        object-fit: contain;
+    }
+
+    nav .search-box {
+        display: none;
+        margin: 0;
+    }
+
+    nav .search-box .back-btn { 
+        display: inline;
+        background: white;
+        border: 0;
+    }
+}
+
+
+
+/* Screen Size Up to 991px */
+@media screen and (min-width: 768px) and (max-width: 991px) {
+    .container {
+        padding: 14px !important;
+    }
+
+    /* ----Navbar---- */
+
+    nav .nav-options {
+        gap: 20px;
+    }
+
+    nav .nav-options li a {
+        font-size: 13px;
+    }
+
+    nav .logo {
+        width: 140px;
+        object-fit: contain;
+    }
+
+    nav .search-box {
+        margin: 0 20px;
+    }
+}
+
+
+
+/* Screen Size Up to 991px */
+@media screen and (min-width: 992px) and (max-width: 1199px) {
+    .container {
+        padding: 16px !important;
+    }
+
+    /* ----Navbar---- */
+
+    nav .nav-options {
+        gap: 20px;
+    }
+
+    nav .nav-options li a {
+        font-size: 14px;
+    }
+
+    nav .logo {
+        width: 140px;
+        object-fit: contain;
+    }
+
+    nav .search-box {
+        margin: 0 20px;
+    }
+}
+
+
+
+/* Screen Size Up to 991px */
+@media screen and (min-width: 1200px) and (max-width: 1279px) {
+    .container {
+        padding: 18px !important;
+    }
+
+    /* ----Navbar---- */
+
+    nav .nav-options {
+        gap: 24px;
+    }
+
+    nav .nav-options li a {
+        font-size: 15px;
+    }
+
+    nav .logo {
+        width: 160px;
+        object-fit: contain;
+    }
+
+    nav .search-box {
+        margin: 0 50px;
     }
 }
