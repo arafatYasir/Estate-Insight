@@ -1,5 +1,144 @@
+/* Reset & Base */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+  /* Core Theme Colors */
+  --primary-blue: #1D3557;
+  --accent-yellow: #F4A261;
+  --background-light: #FAF9F6;
+  --text-primary: #333333;
+
+  /* Optional Extras */
+  --white: #ffffff;
+  --black: #000000;
+}
+
+body {
+  background: var(--background-light);
+  color: var(--text-primary);
+}
+
+ul,
+ol,
+li {
+  list-style: none;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* ----Navbar---- */
+nav {
+  background: var(--white);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+nav .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+}
+
+nav .logo {
+  width: 200px;
+  object-fit: contain;
+}
+
+nav .search-box {
+  position: relative;
+  flex: 1;
+  margin: 0 50px;
+}
+
+.nav-input {
+  width: 100%;
+  padding: 12px 48px 12px 16px;
+  border-radius: 14px;
+  border: 1.5px solid var(--text-primary);
+  background: var(--background-light);
+  outline: none;
+  font-size: 16px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.nav-input:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 8px rgba(29, 53, 87, 0.2);
+}
+
+nav .search-icon {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  cursor: pointer;
+}
+
+nav .nav-options {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+nav .nav-options li a {
+  text-decoration: none;
+  color: var(--primary-blue);
+  text-transform: uppercase;
+  font-weight: 500;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+nav .nav-options li a::after {
+  content: "";
+  width: 0;
+  height: 2px;
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  background: var(--accent-yellow);
+  transition: width 0.4s ease-in-out;
+}
+
+nav .nav-options li:hover > a {
+  color: var(--accent-yellow);
+}
+
+nav .nav-options li:hover > a::after {
+  width: 100%;
+}
+
+nav .nav-options .login-btn:hover > a {
+  color: var(--primary-blue)
+}
+
+nav .nav-options .login-btn:hover > a::after {
+  width: 0;
+}
+
+nav .login-btn a {
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  border: 1.5px solid var(--primary-blue);
+}
+
+nav .login-btn a:hover {
+    background: var(--primary-blue);
+    color: var(--white) !important;
 }
