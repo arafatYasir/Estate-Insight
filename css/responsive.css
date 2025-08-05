@@ -1,0 +1,38 @@
+@media screen and (max-width: 575px) {
+    .container {
+        padding: 10px !important;
+    }
+
+    /* ----Navbar---- */
+    nav .mobile-special-nav {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    nav .menu-btn {
+        display: inline;
+        background: white;
+        border: 0;
+    }
+
+    nav .search-icon-btn {
+        display: inline;
+        background-color: white;
+        border: 0;
+    }
+
+    nav .nav-options {
+        display: none;
+    }
+
+    nav .logo {
+        width: 140px;
+        object-fit: contain;
+    }
+
+    nav .search-box {
+        display: none;
+    }
+}

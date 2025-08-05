@@ -6,19 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EstateInsight – Visualizing Real Estate Trends with Precision</title>
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/responsive.css">
 </head>
 
 <body>
     <!-- ----Header Part---- -->
     <header>
         <!-- ----Navbar---- -->
-        <nav>
+        <nav class="main-nav">
             <div class="container">
-                <!-- Logo -->
-                <div>
-                    <a href="#asd">
-                        <img class="logo" src="./images/EstateInsight.webp" alt="Estate Insight Logo">
-                    </a>
+                <div class="mobile-special-nav">
+                    <!-- Menu Icon for Mobile & Tablet -->
+                    <button class="menu-btn">
+                        <img src="./images/menu_icon.webp" alt="">
+                    </button>
+
+                    <!-- Logo -->
+                    <div>
+                        <a href="#">
+                            <img fetchpriority="high" class="logo" src="./images/EstateInsight.webp"
+                                alt="Estate Insight Logo">
+                        </a>
+                    </div>
+
+                    <!-- Search Icon -->
+                    <button class="search-icon-btn">
+                        <img src="./images/search_icon.webp" alt="Search Icon">
+                    </button>
                 </div>
 
                 <!-- Search Box -->
@@ -27,8 +41,16 @@
                     <img class="search-icon" src="./images/search_icon.webp" alt="Search Icon">
                 </div>
 
-                <!-- Nav Options -->
+                <!-- Nav Options (Laptop & Desktop) -->
                 <ul class="nav-options">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li class="login-btn"><a href="#">Login</a></li>
+                </ul>
+
+                <ul class="nav-options2">
                     <li><a href="#">Home</a></li>
                     <li><a href="#">About</a></li>
                     <li><a href="#">Blog</a></li>
