@@ -8,6 +8,7 @@ let navOptions2 = document.querySelector(".nav-options2");
 let searchBox = document.querySelector(".search-box");
 let mobileSpecialNav = document.querySelector(".mobile-special-nav");
 
+// Responsive Navbar
 menuBtn.addEventListener("click", () => {
     navOptions2.style.transform = "translateX(0%)";
 })
@@ -27,3 +28,5 @@ backBtn.addEventListener("click", () => {
     searchBox.style.display = "none";
     mobileSpecialNav.style.display = "flex";
 })
+
+
