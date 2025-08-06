@@ -62,3 +62,63 @@ filterDropdowns.forEach(dropdown => {
         })
     })
 })
+
+
+// Mobile Filter Dropdowns
+const mobileFilterBtn = document.querySelector(".mobile-filter-btn");
+const filterModal = document.querySelector(".filter-modal");
+const filterOverlay = document.querySelector(".filter-modal-overlay");
+
+let startY, currentY, isDragging = false;
+
+mobileFilterBtn.addEventListener("click", () => {
+    filterOverlay.style.display = "block";
+    setTimeout(() => {
+        filterModal.classList.toggle("show");
+    }, 10)
+});
+
+// Drag Down to Close
+filterModal.addEventListener("touchstart", (e) => {
+    startY = e.touches[0].clientY;
+    isDragging = true;
+});
+
+
+filterModal.addEventListener("touchmove", (e) => {
+    if(!isDragging) return;
+
+    currentY = e.touches[0].clientY;
+    const deltaY = currentY - startY;
+
+    if(deltaY > 0) {
+        filterModal.style.transform = `translateY(${deltaY}px)`;
+    }
+});
+
+filterModal.addEventListener("touchend", () => {
+    isDragging = false;
+
+    const deltaY = currentY - startY;
+
+    if(deltaY > 120) {
+        filterModal.classList.remove("show");
+        filterModal.style.transform = "";
+        setTimeout(() => {
+            filterOverlay.style.display = "none";
+        }, 300);
+    }
+    else {
+        filterModal.style.transform = "";
+    }
+});
+
+// Close modal if clicked outside
+filterOverlay.addEventListener("click", (e) => {
+    if(e.target === filterOverlay) {
+        filterModal.classList.remove("show");
+        setTimeout(() => {
+            filterOverlay.style.display = "none";
+        }, 300);
+    }
+});
