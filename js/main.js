@@ -97,6 +97,13 @@ filterModal.addEventListener("touchmove", (e) => {
 
 filterModal.addEventListener("touchend", () => {
     isDragging = false;
+
+    // If user didn’t move finger enough, do nothing
+    if (typeof currentY !== "number") {
+        filterModal.style.transform = "";
+        return;
+    }
+
     const deltaY = currentY - startY;
 
     if (deltaY > 120) {
@@ -104,7 +111,11 @@ filterModal.addEventListener("touchend", () => {
     } else {
         filterModal.style.transform = "";
     }
+
+    // Reset for next interaction
+    currentY = undefined;
 });
+
 
 // Close when clicking outside the drawer
 filterOverlay.addEventListener("click", (e) => {

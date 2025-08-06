@@ -399,6 +399,8 @@ nav .login-btn a:hover {
     bottom: 0;
 }
 
+
+/* ----Filter Dropdown Responsive---- */
 @media (max-width: 768px) {
     .mobile-filter-btn {
         display: block;
@@ -406,19 +408,5 @@ nav .login-btn a:hover {
 
     .filter-bar {
         display: none;
-    }
-}
-
-
-
-/* ==== Responsive ==== */
-@media (max-width: 768px) {
-    .filter-container {
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .filter-group {
-        width: 100%;
     }
 }
