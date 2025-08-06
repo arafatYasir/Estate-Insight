@@ -341,17 +341,18 @@ nav .login-btn a:hover {
 }
 
 
-/* 🔘 Mobile Filter Button */
+/* Mobile Filter Button */
 .mobile-filter-btn {
     display: none;
     position: fixed;
     bottom: 20px;
-    left: 50%;
+    right: 0px;
     transform: translateX(-50%);
-    background: var(--primary-blue);
+    background: var(--accent-yellow);
     color: white;
-    padding: 12px 24px;
-    border-radius: 50px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
     font-weight: bold;
     font-size: 16px;
     z-index: 9999;
@@ -359,7 +360,7 @@ nav .login-btn a:hover {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* 📱 Filter Modal */
+/* Filter Modal */
 .filter-modal-overlay {
     display: none;
     position: fixed;
