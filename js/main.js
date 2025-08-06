@@ -12,7 +12,7 @@ let filterDropdowns = document.querySelectorAll(".custom-dropdown");
 // Event listener to close dropdowns on the click of outside the box
 window.addEventListener("click", (e) => {
     filterDropdowns.forEach(dropdown => {
-        if(!dropdown.contains(e.target)) {
+        if (!dropdown.contains(e.target)) {
             dropdown.classList.remove("active");
         }
     })
@@ -49,7 +49,7 @@ filterDropdowns.forEach(dropdown => {
         // Closing other dropdowns
 
         document.querySelectorAll(".custom-dropdown").forEach(d => {
-            if(d !== dropdown) d.classList.remove("active");
+            if (d !== dropdown) d.classList.remove("active");
         });
         dropdown.classList.toggle("active");
     })
@@ -74,8 +74,9 @@ let startY, currentY, isDragging = false;
 mobileFilterBtn.addEventListener("click", () => {
     filterOverlay.style.display = "block";
     setTimeout(() => {
-        filterModal.classList.toggle("show");
-    }, 10)
+        filterModal.classList.add("show");
+        mobileFilterBtn.style.display = "none";
+    }, 10);
 });
 
 // Drag Down to Close
@@ -84,41 +85,38 @@ filterModal.addEventListener("touchstart", (e) => {
     isDragging = true;
 });
 
-
 filterModal.addEventListener("touchmove", (e) => {
-    if(!isDragging) return;
-
+    if (!isDragging) return;
     currentY = e.touches[0].clientY;
     const deltaY = currentY - startY;
 
-    if(deltaY > 0) {
+    if (deltaY > 0) {
         filterModal.style.transform = `translateY(${deltaY}px)`;
     }
 });
 
 filterModal.addEventListener("touchend", () => {
     isDragging = false;
-
     const deltaY = currentY - startY;
 
-    if(deltaY > 120) {
-        filterModal.classList.remove("show");
-        filterModal.style.transform = "";
-        setTimeout(() => {
-            filterOverlay.style.display = "none";
-        }, 300);
-    }
-    else {
+    if (deltaY > 120) {
+        closeFilterModal();
+    } else {
         filterModal.style.transform = "";
     }
 });
 
-// Close modal if clicked outside
+// Close when clicking outside the drawer
 filterOverlay.addEventListener("click", (e) => {
-    if(e.target === filterOverlay) {
-        filterModal.classList.remove("show");
-        setTimeout(() => {
-            filterOverlay.style.display = "none";
-        }, 300);
+    if (e.target === filterOverlay) {
+        closeFilterModal();
     }
 });
+
+// Close function for modal
+function closeFilterModal() {
+    filterModal.classList.remove("show");
+    filterModal.style.transform = "";
+    filterOverlay.style.display = "none";
+    mobileFilterBtn.style.display = "block";
+}
