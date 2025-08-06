@@ -1,10 +1,23 @@
 /* Screen Size Up to 575px */
 @media screen and (max-width: 575px) {
     .container {
-        padding: 10px !important;
+        padding: 12px !important;
     }
 
     /* ----Navbar---- */
+    header {
+        padding-top: 20px;
+        background: transparent;
+    }
+    nav {
+        max-width: 95%;
+        margin: 0 auto;
+        /* border: 1px solid #333; */
+        border: 0;
+        border-radius: 32px;
+        background: white;
+    }
+
     nav .mobile-special-nav {
         width: 100%;
         display: flex;
@@ -43,6 +56,22 @@
         background: white;
         border: 0;
     }
+
+    /* ----House Styles---- */
+    .house-container {
+        display: none;
+    }
+
+    /* ----Map Styles---- */
+    #map {
+        width: 100%;
+        height: 100vh;
+        top: 0;
+    }
+
+    #legend {
+        display: none;
+    }
 }
 
 
@@ -50,10 +79,23 @@
 /* Screen Size Up to 767px */
 @media screen and (min-width: 576px) and (max-width: 767px) {
     .container {
-        padding: 10px !important;
+        padding: 14px !important;
     }
 
     /* ----Navbar---- */
+    header {
+        padding-top: 20px;
+        background: transparent;
+    }
+    nav {
+        max-width: 95%;
+        margin: 0 auto;
+        /* border: 1px solid #333; */
+        border: 0;
+        border-radius: 45px;
+        background: white;
+    }
+
     nav .mobile-special-nav {
         width: 100%;
         display: flex;
@@ -91,6 +133,22 @@
         display: inline;
         background: white;
         border: 0;
+    }
+
+    /* ----House Styles---- */
+    .house-container {
+        display: none;
+    }
+
+    /* ----Map Styles---- */
+    #map {
+        width: 100%;
+        height: 100vh;
+        top: 0;
+    }
+
+    #legend {
+        display: none;
     }
 }
 

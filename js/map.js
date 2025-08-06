@@ -1,28 +1,30 @@
+// Canvas setup
+const canvas = document.getElementById('heatmap-canvas');
+const ctx = canvas.getContext('2d');
+
 // Initializing the map
 const map = L.map('map', {
-    zoomControl: true,
     dragging: true,
     scrollWheelZoom: true,
-    doubleClickZoom: false,
-    boxZoom: false,
-    keyboard: false,
+    doubleClickZoom: true,
+    boxZoom: true,
+    keyboard: true,
     tap: true,
     touchZoom: true,
+    zoomControl: false
 }).setView([23.7806, 90.4074], 12);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '',
 }).addTo(map);
 
-// Canvas setup
-const canvas = document.getElementById('heatmap-canvas');
-const ctx = canvas.getContext('2d');
 
 // Resize canvas to match window
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
+
 resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
@@ -63,6 +65,7 @@ fetch('house_data_dhaka.json')
             return { ...house, percentChange, currentPrice: last };
         });
         drawAllHeatPoints();
+        showHouses();
     })
     .catch(err => console.error('Error fetching house data:', err));
 
@@ -148,3 +151,19 @@ mapContainer.addEventListener('mousemove', (e) => {
         tooltip.style.display = 'none';
     }
 });
+
+
+// House Showing Function
+function showHouses() {
+    const houseListings = document.querySelector(".house-listings");
+    
+    houseData.slice(0, 50).forEach((house, idx) => {
+        houseListings.innerHTML += `
+            <div class="house-card" style="margin-bottom: 20px">
+                <p>House Number - ${idx + 1}</p>
+                <p>Current Price - ${house.currentPrice}</p>
+                <hr />
+            </div>
+        `
+    })
+}
