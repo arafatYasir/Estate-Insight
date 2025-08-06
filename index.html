@@ -68,10 +68,8 @@
                 </ul>
             </div>
         </nav>
-    </header>
 
-    <!-- ----Main Part---- -->
-    <main>
+        <!-- ----Filter Dropdowns -->
         <section class="filter-bar">
             <div class="container filter-container">
 
@@ -136,10 +134,88 @@
 
             </div>
         </section>
+    </header>
+
+    <!-- ----Main Part---- -->
+    <main>
+        <!-- 🔘 Mobile Filter Button -->
+        <button class="mobile-filter-btn">🔍 Filter</button>
+
+        <!-- 📱 Mobile Filter Modal Drawer -->
+        <div class="filter-modal-overlay">
+            <div class="filter-modal" id="filterDrawer">
+                <div class="modal-drag-bar"></div>
+                <div class="modal-filters">
+                    <!-- Inject your 4 filters here (copied from header filter section) -->
+                    <section class="filter-container">
+                        <!-- Listing Type -->
+                        <div class="filter-group">
+                            <label>Listing Type</label>
+                            <div class="custom-dropdown" data-name="listingType">
+                                <div class="custom-dropdown-selected">All</div>
+                                <ul class="custom-dropdown-options">
+                                    <li data-value="all">All</li>
+                                    <li data-value="sale">For Sale</li>
+                                    <li data-value="rent">For Rent</li>
+                                    <li data-value="sold">Sold</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="filter-group">
+                            <label>Price</label>
+                            <div class="custom-dropdown" data-name="price">
+                                <div class="custom-dropdown-selected">Any</div>
+                                <ul class="custom-dropdown-options">
+                                    <li data-value="any">Any</li>
+                                    <li data-value="0-100k">Under $100k</li>
+                                    <li data-value="100k-300k">$100k – $300k</li>
+                                    <li data-value="300k-500k">$300k – $500k</li>
+                                    <li data-value="500k+">Over $500k</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Beds & Baths -->
+                        <div class="filter-group">
+                            <label>Beds & Baths</label>
+                            <div class="custom-dropdown" data-name="bedsBaths">
+                                <div class="custom-dropdown-selected">Any</div>
+                                <ul class="custom-dropdown-options">
+                                    <li data-value="any">Any</li>
+                                    <li data-value="1-1">1 Bed, 1 Bath</li>
+                                    <li data-value="2-1">2 Bed, 1 Bath</li>
+                                    <li data-value="2-2">2 Bed, 2 Bath</li>
+                                    <li data-value="3-2">3 Bed, 2 Bath+</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Home Type -->
+                        <div class="filter-group">
+                            <label>Home Type</label>
+                            <div class="custom-dropdown" data-name="homeType">
+                                <div class="custom-dropdown-selected">All Types</div>
+                                <ul class="custom-dropdown-options">
+                                    <li data-value="all">All Types</li>
+                                    <li data-value="house">House</li>
+                                    <li data-value="apartment">Apartment</li>
+                                    <li data-value="condo">Condo</li>
+                                    <li data-value="land">Land</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
     </main>
 
     <!-- ----Footer Part---- -->
-    <footer></footer>
+    <footer>
+        <p>lorem1000</p>
+    </footer>
 
     <script src="./js/main.js"></script>
 </body>
