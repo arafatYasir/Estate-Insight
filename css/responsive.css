@@ -178,12 +178,26 @@
     nav .search-box {
         margin: 0 20px;
     }
+
+    /* ----House Styles---- */
+    .house-container {
+        margin-top: 286px;
+    }
+
+    /* ----Map Styles---- */
+    #map {
+        top: 286px;
+    }
+
+    #legend {
+        display: none;
+    }
 }
 
 
 
-/* Screen Size Up to 991px */
-@media screen and (min-width: 992px) and (max-width: 1199px) {
+/* Screen Size Up to 1129px */
+@media screen and (min-width: 992px) and (max-width: 1129px) {
     .container {
         padding: 16px !important;
     }
@@ -206,14 +220,23 @@
     nav .search-box {
         margin: 0 20px;
     }
+
+    /* ----House Styles---- */
+    .house-container {
+        margin-top: 295px;
+    }
+
+    /* ----Map Styles---- */
+    #map {
+        top: 295px;
+    }
 }
 
 
-
-/* Screen Size Up to 991px */
+/* Screen Size Up to 1279px */
 @media screen and (min-width: 1200px) and (max-width: 1279px) {
     .container {
-        padding: 18px !important;
+        padding: 10px 18px !important;
     }
 
     /* ----Navbar---- */
@@ -233,5 +256,15 @@
 
     nav .search-box {
         margin: 0 50px;
+    }
+
+    /* ----House Styles---- */
+    .house-container {
+        margin-top: 190px;
+    }
+
+    /* ----Map Styles---- */
+    #map {
+        top: 190px;
     }
 }
