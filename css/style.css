@@ -30,19 +30,20 @@ li {
 }
 
 .container {
-    max-width: 1280px;
+    max-width: 1340px;
     margin: 0 auto;
 }
 
 header {
     position: fixed;
     width: 100%;
-    height: auto;
+    top: 0;
+    z-index: 1000;
+    background: var(--white);
 }
 
 /* ----Navbar---- */
 nav {
-    background: var(--white);
     border-bottom: 1px solid var(--text-primary);
 }
 
@@ -100,7 +101,6 @@ nav .search-icon {
     transform: translateY(-50%);
     width: 20px;
     height: 20px;
-    object-fit: contain;
     cursor: pointer;
 }
 
@@ -248,6 +248,7 @@ nav .login-btn a:hover {
     background: var(--white);
     padding: 24px 0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    /* margin-top: 80px; Space for fixed header This line changed */
 }
 
 .filter-container {
@@ -416,7 +417,6 @@ nav .login-btn a:hover {
     bottom: 0;
 }
 
-
 /* ----Filter Dropdown Responsive---- */
 @media (max-width: 768px) {
     .mobile-filter-btn {
@@ -429,12 +429,27 @@ nav .login-btn a:hover {
 }
 
 
+/* ----Main Part---- */
+.main-content {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 320px;
+}
+
+.house-container {
+    width: 49%;
+    height: calc(100vh - 320px);
+    overflow-y: auto;
+    position: relative;
+}
+
+
 /* ----Map Styles---- */
 #map {
-    height: 500px;
-    max-width: 500px;
-    position: relative;
-    left: 0;
+    height: 100vh;
+    width: 49%;
+    position: fixed;
+    top: 214px;
     z-index: 1;
     cursor: default;
 }
@@ -463,19 +478,16 @@ nav .login-btn a:hover {
     line-height: 1.4;
 }
 
-
-
 /* Legend */
 #legend {
     position: absolute;
-    bottom: 20px;
-    left: 20px;
-    width: 220px;
+    top: 10px;
+    right: 10px;
+    width: 200px;
     background: rgba(255, 255, 255, 0.9);
     border-radius: 8px;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
     padding: 12px 16px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 14px;
     color: #333;
     user-select: none;

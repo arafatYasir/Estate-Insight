@@ -11,37 +11,29 @@
     <!-- CSS -->
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/responsive.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-         />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 
 <body>
     <!-- ----Header Part---- -->
     <header>
-        <!-- ----Navbar---- -->
+        <!-- ----Navbar & Filters (same as before)---- -->
         <nav class="main-nav">
             <div class="container">
                 <div class="mobile-special-nav">
-                    <!-- Menu Icon for Mobile & Tablet -->
                     <button class="menu-btn">
                         <img src="./images/menu_icon.webp" alt="Menu Icon">
                     </button>
-
-                    <!-- Logo -->
                     <div>
                         <a href="#">
                             <img fetchpriority="high" class="logo" src="./images/EstateInsight.webp"
                                 alt="Estate Insight Logo">
                         </a>
                     </div>
-
-                    <!-- Search Icon -->
                     <button class="search-icon-btn">
                         <img src="./images/search_icon.webp" alt="Search Icon">
                     </button>
                 </div>
-
-                <!-- Search Box -->
                 <div class="search-box">
                     <button class="back-btn">
                         <img src="./images/prev_icon.webp" alt="Previous Icon">
@@ -49,8 +41,6 @@
                     <input class="nav-input" type="text" placeholder="Search Chicago, Dallas..." />
                     <img class="search-icon" src="./images/search_icon.webp" alt="Search Icon">
                 </div>
-
-                <!-- Nav Options (Laptop & Desktop) -->
                 <ul class="nav-options">
                     <li><a href="#">Home</a></li>
                     <li><a href="#">About</a></li>
@@ -58,8 +48,6 @@
                     <li><a href="#">Contact</a></li>
                     <li class="login-btn"><a href="#">Login</a></li>
                 </ul>
-
-                <!-- Nav Options (Mobile & Tablet) -->
                 <ul class="nav-options2">
                     <p class="nav-menu-title">Options <span class="cross">&times;</span></p>
                     <li><a href="#">Home</a></li>
@@ -71,10 +59,8 @@
             </div>
         </nav>
 
-        <!-- ----Filter Dropdowns -->
         <section class="filter-bar">
             <div class="container filter-container">
-
                 <!-- Filter: Listing Type -->
                 <div class="filter-group">
                     <label>Listing Type</label>
@@ -158,12 +144,10 @@
 
     <!-- ----Main Part---- -->
     <main>
-        <!-- ----Mobile Filter Button---- -->
+        <!-- Mobile Filter Button & Modal (same as before) -->
         <button class="mobile-filter-btn">
             <img src="./images/filter_icon.webp" alt="Filter Icon">
         </button>
-
-        <!--  ----Mobile Filter Modal Drawer---- -->
         <div class="filter-modal-overlay">
             <div class="filter-modal" id="filterDrawer">
                 <div class="drag-bar-container">
@@ -252,30 +236,42 @@
             </div>
         </div>
 
-
-        <!-- ----Map---- -->
-        <section class="map-section">
-            <div id="map">
-                <canvas id="heatmap-canvas"></canvas>
-                <div id="legend">
-                    <div id="legend-gradient"></div>
-                    <div id="legend-labels">
-                        <span>-100%</span>
-                        <span>0%</span>
-                        <span>+100%</span>
+        <!-- ----Split Layout: Left House Container + Right Map---- -->
+        <section class="main-content">
+            <!-- Right Map Container -->
+            <div class="map-container">
+                <div id="map">
+                    <canvas id="heatmap-canvas"></canvas>
+                    <div id="legend">
+                        <div id="legend-gradient"></div>
+                        <div id="legend-labels">
+                            <span>-100%</span>
+                            <span>0%</span>
+                            <span>+100%</span>
+                        </div>
                     </div>
+                </div>
+                <div id="tooltip" class="tooltip"></div>
+            </div>
+            <!-- Left House Container -->
+            <div class="house-container">
+                <!-- Future house listings will go here -->
+                <div class="house-listings">
+                    <!-- Example House Cards -->
+                    <!-- Add as many as needed -->
+                    <div class="house-card">House 1</div>
+                    <div class="house-card">House 2</div>
+                    <div class="house-card">House 3</div>
                 </div>
             </div>
 
-            <div id="tooltip" class="tooltip"></div>
         </section>
     </main>
 
     <!-- ----Footer Part---- -->
     <footer>
-
+        <!-- Footer content goes here -->
     </footer>
-
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="./js/map.js"></script>
