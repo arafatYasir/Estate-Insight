@@ -11,6 +11,8 @@
     <!-- CSS -->
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/responsive.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+         />
 </head>
 
 <body>
@@ -249,13 +251,34 @@
                 </div>
             </div>
         </div>
+
+
+        <!-- ----Map---- -->
+        <section class="map-section">
+            <div id="map">
+                <canvas id="heatmap-canvas"></canvas>
+                <div id="legend">
+                    <div id="legend-gradient"></div>
+                    <div id="legend-labels">
+                        <span>-100%</span>
+                        <span>0%</span>
+                        <span>+100%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tooltip" class="tooltip"></div>
+        </section>
     </main>
 
     <!-- ----Footer Part---- -->
     <footer>
-        <p>lorem1000</p>
+
     </footer>
 
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="./js/map.js"></script>
     <script src="./js/main.js"></script>
 </body>
 

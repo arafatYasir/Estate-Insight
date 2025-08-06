@@ -389,6 +389,8 @@ nav .login-btn a:hover {
     transition: bottom 0.3s ease;
     touch-action: none;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
 }
 
 .drag-bar-container {
@@ -424,4 +426,81 @@ nav .login-btn a:hover {
     .filter-bar {
         display: none;
     }
+}
+
+
+/* ----Map Styles---- */
+#map {
+    height: 500px;
+    max-width: 500px;
+    position: relative;
+    left: 0;
+    z-index: 1;
+    cursor: default;
+}
+
+#heatmap-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    pointer-events: none;
+}
+
+.tooltip {
+    position: absolute;
+    z-index: 9999;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    pointer-events: none;
+    display: none;
+    transition: opacity 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    max-width: 250px;
+    line-height: 1.4;
+}
+
+
+
+/* Legend */
+#legend {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    width: 220px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    padding: 12px 16px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    color: #333;
+    user-select: none;
+    z-index: 10000;
+}
+
+#legend-gradient {
+    height: 20px;
+    border-radius: 10px;
+    background: linear-gradient(to right,
+            rgba(233, 62, 58, 1),
+            /* Red -100% */
+            rgba(255, 165, 0, 1),
+            /* Orange -50% */
+            rgba(255, 255, 0, 1),
+            /* Yellow 0% */
+            rgba(27, 138, 90, 1)
+            /* Green +100% */
+        );
+    margin-bottom: 8px;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+#legend-labels {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
 }
