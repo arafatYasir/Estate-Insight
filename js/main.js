@@ -68,6 +68,7 @@ filterDropdowns.forEach(dropdown => {
 const mobileFilterBtn = document.querySelector(".mobile-filter-btn");
 const filterModal = document.querySelector(".filter-modal");
 const filterOverlay = document.querySelector(".filter-modal-overlay");
+const dragBarContainer = document.querySelector('.drag-bar-container');
 
 let startY, currentY, isDragging = false;
 
@@ -80,13 +81,14 @@ mobileFilterBtn.addEventListener("click", () => {
 });
 
 // Drag Down to Close
-filterModal.addEventListener("touchstart", (e) => {
+dragBarContainer.addEventListener("touchstart", (e) => {
     startY = e.touches[0].clientY;
     isDragging = true;
 });
 
-filterModal.addEventListener("touchmove", (e) => {
+dragBarContainer.addEventListener("touchmove", (e) => {
     if (!isDragging) return;
+
     currentY = e.touches[0].clientY;
     const deltaY = currentY - startY;
 
@@ -95,7 +97,7 @@ filterModal.addEventListener("touchmove", (e) => {
     }
 });
 
-filterModal.addEventListener("touchend", () => {
+dragBarContainer.addEventListener("touchend", () => {
     isDragging = false;
 
     // If user didn’t move finger enough, do nothing

@@ -372,6 +372,10 @@ nav .login-btn a:hover {
     z-index: 9998;
 }
 
+.filter-modal-overlay .filter-container {
+    margin-top: 20px;
+}
+
 .filter-modal {
     position: absolute;
     bottom: -100%;
@@ -387,12 +391,23 @@ nav .login-btn a:hover {
     overflow-y: auto;
 }
 
+.drag-bar-container {
+    height: 40px;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 50%;
+    display: flex;
+    align-items: center;
+    transform: translateX(-50%);
+}
+
 .modal-drag-bar {
-    width: 50px;
+    width: 80px;
     height: 6px;
     background: #ccc;
     border-radius: 4px;
-    margin: 0 auto 16px;
+    margin: 0 auto;
 }
 
 .filter-modal.show {
