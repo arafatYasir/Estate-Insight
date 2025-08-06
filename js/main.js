@@ -10,7 +10,13 @@ let mobileSpecialNav = document.querySelector(".mobile-special-nav");
 let filterDropdowns = document.querySelectorAll(".custom-dropdown");
 
 // Event listener to close dropdowns on the click of outside the box
-
+window.addEventListener("click", (e) => {
+    filterDropdowns.forEach(dropdown => {
+        if(!dropdown.contains(e.target)) {
+            dropdown.classList.remove("active");
+        }
+    })
+})
 
 // Responsive Navbar
 menuBtn.addEventListener("click", () => {
