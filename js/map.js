@@ -42,8 +42,21 @@ function initializeMap(lat, lon) {
         });
 
         if (hoverHouse) {
-            tooltip.style.left = `${e.clientX + 15}px`;
-            tooltip.style.top = `${e.clientY + 15}px`;
+            const toolTipWidth = 190;
+            const toolTipHeight = 95;
+
+            let leftPos = e.clientX + 15;
+            let topPos = e.clientY + 15;
+
+            if(leftPos + toolTipWidth > window.innerWidth) {
+                leftPos = e.clientX - toolTipWidth - 15;
+            }
+            if(topPos + toolTipHeight > window.innerHeight) {
+                topPos = e.clientY - toolTipHeight - 15;
+            }
+
+            tooltip.style.left = `${leftPos}px`;
+            tooltip.style.top = `${topPos}px`;
             tooltip.style.display = 'block';
             tooltip.innerHTML = `
             <strong>Price Change:</strong> ${hoverHouse.percentChange.toFixed(2)}% ${hoverHouse.percentChange > 0 ? "📈" : "📉"}<br>

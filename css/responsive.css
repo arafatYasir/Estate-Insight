@@ -1,7 +1,7 @@
 /* Screen Size Up to 575px */
 @media screen and (max-width: 575px) {
     .container {
-        padding: 12px !important;
+        padding: 10px !important;
     }
 
     /* ----Navbar---- */
