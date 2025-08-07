@@ -105,25 +105,10 @@
                     </div>
                 </div>
 
-                <!-- Filter: Beds & Baths
-                <div class="filter-group">
-                    <label>Beds & Baths</label>
-                    <div class="custom-dropdown" data-name="bedsBaths">
-                        <div class="custom-dropdown-selected">Any</div>
-                        <ul class="custom-dropdown-options">
-                            <li data-value="any">Any</li>
-                            <li data-value="1-1">1 Bed, 1 Bath</li>
-                            <li data-value="2-1">2 Bed, 1 Bath</li>
-                            <li data-value="2-2">2 Bed, 2 Bath</li>
-                            <li data-value="3-2">3 Bed, 2 Bath+</li>
-                        </ul>
-                    </div>
-                </div> -->
-
                 <!-- Filter: Beds & Baths -->
                 <div class="filter-group">
                     <label>Beds & Baths</label>
-                    <div class="custom-dropdown" data-name="bedsBaths"> 
+                    <div class="custom-dropdown" data-name="bedsBaths">
                         <div class="custom-dropdown-selected">Beds & Baths</div>
                         <div class="custom-dropdown-options">
                             <div class="slider-container">
@@ -194,6 +179,8 @@
         <button class="mobile-filter-btn">
             <img src="./images/filter_icon.webp" alt="Filter Icon">
         </button>
+
+        <!-- Filter Modal Overlay -->
         <div class="filter-modal-overlay">
             <div class="filter-modal" id="filterDrawer">
                 <div class="drag-bar-container">
@@ -230,18 +217,21 @@
                             </div>
                         </div>
 
-                        <!-- Beds & Baths -->
+                        <!-- Filter: Beds & Baths -->
                         <div class="filter-group">
                             <label>Beds & Baths</label>
                             <div class="custom-dropdown" data-name="bedsBaths">
-                                <div class="custom-dropdown-selected">Any</div>
-                                <ul class="custom-dropdown-options">
-                                    <li data-value="any">Any</li>
-                                    <li data-value="1-1">1 Bed, 1 Bath</li>
-                                    <li data-value="2-1">2 Bed, 1 Bath</li>
-                                    <li data-value="2-2">2 Bed, 2 Bath</li>
-                                    <li data-value="3-2">3 Bed, 2 Bath+</li>
-                                </ul>
+                                <div class="custom-dropdown-selected">Beds & Baths</div>
+                                <div class="custom-dropdown-options">
+                                    <div class="slider-container">
+                                        <label for="bedsRange">Beds: <span id="bedsValue">0</span></label>
+                                        <input type="range" id="bedsRange" min="0" max="10" value="2">
+                                    </div>
+                                    <div class="slider-container">
+                                        <label for="bathsRange">Baths: <span id="bathsValue">0</span></label>
+                                        <input type="range" id="bathsRange" min="0" max="10" value="2">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

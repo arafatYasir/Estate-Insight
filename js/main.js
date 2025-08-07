@@ -158,34 +158,67 @@ switchToMapBtn.addEventListener("click", () => {
     mobileFilterBtn.style.display = "none";
 });
 
-// Dropdown Custom Slider Range
-const dropdown = document.querySelector('.custom-dropdown[data-name="bedsBaths"]');
+// ----Dropdown Custom Slider Range----
+// Variables For Mobile & Tablet
+const filterModalDropdown = document.querySelector('.filter-modal-overlay .custom-dropdown[data-name="bedsBaths"]');
+const filterModalSelected = filterModalDropdown.querySelector(".custom-dropdown-selected");
+const filterModalBedsSlider = filterModalDropdown.querySelector("#bedsRange");
+const filterModalBathsSlider = filterModalDropdown.querySelector("#bathsRange");
+const filterModalBedsValue = filterModalDropdown.querySelector("#bedsValue");
+const filterModalBathsValue = filterModalDropdown.querySelector("#bathsValue");
+
+// Variables for Laptop & Desktop
+const dropdown = document.querySelector('.filter-container .custom-dropdown[data-name="bedsBaths"]');
 const selected = dropdown.querySelector(".custom-dropdown-selected");
 const bedsSlider = dropdown.querySelector("#bedsRange");
 const bathsSlider = dropdown.querySelector("#bathsRange");
 const bedsValue = dropdown.querySelector("#bedsValue");
 const bathsValue = dropdown.querySelector("#bathsValue");
 
+console.log(dropdown, selected, bedsSlider, bathsSlider, bedsValue, bathsValue, "This is all for desktop----");
 
-// Update Display
-function updateDisplay() {
-    bedsValue.innerHTML = bedsSlider.value;
-    bathsValue.innerHTML = bathsSlider.value;
+// Update Display for Mobile
+function updateSliderForMobile() {
+    const filterModalBeds = filterModalBedsSlider.value;
+    const filterModalBaths = filterModalBathsSlider.value;
 
-    if (bedsSlider.value == 0 && bathsSlider.value == 0) {
-        selected.innerHTML = "Any";
+    filterModalBedsValue.innerHTML = filterModalBeds;
+    filterModalBathsValue.innerHTML = filterModalBaths;
+
+    if (filterModalBeds == 0 && filterModalBaths == 0) {
+        filterModalSelected.innerHTML = "Any";
     }
     else {
-        selected.innerHTML = `${bedsSlider.value} Bed${bedsSlider.value > 1 ? "s" : ""}, ${bathsSlider.value} Bath${bathsSlider.value > 1 ? "s" : ""}`;
+        filterModalSelected.innerHTML = `${filterModalBeds} Bed${filterModalBeds > 1 ? "s" : ""}, ${filterModalBaths} Bath${filterModalBaths > 1 ? "s" : ""}`;
     }
 }
 
-bedsSlider.addEventListener("input", updateDisplay);
-bathsSlider.addEventListener("input", updateDisplay);
+function updateSliderForPC() {
+    console.log("I am at the beginning of this desktop slider function");
+    const beds = bedsSlider.value;
+    const baths = bathsSlider.value;
+
+    bedsValue.innerHTML = beds;
+    bathsValue.innerHTML = baths;
+
+    if (beds == 0 && baths == 0) {
+        selected.innerHTML = "Any";
+    }
+    else {
+        selected.innerHTML = `${beds} Bed${beds > 1 ? "s" : ""}, ${baths} Bath${baths > 1 ? "s" : ""}`;
+        console.log("I am here setting the dropdown value");
+    }
+}
+
+filterModalBedsSlider.addEventListener("input", updateSliderForMobile);
+filterModalBathsSlider.addEventListener("input", updateSliderForMobile);
+bedsSlider.addEventListener("input", updateSliderForPC);
+bathsSlider.addEventListener("input", updateSliderForPC);
 
 
 // Initial Call
-updateDisplay();
+updateSliderForMobile();
+updateSliderForPC();
 
 
 function updateRangeFill(input) {
@@ -198,7 +231,7 @@ function updateRangeFill(input) {
 }
 
 // Apply it to both sliders
-[bedsSlider, bathsSlider].forEach(slider => {
+[filterModalBedsSlider, filterModalBathsSlider, bedsSlider, bathsSlider].forEach(slider => {
     updateRangeFill(slider);
     slider.addEventListener('input', () => updateRangeFill(slider));
 });
