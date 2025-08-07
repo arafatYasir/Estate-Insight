@@ -3,20 +3,59 @@ const canvas = document.getElementById('heatmap-canvas');
 const ctx = canvas.getContext('2d');
 
 // Initializing the map
-const map = L.map('map', {
-    dragging: true,
-    scrollWheelZoom: true,
-    doubleClickZoom: true,
-    boxZoom: true,
-    keyboard: true,
-    tap: true,
-    touchZoom: true,
-    zoomControl: false
-}).setView([23.7806, 90.4074], 12);
+let map;
+function initializeMap(lat, lon) {
+    map = L.map('map', {
+        dragging: true,
+        scrollWheelZoom: true,
+        doubleClickZoom: true,
+        boxZoom: true,
+        keyboard: true,
+        tap: true,
+        touchZoom: true,
+        zoomControl: false
+    }).setView([lat, lon], 6);
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '',
-}).addTo(map);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '',
+    }).addTo(map);
+
+    map.on('move', drawAllHeatPoints);
+    map.on('zoom', drawAllHeatPoints);
+
+
+    // Tooltip on hover
+    const mapContainer = document.getElementById("map");
+    const tooltip = document.getElementById('tooltip');
+
+    // Event listener to track hover on house point
+    mapContainer.addEventListener('mousemove', (e) => {
+        const mapRect = map.getContainer().getBoundingClientRect();
+        const mouseX = e.clientX - mapRect.left;
+        const mouseY = e.clientY - mapRect.top;
+
+        const hoverHouse = houseData.find(house => {
+            const point = map.latLngToContainerPoint([house.lat, house.lon]);
+            const dx = point.x - mouseX;
+            const dy = point.y - mouseY;
+            return Math.sqrt(dx * dx + dy * dy) < 15;
+        });
+
+        if (hoverHouse) {
+            tooltip.style.left = `${e.clientX + 15}px`;
+            tooltip.style.top = `${e.clientY + 15}px`;
+            tooltip.style.display = 'block';
+            tooltip.innerHTML = `
+            <strong>Price Change:</strong> ${hoverHouse.percentChange.toFixed(2)}% ${hoverHouse.percentChange > 0 ? "📈" : "📉"}<br>
+            <strong>Latest Price:</strong> $${hoverHouse.currentPrice} <br>
+            <strong>Lat:</strong> ${hoverHouse.lat} <br>
+            <strong>Lon:</strong> ${hoverHouse.lon}
+        `;
+        } else {
+            tooltip.style.display = 'none';
+        }
+    });
+}
 
 
 // Resize canvas to match window
@@ -54,16 +93,24 @@ function calculatePercentChange(pricesArray) {
 }
 
 // Fetch house data
-fetch('house_data_dhaka.json')
+fetch('../dummy_ecuador_houses.json')
     .then(res => {
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         return res.json();
     })
     .then(data => {
+        let lat = 0, lon = 0;
         houseData = data.map(house => {
+            lat += house.lat;
+            lon += house.lon;
             const { percentChange, last } = calculatePercentChange(house.prices);
             return { ...house, percentChange, currentPrice: last };
         });
+
+        lat /= houseData.length;
+        lon /= houseData.length;
+
+        initializeMap(lat, lon);
         drawAllHeatPoints();
         showHouses();
     })
@@ -117,53 +164,26 @@ function getInterpolatedColor(change) {
 }
 
 // Redraw map on view changes
-map.on('move', drawAllHeatPoints);
-map.on('zoom', drawAllHeatPoints);
 window.addEventListener('resize', drawAllHeatPoints);
-
-// Tooltip on hover
-const mapContainer = document.getElementById("map");
-const tooltip = document.getElementById('tooltip');
-
-mapContainer.addEventListener('mousemove', (e) => {
-    const mapRect = map.getContainer().getBoundingClientRect();
-    const mouseX = e.clientX - mapRect.left;
-    const mouseY = e.clientY - mapRect.top;
-
-    const hoverHouse = houseData.find(house => {
-        const point = map.latLngToContainerPoint([house.lat, house.lon]);
-        const dx = point.x - mouseX;
-        const dy = point.y - mouseY;
-        return Math.sqrt(dx * dx + dy * dy) < 15;
-    });
-
-    if (hoverHouse) {
-        tooltip.style.left = `${e.clientX + 15}px`;
-        tooltip.style.top = `${e.clientY + 15}px`;
-        tooltip.style.display = 'block';
-        tooltip.innerHTML = `
-            <strong>Price Change:</strong> ${hoverHouse.percentChange.toFixed(2)}% ${hoverHouse.percentChange > 0 ? "📈" : "📉"}<br>
-            <strong>Latest Price:</strong> $${hoverHouse.currentPrice} <br>
-            <strong>Lat:</strong> ${hoverHouse.lat} <br>
-            <strong>Lon:</strong> ${hoverHouse.lon}
-        `;
-    } else {
-        tooltip.style.display = 'none';
-    }
-});
 
 
 // House Showing Function
 function showHouses() {
     const houseListings = document.querySelector(".house-listings");
-    
+
     houseData.slice(0, 50).forEach((house, idx) => {
         houseListings.innerHTML += `
-            <div class="house-card" style="margin-bottom: 20px">
-                <p>House Number - ${idx + 1}</p>
-                <p>Current Price - ${house.currentPrice}</p>
-                <hr />
+            <div class="house-card">
+                <img class="house-img" src="./images/house_image.webp" alt="House Image" />
+                <div class="house-content">
+                    <h2 class="price">৳ ${house.currentPrice}</h2>
+                    <p class="info">🏠 House #${idx + 1}</p>
+                    <p class="info">🛏️ 3 Beds · 🛁 2 Baths</p>
+                    <p class="info">📍 123 Gulshan Ave, Dhaka</p>
+                    <p class="price-change increase">⬆️ +12.3% since last year</p>
+                </div>
             </div>
+
         `
     })
 }

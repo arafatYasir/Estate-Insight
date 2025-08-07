@@ -429,12 +429,10 @@ nav .login-btn a:hover {
     }
 }
 
-
-/* ----Main Part---- */
+/* ----House Styles---- */
 .house-container {
     width: 49%;
     height: 100vh;
-    /* overflow-y: auto; */
     position: relative;
     margin-top: 194px;
     padding: 0 20px;
@@ -443,13 +441,63 @@ nav .login-btn a:hover {
 .house-listings {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
+    justify-content: space-between;
+    row-gap: 12px;
 }
 
 .house-card {
-    width: 320px;
+  width: 100%;
+  max-width: 320px;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
+.house-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 35px rgba(0, 0, 0, 0.15);
+}
+
+.house-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+.house-content {
+  padding: 16px;
+}
+
+.price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-yellow);
+  margin-bottom: 8px;
+}
+
+.info {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+.price-change {
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+.price-change.increase {
+  color: #2e7d32;
+}
+
+.price-change.decrease {
+  color: #c62828;
+}
+
 
 /* ----Map Styles---- */
 #map {
@@ -471,7 +519,7 @@ nav .login-btn a:hover {
 }
 
 .tooltip {
-    position: absolute;
+    position: fixed;
     z-index: 9999;
     background-color: rgba(0, 0, 0, 0.8);
     color: #fff;
