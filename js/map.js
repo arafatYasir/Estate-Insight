@@ -60,9 +60,7 @@ function initializeMap(lat, lon) {
             tooltip.style.display = 'block';
             tooltip.innerHTML = `
             <strong>Price Change:</strong> ${hoverHouse.percentChange.toFixed(2)}% ${hoverHouse.percentChange > 0 ? "📈" : "📉"}<br>
-            <strong>Latest Price:</strong> $${hoverHouse.currentPrice} <br>
-            <strong>Lat:</strong> ${hoverHouse.lat} <br>
-            <strong>Lon:</strong> ${hoverHouse.lon}
+            <strong>Latest Price:</strong> $${hoverHouse.currentPrice}
         `;
         } else {
             tooltip.style.display = 'none';
