@@ -89,7 +89,7 @@ function calculatePercentChange(pricesArray) {
     const last = parsed[parsed.length - 1].price;
 
     if (first === 0) return { percentChange: 0, last };
-    return { percentChange: ((last - first) / first) * 100, last };
+    return { percentChange: ((last - first) / first) * 100, last,  };
 }
 
 // Fetch house data
@@ -172,18 +172,26 @@ function showHouses() {
     const houseListings = document.querySelector(".house-listings");
 
     houseData.slice(0, 50).forEach((house, idx) => {
+        const priceChangeText = house.percentChange > 0 ? `<span class='increase'>⬆️ ${house.percentChange.toFixed(2)}% since last year</span>` : `<span class='decrease'>⬆️ ${house.percentChange.toFixed(2)}% since last year</span>`
         houseListings.innerHTML += `
             <div class="house-card">
                 <img class="house-img" src="./images/house_image.webp" alt="House Image" />
                 <div class="house-content">
-                    <h2 class="price">৳ ${house.currentPrice}</h2>
-                    <p class="info">🏠 House #${idx + 1}</p>
-                    <p class="info">🛏️ 3 Beds · 🛁 2 Baths</p>
-                    <p class="info">📍 123 Gulshan Ave, Dhaka</p>
-                    <p class="price-change increase">⬆️ +12.3% since last year</p>
+                    <h2 class="price">$${house.currentPrice.toLocaleString()}</h2>
+    
+                    <p class="info">
+                        <span>🛏️ ${house.beds} Beds</span> · 
+                        <span>🛁 ${house.baths} Baths</span> · 
+                        <span>📐 ${house.sizeSqft} sqft</span>
+                    </p>
+    
+                    <p class="info">📍 <em>${house.address}</em></p>
+    
+                    <p class="price-change">
+                    ${priceChangeText}
+                    </p>
                 </div>
             </div>
-
         `
     })
 }

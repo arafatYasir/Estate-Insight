@@ -438,6 +438,13 @@ nav .login-btn a:hover {
     padding: 0 20px;
 }
 
+.house-container .title {
+    font-size: 24px;
+    color: var(--primary-blue);
+    margin-bottom: 20px;
+    padding-top: 10px;
+}
+
 .house-listings {
     display: flex;
     flex-wrap: wrap;
@@ -447,7 +454,7 @@ nav .login-btn a:hover {
 
 .house-card {
   width: 100%;
-  max-width: 320px;
+  max-width: 324px;
   background: #ffffff;
   border-radius: 12px;
   overflow: hidden;
@@ -490,11 +497,11 @@ nav .login-btn a:hover {
   font-size: 0.95rem;
 }
 
-.price-change.increase {
+.price-change .increase {
   color: #2e7d32;
 }
 
-.price-change.decrease {
+.price-change .decrease {
   color: #c62828;
 }
 
