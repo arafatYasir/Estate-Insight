@@ -115,7 +115,6 @@ function loadHouseData() {
     const now = Date.now();
 
     if (cached && timestamp && now - parseInt(timestamp) < MAX_CACHE_AGE) {
-        console.log("Loaded house data from cache.");
         const data = JSON.parse(cached);
         
         let lat = 0, lon = 0;
@@ -136,8 +135,6 @@ function loadHouseData() {
         showHouses();
     }
     else {
-        console.log("Fetching data from API");
-
         // Calling fetch
         fetch('../dummy_ecuador_houses.json')
             .then(res => {

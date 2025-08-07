@@ -122,6 +122,7 @@ nav .nav-options2 {
     left: 0;
     bottom: 0;
     right: 0;
+    z-index: 100;
     background: var(--primary-blue);
     z-index: 20;
     padding: 24px;
@@ -342,12 +343,37 @@ nav .login-btn a:hover {
     color: var(--white);
 }
 
+/* Switch to List button */
+.switch-to-list {
+    display: none;
+    background: var(--primary-blue);
+    padding: 5px;
+    border-radius: 12px;
+    position: fixed;
+    z-index: 50;
+    border: 0;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 16px;
+    text-transform: uppercase;
+}
+
+.switch-to-list .icon {
+    font-size: 15px;
+}
+
+.switch-to-list:active {
+    color: var(--accent-yellow);
+}
+
 
 /* Mobile Filter Button */
 .mobile-filter-btn {
     display: none;
     position: fixed;
-    bottom: 20px;
+    bottom: 25px;
     right: 0px;
     transform: translateX(-50%);
     background: var(--accent-yellow);
@@ -420,10 +446,6 @@ nav .login-btn a:hover {
 
 /* ----Filter Dropdown Responsive---- */
 @media (max-width: 768px) {
-    .mobile-filter-btn {
-        display: block;
-    }
-
     .filter-bar {
         display: none;
     }
@@ -444,6 +466,7 @@ nav .login-btn a:hover {
     color: var(--primary-blue);
     margin-bottom: 20px;
     padding-top: 10px;
+    text-align: center;
 }
 
 .house-listings {

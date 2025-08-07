@@ -133,3 +133,15 @@ function closeFilterModal() {
     filterOverlay.style.display = "none";
     mobileFilterBtn.style.display = "block";
 }
+
+// Switching from map to list for mobile and tablet
+const realMap = document.querySelector("#map");
+const houseContainer = document.querySelector(".house-container");
+const switchToListBtn = document.querySelector(".switch-to-list");
+
+switchToListBtn.addEventListener("click", () => {
+    realMap.style.display = "none";
+    houseContainer.style.display = "block";
+    switchToListBtn.style.display = "none";
+    mobileFilterBtn.style.display = "inline";
+})
