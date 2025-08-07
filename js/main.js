@@ -156,4 +156,49 @@ switchToMapBtn.addEventListener("click", () => {
     switchToListBtn.style.display = "inline";
     switchToMapBtn.style.display = "none";
     mobileFilterBtn.style.display = "none";
-})
+});
+
+// Dropdown Custom Slider Range
+const dropdown = document.querySelector('.custom-dropdown[data-name="bedsBaths"]');
+const selected = dropdown.querySelector(".custom-dropdown-selected");
+const bedsSlider = dropdown.querySelector("#bedsRange");
+const bathsSlider = dropdown.querySelector("#bathsRange");
+const bedsValue = dropdown.querySelector("#bedsValue");
+const bathsValue = dropdown.querySelector("#bathsValue");
+
+
+// Update Display
+function updateDisplay() {
+    bedsValue.innerHTML = bedsSlider.value;
+    bathsValue.innerHTML = bathsSlider.value;
+
+    if (bedsSlider.value == 0 && bathsSlider.value == 0) {
+        selected.innerHTML = "Any";
+    }
+    else {
+        selected.innerHTML = `${bedsSlider.value} Bed${bedsSlider.value > 1 ? "s" : ""}, ${bathsSlider.value} Bath${bathsSlider.value > 1 ? "s" : ""}`;
+    }
+}
+
+bedsSlider.addEventListener("input", updateDisplay);
+bathsSlider.addEventListener("input", updateDisplay);
+
+
+// Initial Call
+updateDisplay();
+
+
+function updateRangeFill(input) {
+    const value = (input.value - input.min) / (input.max - input.min) * 100;
+    input.style.background = `linear-gradient(to right,
+      var(--accent-yellow) 0%,
+      var(--accent-yellow) ${value}%,
+      var(--background-light) ${value}%,
+      var(--background-light) 100%)`;
+}
+
+// Apply it to both sliders
+[bedsSlider, bathsSlider].forEach(slider => {
+    updateRangeFill(slider);
+    slider.addEventListener('input', () => updateRangeFill(slider));
+});

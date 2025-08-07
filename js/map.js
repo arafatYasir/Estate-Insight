@@ -225,7 +225,7 @@ function showHouses() {
         const priceChangeText = house.percentChange > 0 ? `<span class='increase'>⬆ ${house.percentChange.toFixed(2)}%</span>` : `<span class='decrease'>⬇ ${house.percentChange.toFixed(2)}%</span>`
         houseListings.innerHTML += `
             <div class="house-card">
-                <img loading="lazy" class="house-img" src="./images/house_image.webp" alt="House Image" />
+                <img class="house-img" src="./images/house_image.webp" alt="House Image" />
                 <div class="house-content">
                     <h2 class="price">$${house.currentPrice.toLocaleString()}</h2>
     
