@@ -372,7 +372,7 @@ nav .login-btn a:hover {
 .switch-to-map {
     display: none;
     background: var(--primary-blue);
-    padding: 8px;
+    padding: 6px;
     border-radius: 12px;
     position: fixed;
     z-index: 50;

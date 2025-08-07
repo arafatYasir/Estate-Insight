@@ -139,6 +139,7 @@ const realMap = document.querySelector("#map");
 const houseContainer = document.querySelector(".house-container");
 const switchToListBtn = document.querySelector(".switch-to-list");
 const switchToMapBtn = document.querySelector(".switch-to-map");
+const tooltip = document.getElementById('tooltip');
 
 switchToListBtn.addEventListener("click", () => {
     realMap.style.display = "none";
@@ -146,6 +147,7 @@ switchToListBtn.addEventListener("click", () => {
     switchToListBtn.style.display = "none";
     switchToMapBtn.style.display = "inline";
     mobileFilterBtn.style.display = "inline";
+    tooltip.style.display = "none";
 })
 
 switchToMapBtn.addEventListener("click", () => {
