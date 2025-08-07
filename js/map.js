@@ -2,6 +2,11 @@
 const canvas = document.getElementById('heatmap-canvas');
 const ctx = canvas.getContext('2d');
 
+// Setting Cache Details for Local Storage
+const CACHE_KEY = "houseData";
+const CACHE_TIME_KEY = "houseDataTimestamp";
+const MAX_CACHE_AGE = 1000 * 60 * 60 * 6; // 6 hours
+
 // Initializing the map
 let map;
 function initializeMap(lat, lon) {
@@ -48,10 +53,10 @@ function initializeMap(lat, lon) {
             let leftPos = e.clientX + 15;
             let topPos = e.clientY + 15;
 
-            if(leftPos + toolTipWidth > window.innerWidth) {
+            if (leftPos + toolTipWidth > window.innerWidth) {
                 leftPos = e.clientX - toolTipWidth - 15;
             }
-            if(topPos + toolTipHeight > window.innerHeight) {
+            if (topPos + toolTipHeight > window.innerHeight) {
                 topPos = e.clientY - toolTipHeight - 15;
             }
 
@@ -100,23 +105,28 @@ function calculatePercentChange(pricesArray) {
     const last = parsed[parsed.length - 1].price;
 
     if (first === 0) return { percentChange: 0, last };
-    return { percentChange: ((last - first) / first) * 100, last,  };
+    return { percentChange: ((last - first) / first) * 100, last, };
 }
 
 // Fetch house data
-fetch('../dummy_ecuador_houses.json')
-    .then(res => {
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        return res.json();
-    })
-    .then(data => {
+function loadHouseData() {
+    const cached = localStorage.getItem(CACHE_KEY);
+    const timestamp = localStorage.getItem(CACHE_TIME_KEY);
+    const now = Date.now();
+
+    if (cached && timestamp && now - parseInt(timestamp) < MAX_CACHE_AGE) {
+        console.log("Loaded house data from cache.");
+        const data = JSON.parse(cached);
+        
         let lat = 0, lon = 0;
         houseData = data.map(house => {
             lat += house.lat;
             lon += house.lon;
-            const { percentChange, last } = calculatePercentChange(house.prices);
-            return { ...house, percentChange, currentPrice: last };
-        });
+
+            const {percentChange, last} = calculatePercentChange(house.prices);
+
+            return {...house, percentChange, currentPrice: last};
+        })
 
         lat /= houseData.length;
         lon /= houseData.length;
@@ -124,8 +134,40 @@ fetch('../dummy_ecuador_houses.json')
         initializeMap(lat, lon);
         drawAllHeatPoints();
         showHouses();
-    })
-    .catch(err => console.error('Error fetching house data:', err));
+    }
+    else {
+        console.log("Fetching data from API");
+
+        // Calling fetch
+        fetch('../dummy_ecuador_houses.json')
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                return res.json();
+            })
+            .then(data => {
+                let lat = 0, lon = 0;
+                houseData = data.map(house => {
+                    lat += house.lat;
+                    lon += house.lon;
+                    const { percentChange, last } = calculatePercentChange(house.prices);
+                    return { ...house, percentChange, currentPrice: last };
+                });
+
+                lat /= houseData.length;
+                lon /= houseData.length;
+
+                initializeMap(lat, lon);
+                drawAllHeatPoints();
+                showHouses();
+
+                localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+                localStorage.setItem(CACHE_TIME_KEY, now.toString());
+            })
+            .catch(err => console.error('Error fetching house data:', err));
+    }
+
+}
+
 
 // Draw heat points
 function drawAllHeatPoints() {
@@ -206,3 +248,7 @@ function showHouses() {
         `
     })
 }
+
+
+// Calling the loader function
+loadHouseData();
