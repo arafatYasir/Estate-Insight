@@ -16,8 +16,8 @@ function initializeMap(lat, lon) {
         zoomControl: false
     }).setView([lat, lon], 6);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '',
+    L.tileLayer('https://{s}.tile.openstreetmap.de/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
     }).addTo(map);
 
     map.on('move', drawAllHeatPoints);
@@ -171,11 +171,11 @@ window.addEventListener('resize', drawAllHeatPoints);
 function showHouses() {
     const houseListings = document.querySelector(".house-listings");
 
-    houseData.slice(0, 50).forEach((house, idx) => {
-        const priceChangeText = house.percentChange > 0 ? `<span class='increase'>⬆️ ${house.percentChange.toFixed(2)}% since last year</span>` : `<span class='decrease'>⬆️ ${house.percentChange.toFixed(2)}% since last year</span>`
+    houseData.slice(0, 20).forEach((house, idx) => {
+        const priceChangeText = house.percentChange > 0 ? `<span class='increase'>⬆ ${house.percentChange.toFixed(2)}%</span>` : `<span class='decrease'>⬇ ${house.percentChange.toFixed(2)}%</span>`
         houseListings.innerHTML += `
             <div class="house-card">
-                <img class="house-img" src="./images/house_image.webp" alt="House Image" />
+                <img loading="lazy" class="house-img" src="./images/house_image.webp" alt="House Image" />
                 <div class="house-content">
                     <h2 class="price">$${house.currentPrice.toLocaleString()}</h2>
     

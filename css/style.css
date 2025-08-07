@@ -435,6 +435,7 @@ nav .login-btn a:hover {
     height: 100vh;
     position: relative;
     margin-top: 194px;
+    margin-left: 20px;
     padding: 0 20px;
 }
 
