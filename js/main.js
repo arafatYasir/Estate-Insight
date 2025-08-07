@@ -235,23 +235,7 @@ function updateRangeFill(input) {
 
 // ----Price Dropdown Custom Slider Event Listener----
 document.addEventListener("DOMContentLoaded", () => {
-    const minInput = document.getElementById("minPrice");
-    const maxInput = document.getElementById("maxPrice");
-    const selected = document.querySelector('.custom-dropdown[data-name="price"] .custom-dropdown-selected');
-
-    // Inject range-fill into the DOM dynamically
-    const rangeWrapper = document.querySelector(".price-range-slider-wrapper");
-    let fill = document.createElement("div");
-    fill.classList.add("range-fill")
-    rangeWrapper.appendChild(fill);
-
-    const minValueEl = document.getElementById("minPriceValue");
-    const maxValueEl = document.getElementById("maxPriceValue");
-
-    const min = parseInt(minInput.min);
-    const max = parseInt(maxInput.max);
-
-    function updateRange() {
+    function updateRange(min, max, minInput, maxInput, fill, minValueEl, maxValueEl, selectedPriceDropdown) {
         let minVal = parseInt(minInput.value);
         let maxVal = parseInt(maxInput.value);
 
@@ -272,12 +256,37 @@ document.addEventListener("DOMContentLoaded", () => {
         // Update value display
         minValueEl.innerHTML = `$${Number(minVal).toLocaleString()}`;
         maxValueEl.innerHTML = `$${Number(maxVal).toLocaleString()}`;
-        selected.innerHTML = `$${parseInt(minVal).toLocaleString()} - $${parseInt(maxVal).toLocaleString()}`;
+        selectedPriceDropdown.innerHTML = `$${parseInt(minVal).toLocaleString()} - $${parseInt(maxVal).toLocaleString()}`;
     }
 
-    minInput.addEventListener("input", updateRange);
-    maxInput.addEventListener("input", updateRange);
+    const dropdown = document.querySelectorAll('.custom-dropdown[data-name="price"]');
+    console.log(dropdown);
 
-    // Initial update on load
-    updateRange();
+
+    dropdown.forEach(d => {
+        const minInput = d.querySelector("#minPrice");
+        const maxInput = d.querySelector("#maxPrice");
+        const selectedPriceDropdown = d.querySelector(".custom-dropdown-selected");
+
+        selectedPriceDropdown.innerHTML = `$${parseInt(minInput.value).toLocaleString()} - $${parseInt(maxInput.value).toLocaleString()}`;
+
+        // Inject range-fill into the DOM dynamically
+        const rangeWrapper = d.querySelector(".price-range-slider-wrapper");
+        let fill = document.createElement("div");
+        fill.classList.add("range-fill");
+        rangeWrapper.appendChild(fill);
+
+
+        const minValueEl = d.querySelector("#minPriceValue");
+        const maxValueEl = d.querySelector("#maxPriceValue");
+
+        const min = parseInt(minInput.min);
+        const max = parseInt(maxInput.max);
+
+        minInput.addEventListener("input", () => updateRange(min, max, minInput, maxInput, fill, minValueEl, maxValueEl, selectedPriceDropdown));
+        maxInput.addEventListener("input", () => updateRange(min, max, minInput, maxInput, fill, minValueEl, maxValueEl, selectedPriceDropdown));
+
+        // Initial update on load
+        updateRange(min, max, minInput, maxInput, fill, minValueEl, maxValueEl, selectedPriceDropdown);
+    })
 });

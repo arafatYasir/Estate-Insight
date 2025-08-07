@@ -424,9 +424,7 @@ nav .login-btn a:hover {
 /* Price Custom Slider */
 .price-range-slider-wrapper {
     position: relative;
-    /* height: 40px; */
     margin: 10px 0;
-    /* padding: 5px; */
 }
 
 .price-range-slider-wrapper input[type="range"] {
@@ -468,7 +466,7 @@ nav .login-btn a:hover {
     position: absolute;
     top: 50%;
     left: 0;
-    height: 6px;
+    height: 3px;
     width: 100%;
     background: #ddd;
     transform: translateY(-50%);
@@ -479,7 +477,7 @@ nav .login-btn a:hover {
 .price-range-slider-wrapper .range-fill {
     position: absolute;
     top: 50%;
-    height: 6px;
+    height: 3px;
     background: var(--accent-yellow);
     transform: translateY(-50%);
     z-index: 1;
