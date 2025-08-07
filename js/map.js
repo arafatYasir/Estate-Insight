@@ -2,6 +2,15 @@
 const canvas = document.getElementById('heatmap-canvas');
 const ctx = canvas.getContext('2d');
 
+// Resize canvas to match window
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
 // Setting Cache Details for Local Storage
 const CACHE_KEY = "houseData";
 const CACHE_TIME_KEY = "houseDataTimestamp";
@@ -74,14 +83,7 @@ function initializeMap(lat, lon) {
 }
 
 
-// Resize canvas to match window
-function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
 
-resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
 
 // House data store
 let houseData = [];
@@ -202,6 +204,9 @@ function drawAllHeatPoints() {
     });
 }
 
+// Redraw map on view changes
+window.addEventListener('resize', drawAllHeatPoints);
+
 // Color scale
 function getInterpolatedColor(change) {
     if (change <= -80) return { r: 160, g: 0, b: 0 };
@@ -212,9 +217,6 @@ function getInterpolatedColor(change) {
     if (change <= 100) return { r: 27, g: 138, b: 90 };
     return { r: 0, g: 255, b: 0 };
 }
-
-// Redraw map on view changes
-window.addEventListener('resize', drawAllHeatPoints);
 
 
 // House Showing Function

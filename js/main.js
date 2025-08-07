@@ -158,7 +158,7 @@ switchToMapBtn.addEventListener("click", () => {
     mobileFilterBtn.style.display = "none";
 });
 
-// ----Dropdown Custom Slider Range----
+// ----Beds & Baths Custom Slider Range----
 // Variables For Mobile & Tablet
 const filterModalDropdown = document.querySelector('.filter-modal-overlay .custom-dropdown[data-name="bedsBaths"]');
 const filterModalSelected = filterModalDropdown.querySelector(".custom-dropdown-selected");
@@ -174,8 +174,6 @@ const bedsSlider = dropdown.querySelector("#bedsRange");
 const bathsSlider = dropdown.querySelector("#bathsRange");
 const bedsValue = dropdown.querySelector("#bedsValue");
 const bathsValue = dropdown.querySelector("#bathsValue");
-
-console.log(dropdown, selected, bedsSlider, bathsSlider, bedsValue, bathsValue, "This is all for desktop----");
 
 // Update Display for Mobile
 function updateSliderForMobile() {
@@ -194,7 +192,6 @@ function updateSliderForMobile() {
 }
 
 function updateSliderForPC() {
-    console.log("I am at the beginning of this desktop slider function");
     const beds = bedsSlider.value;
     const baths = bathsSlider.value;
 
@@ -206,7 +203,6 @@ function updateSliderForPC() {
     }
     else {
         selected.innerHTML = `${beds} Bed${beds > 1 ? "s" : ""}, ${baths} Bath${baths > 1 ? "s" : ""}`;
-        console.log("I am here setting the dropdown value");
     }
 }
 
@@ -234,4 +230,54 @@ function updateRangeFill(input) {
 [filterModalBedsSlider, filterModalBathsSlider, bedsSlider, bathsSlider].forEach(slider => {
     updateRangeFill(slider);
     slider.addEventListener('input', () => updateRangeFill(slider));
+});
+
+
+// ----Price Dropdown Custom Slider Event Listener----
+document.addEventListener("DOMContentLoaded", () => {
+    const minInput = document.getElementById("minPrice");
+    const maxInput = document.getElementById("maxPrice");
+    const selected = document.querySelector('.custom-dropdown[data-name="price"] .custom-dropdown-selected');
+
+    // Inject range-fill into the DOM dynamically
+    const rangeWrapper = document.querySelector(".price-range-slider-wrapper");
+    let fill = document.createElement("div");
+    fill.classList.add("range-fill")
+    rangeWrapper.appendChild(fill);
+
+    const minValueEl = document.getElementById("minPriceValue");
+    const maxValueEl = document.getElementById("maxPriceValue");
+
+    const min = parseInt(minInput.min);
+    const max = parseInt(maxInput.max);
+
+    function updateRange() {
+        let minVal = parseInt(minInput.value);
+        let maxVal = parseInt(maxInput.value);
+
+        if (minVal > maxVal) {
+            // Prevent crossing over
+            [minInput.value, maxInput.value] = [maxVal, minVal];
+            [minVal, maxVal] = [maxVal, minVal];
+        }
+
+        // Calculate percentage positions
+        const minPercent = ((minVal - min) / (max - min)) * 100;
+        const maxPercent = ((maxVal - min) / (max - min)) * 100;
+
+        // Update fill bar
+        fill.style.left = `${minPercent}%`;
+        fill.style.width = `${maxPercent - minPercent}%`
+
+        // Update value display
+        minValueEl.innerHTML = `$${Number(minVal).toLocaleString()}`;
+        maxValueEl.innerHTML = `$${Number(maxVal).toLocaleString()}`;
+        selected.innerHTML = `$${parseInt(minVal).toLocaleString()} - $${parseInt(maxVal).toLocaleString()}`;
+    }
+
+    minInput.addEventListener("input", updateRange);
+    maxInput.addEventListener("input", updateRange);
+
+    // Initial update on load
+    updateRange();
 });

@@ -363,7 +363,7 @@ nav .login-btn a:hover {
     -webkit-appearance: none;
     appearance: none;
     width: 100%;
-    height: 3px;    
+    height: 3px;
     background: transparent;
     position: relative;
     border-radius: 4px;
@@ -388,13 +388,14 @@ nav .login-btn a:hover {
 .slider-container input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    margin-top: -5px; /* Align thumb with track */
+    margin-top: -5px;
+    /* Align thumb with track */
     width: 16px;
     height: 16px;
     background: var(--accent-yellow);
     border-radius: 50%;
     border: 2px solid var(--white);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     position: relative;
     z-index: 2;
 }
@@ -406,20 +407,95 @@ nav .login-btn a:hover {
     background: var(--accent-yellow);
     border: 2px solid var(--white);
     border-radius: 50%;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     position: relative;
     z-index: 2;
 }
 
 /* Custom fill using background gradient */
 .slider-container input[type="range"] {
-    background: linear-gradient(
-        to right,
-        var(--accent-yellow) 0%,
-        var(--accent-yellow) 0%,
-        var(--background-light) 0%,
-        var(--background-light) 100%
-    );
+    background: linear-gradient(to right,
+            var(--accent-yellow) 0%,
+            var(--accent-yellow) 0%,
+            var(--background-light) 0%,
+            var(--background-light) 100%);
+}
+
+/* Price Custom Slider */
+.price-range-slider-wrapper {
+    position: relative;
+    /* height: 40px; */
+    margin: 10px 0;
+    /* padding: 5px; */
+}
+
+.price-range-slider-wrapper input[type="range"] {
+    position: absolute;
+    width: 100%;
+    pointer-events: none;
+    appearance: none;
+    height: 6px;
+    background: transparent;
+    z-index: 2;
+}
+
+.price-range-slider-wrapper input[type="range"]::-webkit-slider-thumb {
+    pointer-events: auto;
+    appearance: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: var(--accent-yellow); /* accent-yellow */
+    cursor: pointer;
+    border: none;
+    margin-top: -5px;
+    transition: background 0.3s ease;
+}
+
+.price-range-slider-wrapper input[type="range"]::-moz-range-thumb {
+    pointer-events: auto;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #facc15;
+    cursor: pointer;
+    border: none;
+    transition: background 0.3s ease;
+}
+
+.price-range-slider-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    height: 6px;
+    width: 100%;
+    background: #ddd;
+    transform: translateY(-50%);
+    z-index: 1;
+    border-radius: 10px;
+}
+
+.price-range-slider-wrapper .range-fill {
+    position: absolute;
+    top: 50%;
+    height: 6px;
+    background: var(--accent-yellow);
+    transform: translateY(-50%);
+    z-index: 1;
+    border-radius: 10px;
+}
+
+.price-values {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0 0;
+    font-size: 14px;
+    margin-top: 20px;
+}
+
+.custom-dropdown[data-name="price"] .custom-dropdown-options {
+    padding: 14px;
 }
 
 
@@ -587,12 +663,6 @@ nav .login-btn a:hover {
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.house-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.15);
 }
 
 .house-img {

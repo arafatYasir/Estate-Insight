@@ -90,7 +90,7 @@
                     </div>
                 </div>
 
-                <!-- Filter: Price -->
+                <!-- Filter: Price
                 <div class="filter-group">
                     <label>Price</label>
                     <div class="custom-dropdown" data-name="price">
@@ -101,6 +101,26 @@
                             <li data-value="100k-300k">$100k – $300k</li>
                             <li data-value="300k-500k">$300k – $500k</li>
                             <li data-value="500k+">Over $500k</li>
+                        </ul>
+                    </div>
+                </div> -->
+
+
+                <!-- Filter: Price -->
+                <div class="filter-group">
+                    <label>Price</label>
+                    <div class="custom-dropdown" data-name="price">
+                        <div class="custom-dropdown-selected">Any</div>
+                        <ul class="custom-dropdown-options">
+                            <div class="price-range-slider-wrapper">
+                                <input type="range" id="minPrice" min="10000" max="1000000" step="10000" value="10000">
+                                <input type="range" id="maxPrice" min="10000" max="1000000" step="10000"
+                                    value="1000000">
+                            </div>
+                            <div class="price-values">
+                                <span id="minPriceValue">$10,000</span>
+                                <span id="maxPriceValue">$1,000,000</span>
+                            </div>
                         </ul>
                     </div>
                 </div>
