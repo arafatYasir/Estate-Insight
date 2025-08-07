@@ -138,10 +138,20 @@ function closeFilterModal() {
 const realMap = document.querySelector("#map");
 const houseContainer = document.querySelector(".house-container");
 const switchToListBtn = document.querySelector(".switch-to-list");
+const switchToMapBtn = document.querySelector(".switch-to-map");
 
 switchToListBtn.addEventListener("click", () => {
     realMap.style.display = "none";
     houseContainer.style.display = "block";
     switchToListBtn.style.display = "none";
+    switchToMapBtn.style.display = "inline";
     mobileFilterBtn.style.display = "inline";
+})
+
+switchToMapBtn.addEventListener("click", () => {
+    realMap.style.display = "block";
+    houseContainer.style.display = "none";
+    switchToListBtn.style.display = "inline";
+    switchToMapBtn.style.display = "none";
+    mobileFilterBtn.style.display = "none";
 })

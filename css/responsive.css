@@ -65,6 +65,11 @@
         margin-top: 100px;
     }
 
+    .house-container .title {
+        text-align: center;
+    }
+
+
     .house-listings {
         justify-content: center;
     }
@@ -153,6 +158,10 @@
         width: 100%;
         margin-left: 0;
         margin-top: 120px;
+    }
+
+    .house-container .title {
+        text-align: center;
     }
 
     .house-listings {

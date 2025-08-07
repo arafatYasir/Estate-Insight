@@ -347,7 +347,7 @@ nav .login-btn a:hover {
 .switch-to-list {
     display: none;
     background: var(--primary-blue);
-    padding: 5px;
+    padding: 8px;
     border-radius: 12px;
     position: fixed;
     z-index: 50;
@@ -365,6 +365,31 @@ nav .login-btn a:hover {
 }
 
 .switch-to-list:active {
+    color: var(--accent-yellow);
+}
+
+/* Switch to Map Button */
+.switch-to-map {
+    display: none;
+    background: var(--primary-blue);
+    padding: 8px;
+    border-radius: 12px;
+    position: fixed;
+    z-index: 50;
+    border: 0;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 16px;
+    text-transform: uppercase;
+}
+
+.switch-to-map .icon {
+    font-size: 18px;
+}
+
+.switch-to-map:active {
     color: var(--accent-yellow);
 }
 
@@ -466,7 +491,6 @@ nav .login-btn a:hover {
     color: var(--primary-blue);
     margin-bottom: 20px;
     padding-top: 10px;
-    text-align: center;
 }
 
 .house-listings {
