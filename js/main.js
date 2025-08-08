@@ -1,4 +1,4 @@
-// Event listener to show mobile menu options
+// Elements to show mobile menu options
 let menuBtn = document.querySelector(".menu-btn");
 let searchIconBtn = document.querySelector(".search-icon-btn");
 let crossBtn = document.querySelector(".cross");
@@ -9,22 +9,33 @@ let searchBox = document.querySelector(".search-box");
 let mobileSpecialNav = document.querySelector(".mobile-special-nav");
 let filterDropdowns = document.querySelectorAll(".custom-dropdown");
 
-// Event listener to close dropdowns on the click of outside the box
+// Event listener to close things when clicked outside of it
+let isNavOpen = false;
+
 window.addEventListener("click", (e) => {
     filterDropdowns.forEach(dropdown => {
         if (!dropdown.contains(e.target)) {
             dropdown.classList.remove("active");
         }
-    })
+    });
+
+    if (isNavOpen && !navOptions2.contains(e.target)) {
+        navOptions2.style.transform = "translateX(-100%)";
+        isNavOpen = false;
+    }
+
 })
 
 // Responsive Navbar
-menuBtn.addEventListener("click", () => {
+menuBtn.addEventListener("click", (e) => {
     navOptions2.style.transform = "translateX(0%)";
+    isNavOpen = true;
+    e.stopPropagation();
 })
 
 crossBtn.addEventListener("click", () => {
     navOptions2.style.transform = "translateX(-100%)";
+    isNavOpen = false;
 })
 
 searchIconBtn.addEventListener("click", () => {
@@ -94,14 +105,12 @@ mobileFilterBtn.addEventListener("click", () => {
 
 // Drag Down to Close
 dragBarContainer.addEventListener("touchstart", (e) => {
-    console.log("I am starting to drag");
     startY = e.touches[0].clientY;
     isDragging = true;
 });
 
 dragBarContainer.addEventListener("touchmove", (e) => {
     if (!isDragging) return;
-    console.log("I am dragging.");
 
     currentY = e.touches[0].clientY;
     const deltaY = currentY - startY;
@@ -112,7 +121,6 @@ dragBarContainer.addEventListener("touchmove", (e) => {
 });
 
 dragBarContainer.addEventListener("touchend", () => {
-    console.log("The draggin is done!");
     isDragging = false;
 
     // If user didn’t move finger enough, do nothing
@@ -145,7 +153,6 @@ dragBarContainer.addEventListener("touchend", () => {
 
 // Close when clicking outside the drawer
 filterOverlay.addEventListener("click", (e) => {
-    console.log("I am clicked on filter modal overlay");
     if (e.target === filterOverlay) {
         closeFilterModal();
     }
@@ -161,7 +168,7 @@ function closeFilterModal() {
     setTimeout(() => {
         filterOverlay.style.display = "none";
         isAnimating = false;
-    }, 10);
+    }, 300);
 }
 
 
