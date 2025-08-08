@@ -259,6 +259,7 @@ nav .login-btn a:hover {
     row-gap: 12px;
     justify-content: space-between;
     align-items: flex-start;
+    padding: 0 20px;
 }
 
 .filter-group {
@@ -638,8 +639,8 @@ nav .login-btn a:hover {
     height: 100vh;
     position: relative;
     margin-top: 194px;
-    margin-left: 20px;
-    padding: 0 20px;
+    margin-left: 10px;
+    /* padding: 0 20px; */
 }
 
 .house-container .title {
@@ -647,13 +648,16 @@ nav .login-btn a:hover {
     color: var(--primary-blue);
     margin-bottom: 20px;
     padding-top: 10px;
+    text-align: center;
 }
 
 .house-listings {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
-    row-gap: 12px;
+    /* justify-content: space-between; */
+    justify-content: center;
+    gap: 14px;
+    row-gap: 14px;
 }
 
 .house-card {

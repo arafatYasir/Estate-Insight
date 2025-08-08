@@ -73,7 +73,7 @@
         </nav>
 
         <section class="filter-bar">
-            <div class="container filter-container">
+            <div class="filter-container">
                 <!-- Filter: Listing Type -->
                 <div class="filter-group">
                     <label>Listing Type</label>
@@ -87,22 +87,6 @@
                         </ul>
                     </div>
                 </div>
-
-                <!-- Filter: Price
-                <div class="filter-group">
-                    <label>Price</label>
-                    <div class="custom-dropdown" data-name="price">
-                        <div class="custom-dropdown-selected">Any</div>
-                        <ul class="custom-dropdown-options">
-                            <li data-value="any">Any</li>
-                            <li data-value="0-100k">Under $100k</li>
-                            <li data-value="100k-300k">$100k – $300k</li>
-                            <li data-value="300k-500k">$300k – $500k</li>
-                            <li data-value="500k+">Over $500k</li>
-                        </ul>
-                    </div>
-                </div> -->
-
 
                 <!-- Filter: Price -->
                 <div class="filter-group">
@@ -119,6 +103,19 @@
                                 <span id="minPriceValue">$10,000</span>
                                 <span id="maxPriceValue">$1,000,000</span>
                             </div>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Filter: Source -->
+                <div class="filter-group">
+                    <label>Source</label>
+                    <div class="custom-dropdown" data-name="source">
+                        <div class="custom-dropdown-selected">Source 1</div>
+                        <ul class="custom-dropdown-options">
+                            <li data-value="source1">Source 1</li>
+                            <li data-value="source2">Source 2</li>
+                            <li data-value="source3">Source 3</li>
                         </ul>
                     </div>
                 </div>
@@ -162,9 +159,9 @@
                 <div class="filter-group">
                     <label>Sort By</label>
                     <div class="custom-dropdown" data-name="sortBy">
-                        <div class="custom-dropdown-selected">All</div>
+                        <div class="custom-dropdown-selected">None</div>
                         <ul class="custom-dropdown-options">
-                            <li data-value="all">All</li>
+                            <li data-value="none">None</li>
                             <li data-value="lowToHigh">Price: Low to High</li>
                             <li data-value="highToLow">Price: Hight to Low</li>
                             <li data-value="priceDrop">Price Drop</li>
