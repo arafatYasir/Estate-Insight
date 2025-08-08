@@ -118,15 +118,15 @@ function loadHouseData() {
 
     if (cached && timestamp && now - parseInt(timestamp) < MAX_CACHE_AGE) {
         const data = JSON.parse(cached);
-        
+
         let lat = 0, lon = 0;
         houseData = data.map(house => {
             lat += house.lat;
             lon += house.lon;
 
-            const {percentChange, last} = calculatePercentChange(house.prices);
+            const { percentChange, last } = calculatePercentChange(house.prices);
 
-            return {...house, percentChange, currentPrice: last};
+            return { ...house, percentChange, currentPrice: last };
         })
 
         lat /= houseData.length;
@@ -166,6 +166,9 @@ function loadHouseData() {
     }
 
 }
+
+// Calling the loader function
+loadHouseData();
 
 
 // Draw heat points
@@ -226,28 +229,56 @@ function showHouses() {
     houseData.slice(0, 20).forEach((house, idx) => {
         const priceChangeText = house.percentChange > 0 ? `<span class='increase'>⬆ ${house.percentChange.toFixed(2)}%</span>` : `<span class='decrease'>⬇ ${house.percentChange.toFixed(2)}%</span>`
         houseListings.innerHTML += `
-            <div class="house-card">
+            <div class="house-card" data-index="${idx}">
                 <img class="house-img" src="./images/house_image.webp" alt="House Image" />
                 <div class="house-content">
                     <h2 class="price">$${house.currentPrice.toLocaleString()}</h2>
     
-                    <p class="info">
-                        <span>🛏️ ${house.beds} Beds</span> · 
-                        <span>🛁 ${house.baths} Baths</span> · 
-                        <span>📐 ${house.sizeSqft} sqft</span>
-                    </p>
+                    <div class="info">
+                        <p><span>${house.beds}</span> Bed${house.beds > 1 ? "s" : ""}</p> | 
+                        <p><span>${house.baths}</span> Bath${house.baths > 1 ? "s" : ""}</p> | 
+                        <p><span>${house.sizeSqft}</span> sqft</p> |
+                        <p><span>${house.listingType}</span></p>
+                    </div>
     
-                    <p class="info">📍 <em>${house.address}</em></p>
+                    <p class="address">${house.address}</p>
     
                     <p class="price-change">
                     ${priceChangeText}
                     </p>
                 </div>
             </div>
-        `
+        `;
     })
 }
 
 
-// Calling the loader function
-loadHouseData();
+function openHouseDetails(house) {
+    const mainContent = document.querySelector(".main-content");
+    const houseDetails = document.querySelector("#house-details-view");
+
+    mainContent.style.display = "none";
+    houseDetails.style.display = "block";
+    houseDetails.style.marginTop = "200px";
+
+    const details = document.querySelector("#house-details-content");
+
+    details.innerHTML = `
+        <h2>${house.address}</h2>
+        <p>Price: $${house.currentPrice.toLocaleString()}</p>
+        <p>${house.beds} Beds | ${house.baths} Baths | ${house.sizeSqft} sqft</p>
+        <img src="./images/house_image.webp" alt="House Image" />
+        <p>${house.description || "No description provided."}</p>
+  `;
+}
+
+
+// Setting Event Listener to show House Details Page
+document.querySelectorAll(".house-card").forEach(card => {
+    card.addEventListener("click", () => {
+        const index = parseInt(card.getAttribute("data-index"));
+        const house = houseData[index];
+
+        openHouseDetails(house);
+    });
+});

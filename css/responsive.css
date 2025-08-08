@@ -91,6 +91,12 @@
         display: inline;
     }
 
+    /* ----Filter Dropdowns---- */
+    .custom-dropdown-options li:active {
+        background: var(--accent-yellow);
+        color: var(--white);
+    }
+
     /* Custom Dropdown Sliders (Price and Bed-Bath) */
     .custom-dropdown[data-name="price"] .custom-dropdown-options {
         padding: 22px 10px;
@@ -229,6 +235,12 @@
     /* ----Switch to List Btn---- */
     .switch-to-list {
         display: inline;
+    }
+
+    /* ----Filter Dropdowns---- */
+    .custom-dropdown-options li:active {
+        background: var(--accent-yellow);
+        color: var(--white);
     }
 
     /* Custom Dropdown Sliders (Price and Bed-Bath) */
