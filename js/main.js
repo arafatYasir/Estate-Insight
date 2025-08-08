@@ -72,22 +72,36 @@ const dragBarContainer = document.querySelector('.drag-bar-container');
 
 let startY, currentY, isDragging = false;
 
+let isAnimating = false;
+
 mobileFilterBtn.addEventListener("click", () => {
+    if (isAnimating) return;
+
+    isAnimating = true;
+    filterModal.style.transform = "";
     filterOverlay.style.display = "block";
+
     setTimeout(() => {
         filterModal.classList.add("show");
-        mobileFilterBtn.style.display = "none";
     }, 10);
+
+    // Reset flag after animation finishes
+    setTimeout(() => {
+        isAnimating = false;
+    }, 300);
 });
+
 
 // Drag Down to Close
 dragBarContainer.addEventListener("touchstart", (e) => {
+    console.log("I am starting to drag");
     startY = e.touches[0].clientY;
     isDragging = true;
 });
 
 dragBarContainer.addEventListener("touchmove", (e) => {
     if (!isDragging) return;
+    console.log("I am dragging.");
 
     currentY = e.touches[0].clientY;
     const deltaY = currentY - startY;
@@ -98,6 +112,7 @@ dragBarContainer.addEventListener("touchmove", (e) => {
 });
 
 dragBarContainer.addEventListener("touchend", () => {
+    console.log("The draggin is done!");
     isDragging = false;
 
     // If user didn’t move finger enough, do nothing
@@ -108,10 +123,19 @@ dragBarContainer.addEventListener("touchend", () => {
 
     const deltaY = currentY - startY;
 
-    if (deltaY > 120) {
+    const threshold = filterModal.offsetHeight * 0.25; // 25% of modal height
+
+    if (deltaY > threshold) {
         closeFilterModal();
+
     } else {
+        filterModal.style.transition = "transform 0.2s ease";
+
         filterModal.style.transform = "";
+
+        setTimeout(() => {
+            filterModal.style.transition = "";
+        }, 200);
     }
 
     // Reset for next interaction
@@ -121,6 +145,7 @@ dragBarContainer.addEventListener("touchend", () => {
 
 // Close when clicking outside the drawer
 filterOverlay.addEventListener("click", (e) => {
+    console.log("I am clicked on filter modal overlay");
     if (e.target === filterOverlay) {
         closeFilterModal();
     }
@@ -128,11 +153,17 @@ filterOverlay.addEventListener("click", (e) => {
 
 // Close function for modal
 function closeFilterModal() {
+    if (isAnimating) return;
+    isAnimating = true;
+
     filterModal.classList.remove("show");
-    filterModal.style.transform = "";
-    filterOverlay.style.display = "none";
-    mobileFilterBtn.style.display = "block";
+
+    setTimeout(() => {
+        filterOverlay.style.display = "none";
+        isAnimating = false;
+    }, 10);
 }
+
 
 // Switching from map to list for mobile and tablet
 const realMap = document.querySelector("#map");

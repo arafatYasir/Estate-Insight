@@ -519,7 +519,7 @@ nav .login-btn a:hover {
 }
 
 .switch-to-list:active {
-    color: var(--accent-yellow);
+    color: var(--primary-blue);
 }
 
 /* Switch to Map Button */
@@ -562,7 +562,7 @@ nav .login-btn a:hover {
     border-radius: 50%;
     font-weight: bold;
     font-size: 16px;
-    z-index: 9999;
+    z-index: 50;
     border: none;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
@@ -576,6 +576,7 @@ nav .login-btn a:hover {
     right: 0;
     top: 0;
     background: rgba(0, 0, 0, 0.1);
+    /* background-color: red; */
     z-index: 9998;
 }
 
@@ -588,6 +589,7 @@ nav .login-btn a:hover {
     bottom: -100%;
     left: 0;
     right: 0;
+    z-index: 10000;
     background: white;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
