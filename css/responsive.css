@@ -9,6 +9,7 @@
         padding-top: 20px;
         background: transparent;
     }
+
     nav {
         max-width: 95%;
         margin: 0 auto;
@@ -51,7 +52,7 @@
         margin: 0;
     }
 
-    nav .search-box .back-btn { 
+    nav .search-box .back-btn {
         display: inline;
         background: white;
         border: 0;
@@ -91,11 +92,53 @@
     }
 
     /* Custom Dropdown Sliders (Price and Bed-Bath) */
+    .custom-dropdown[data-name="price"] .custom-dropdown-options {
+        padding: 22px 10px;
+    }
+
+    .price-range-slider-wrapper::before {
+        height: 6px;
+    }
+
+    .price-range-slider-wrapper input[type="range"]::-webkit-slider-thumb {
+        width: 24px;
+        height: 24px;
+    }
+
+    .price-range-slider-wrapper input[type="range"]::-moz-range-thumb {
+        width: 24px;
+        height: 24px;
+    }
+
+    .price-range-slider-wrapper .range-fill {
+        height: 6px;
+    }
+
+    .price-values {
+        font-size: 18px;
+        margin-top: 30px;
+    }
+
+    .slider-container input[type="range"]::-webkit-slider-thumb {
+        width: 24px;
+        height: 24px;
+        margin-top: -10px;
+    }
+
+    .slider-container input[type="range"]::-moz-range-thumb {
+        width: 24px;
+        height: 24px;
+        margin-top: -10px;
+    }
+
+    .slider-container input[type="range"] {
+        height: 6px;
+    }
 }
 
 
 
-/* Screen Size Up to 767px */
+/* Screen Size Up to 768px */
 @media screen and (min-width: 576px) and (max-width: 768px) {
     .container {
         padding: 14px !important;
@@ -106,6 +149,7 @@
         padding-top: 20px;
         background: transparent;
     }
+
     nav {
         max-width: 95%;
         margin: 0 auto;
@@ -148,7 +192,7 @@
         margin: 0;
     }
 
-    nav .search-box .back-btn { 
+    nav .search-box .back-btn {
         display: inline;
         background: white;
         border: 0;
@@ -185,6 +229,50 @@
     /* ----Switch to List Btn---- */
     .switch-to-list {
         display: inline;
+    }
+
+    /* Custom Dropdown Sliders (Price and Bed-Bath) */
+    .custom-dropdown[data-name="price"] .custom-dropdown-options {
+        padding: 22px 10px;
+    }
+
+    .price-range-slider-wrapper::before {
+        height: 6px;
+    }
+
+    .price-range-slider-wrapper input[type="range"]::-webkit-slider-thumb {
+        width: 24px;
+        height: 24px;
+    }
+
+    .price-range-slider-wrapper input[type="range"]::-moz-range-thumb {
+        width: 24px;
+        height: 24px;
+    }
+
+    .price-range-slider-wrapper .range-fill {
+        height: 6px;
+    }
+
+    .price-values {
+        font-size: 18px;
+        margin-top: 30px;
+    }
+
+    .slider-container input[type="range"]::-webkit-slider-thumb {
+        width: 24px;
+        height: 24px;
+        margin-top: -10px;
+    }
+
+    .slider-container input[type="range"]::-moz-range-thumb {
+        width: 24px;
+        height: 24px;
+        margin-top: -10px;
+    }
+
+    .slider-container input[type="range"] {
+        height: 6px;
     }
 }
 
