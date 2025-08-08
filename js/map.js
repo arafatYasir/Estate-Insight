@@ -197,7 +197,6 @@ function drawAllHeatPoints() {
 
         const change = currentHouse.percentChange;
         const listingType = currentHouse.listingType;
-        console.log(listingType);
         const absChange = Math.min(Math.abs(change), 100);
 
         const intensity = absChange + nearbyCount * 5;
