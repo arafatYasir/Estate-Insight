@@ -56,7 +56,7 @@ function initializeMap(lat, lon) {
         });
 
         if (hoverHouse) {
-            const toolTipWidth = 190;
+            const toolTipWidth = 200;
             const toolTipHeight = 95;
 
             let leftPos = e.clientX + 15;
@@ -67,6 +67,13 @@ function initializeMap(lat, lon) {
             }
             if (topPos + toolTipHeight > window.innerHeight) {
                 topPos = e.clientY - toolTipHeight - 15;
+            }
+
+            if(leftPos < 0) {
+                leftPos = toolTipWidth / 2;
+            }
+            if(topPos < 0) {
+                topPos = toolTipHeight / 2;
             }
 
             tooltip.style.left = `${leftPos}px`;
@@ -81,9 +88,6 @@ function initializeMap(lat, lon) {
         }
     });
 }
-
-
-
 
 // House data store
 let houseData = [];
@@ -192,13 +196,15 @@ function drawAllHeatPoints() {
         });
 
         const change = currentHouse.percentChange;
+        const listingType = currentHouse.listingType;
+        console.log(listingType);
         const absChange = Math.min(Math.abs(change), 100);
 
         const intensity = absChange + nearbyCount * 5;
         const clampedIntensity = Math.min(intensity, 150);
 
         const radius = 5;
-        const color = getInterpolatedColor(change);
+        const color = getInterpolatedColor(change, listingType);
 
         ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
         ctx.beginPath();
@@ -211,7 +217,10 @@ function drawAllHeatPoints() {
 window.addEventListener('resize', drawAllHeatPoints);
 
 // Color scale
-function getInterpolatedColor(change) {
+function getInterpolatedColor(change, listingType) {
+    if(listingType === "Sold") {
+        return {r: 40, g: 40, b: 40};
+    }
     if (change <= -80) return { r: 160, g: 0, b: 0 };
     if (change <= -20) return { r: 233, g: 62, b: 58 };
     if (change < 0) return { r: 255, g: 165, b: 0 };
