@@ -159,81 +159,56 @@ switchToMapBtn.addEventListener("click", () => {
 });
 
 // ----Beds & Baths Custom Slider Range----
-// Variables For Mobile & Tablet
-const filterModalDropdown = document.querySelector('.filter-modal-overlay .custom-dropdown[data-name="bedsBaths"]');
-const filterModalSelected = filterModalDropdown.querySelector(".custom-dropdown-selected");
-const filterModalBedsSlider = filterModalDropdown.querySelector("#bedsRange");
-const filterModalBathsSlider = filterModalDropdown.querySelector("#bathsRange");
-const filterModalBedsValue = filterModalDropdown.querySelector("#bedsValue");
-const filterModalBathsValue = filterModalDropdown.querySelector("#bathsValue");
+document.addEventListener("DOMContentLoaded", () => {
+    function updateBedsBathsSlider(bedsSlider, bathsSlider, bedsValue, bathsValue, selected) {
+        const beds = bedsSlider.value;
+        const baths = bathsSlider.value;
 
-// Variables for Laptop & Desktop
-const dropdown = document.querySelector('.filter-container .custom-dropdown[data-name="bedsBaths"]');
-const selected = dropdown.querySelector(".custom-dropdown-selected");
-const bedsSlider = dropdown.querySelector("#bedsRange");
-const bathsSlider = dropdown.querySelector("#bathsRange");
-const bedsValue = dropdown.querySelector("#bedsValue");
-const bathsValue = dropdown.querySelector("#bathsValue");
+        bedsValue.innerHTML = beds;
+        bathsValue.innerHTML = baths;
 
-// Update Display for Mobile
-function updateSliderForMobile() {
-    const filterModalBeds = filterModalBedsSlider.value;
-    const filterModalBaths = filterModalBathsSlider.value;
-
-    filterModalBedsValue.innerHTML = filterModalBeds;
-    filterModalBathsValue.innerHTML = filterModalBaths;
-
-    if (filterModalBeds == 0 && filterModalBaths == 0) {
-        filterModalSelected.innerHTML = "Any";
+        if (beds == 0 && baths == 0) {
+            selected.innerHTML = "Any";
+        }
+        else {
+            selected.innerHTML = `${beds} Bed${beds > 1 ? "s" : ""}, ${baths} Bath${baths > 1 ? "s" : ""}`;
+        }
     }
-    else {
-        filterModalSelected.innerHTML = `${filterModalBeds} Bed${filterModalBeds > 1 ? "s" : ""}, ${filterModalBaths} Bath${filterModalBaths > 1 ? "s" : ""}`;
-    }
-}
 
-function updateSliderForPC() {
-    const beds = bedsSlider.value;
-    const baths = bathsSlider.value;
-
-    bedsValue.innerHTML = beds;
-    bathsValue.innerHTML = baths;
-
-    if (beds == 0 && baths == 0) {
-        selected.innerHTML = "Any";
-    }
-    else {
-        selected.innerHTML = `${beds} Bed${beds > 1 ? "s" : ""}, ${baths} Bath${baths > 1 ? "s" : ""}`;
-    }
-}
-
-filterModalBedsSlider.addEventListener("input", updateSliderForMobile);
-filterModalBathsSlider.addEventListener("input", updateSliderForMobile);
-bedsSlider.addEventListener("input", updateSliderForPC);
-bathsSlider.addEventListener("input", updateSliderForPC);
-
-
-// Initial Call
-updateSliderForMobile();
-updateSliderForPC();
-
-
-function updateRangeFill(input) {
-    const value = (input.value - input.min) / (input.max - input.min) * 100;
-    input.style.background = `linear-gradient(to right,
+    function updateRangeFill(input) {
+        const value = (input.value - input.min) / (input.max - input.min) * 100;
+        input.style.background = `linear-gradient(to right,
       var(--accent-yellow) 0%,
       var(--accent-yellow) ${value}%,
       var(--background-light) ${value}%,
       var(--background-light) 100%)`;
-}
+    }
 
-// Apply it to both sliders
-[filterModalBedsSlider, filterModalBathsSlider, bedsSlider, bathsSlider].forEach(slider => {
-    updateRangeFill(slider);
-    slider.addEventListener('input', () => updateRangeFill(slider));
-});
+    const dropdown = document.querySelectorAll('.custom-dropdown[data-name="bedsBaths"]');
+
+    dropdown.forEach(d => {
+        const selected = d.querySelector(".custom-dropdown-selected");
+        const bedsSlider = d.querySelector("#bedsRange");
+        const bathsSlider = d.querySelector("#bathsRange");
+        const bedsValue = d.querySelector("#bedsValue");
+        const bathsValue = d.querySelector("#bathsValue");
+
+        bedsSlider.addEventListener("input", () => updateBedsBathsSlider(bedsSlider, bathsSlider, bedsValue, bathsValue, selected));
+        bathsSlider.addEventListener("input", () => updateBedsBathsSlider(bedsSlider, bathsSlider, bedsValue, bathsValue, selected));
+
+        // Initial Call
+        updateBedsBathsSlider(bedsSlider, bathsSlider, bedsValue, bathsValue, selected);
+
+        // Apply it to both sliders
+        [bedsSlider, bathsSlider].forEach(slider => {
+            updateRangeFill(slider);
+            slider.addEventListener('input', () => updateRangeFill(slider));
+        });
+    })
+})
 
 
-// ----Price Dropdown Custom Slider Event Listener----
+// ----Price Dropdown Custom Slider----
 document.addEventListener("DOMContentLoaded", () => {
     function updateRange(min, max, minInput, maxInput, fill, minValueEl, maxValueEl, selectedPriceDropdown) {
         let minVal = parseInt(minInput.value);
@@ -260,7 +235,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const dropdown = document.querySelectorAll('.custom-dropdown[data-name="price"]');
-    console.log(dropdown);
 
 
     dropdown.forEach(d => {
