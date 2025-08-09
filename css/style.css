@@ -458,7 +458,6 @@ nav .login-btn a:hover {
     width: 16px;
     border-radius: 50%;
     background: var(--accent-yellow);
-    /* accent-yellow */
     cursor: pointer;
     border: none;
     margin-top: -5px;
@@ -470,9 +469,10 @@ nav .login-btn a:hover {
     height: 16px;
     width: 16px;
     border-radius: 50%;
-    background: #facc15;
+    background: var(--accent-yellow);
     cursor: pointer;
     border: none;
+    margin-top: -5px;
     transition: background 0.3s ease;
 }
 

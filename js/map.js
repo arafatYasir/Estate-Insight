@@ -337,7 +337,6 @@ function closeHouseDetails() {
 }
 
 
-
 // Setting Event Listener to show House Details Page
 document.querySelectorAll(".house-card").forEach(card => {
     const detailsBtn = card.querySelector(".details-btn");
