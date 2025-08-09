@@ -770,6 +770,10 @@ nav .login-btn a:hover {
 
 /* ----House Details Modal---- */
 /* Modal Overlay */
+body.modal-open {
+    overflow: hidden;
+}
+
 .house-details-modal {
     position: fixed;
     top: 0;

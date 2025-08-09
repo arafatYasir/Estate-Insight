@@ -275,6 +275,8 @@ function showHouses() {
 
 
 function openHouseDetails(house) {
+    document.body.classList.add("modal-open");
+
     const modal = document.getElementById("house-details-modal");
     const details = document.getElementById("house-details-content");
 
@@ -332,6 +334,7 @@ function openHouseDetails(house) {
 }
 
 function closeHouseDetails() {
+    document.body.classList.remove("modal-open");
     const modal = document.getElementById("house-details-modal");
     modal.classList.add("hidden");
 }

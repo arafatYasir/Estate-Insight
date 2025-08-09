@@ -93,6 +93,7 @@ mobileFilterBtn.addEventListener("click", () => {
 
     setTimeout(() => {
         filterModal.classList.add("show");
+        document.body.classList.add("modal-open");
     }, 10);
 
     // Reset flag after animation finishes
@@ -166,6 +167,7 @@ function closeFilterModal() {
 
     setTimeout(() => {
         filterOverlay.style.display = "none";
+        document.body.classList.remove("modal-open");
         isAnimating = false;
     }, 300);
 }
