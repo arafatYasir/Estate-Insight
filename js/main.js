@@ -58,7 +58,6 @@ filterDropdowns.forEach(dropdown => {
 
     selected.addEventListener("click", () => {
         // Closing other dropdowns
-
         document.querySelectorAll(".custom-dropdown").forEach(d => {
             if (d !== dropdown) d.classList.remove("active");
         });

@@ -298,6 +298,11 @@ nav .login-btn a:hover {
     font-weight: 500;
 }
 
+.custom-dropdown-selected:hover {
+    border-color: var(--accent-yellow);
+    box-shadow: 0 0 8px rgba(29, 53, 87, 0.2);
+}
+
 .custom-dropdown-selected::after {
     content: '';
     position: absolute;
@@ -333,6 +338,11 @@ nav .login-btn a:hover {
 
 .custom-dropdown.active .custom-dropdown-options {
     display: block;
+}
+
+.custom-dropdown.active .custom-dropdown-selected {
+    border-color: var(--accent-yellow);
+    box-shadow: 0 0 8px rgba(29, 53, 87, 0.2);
 }
 
 .custom-dropdown-options li {
@@ -676,10 +686,10 @@ nav .login-btn a:hover {
     cursor: pointer;
 }
 
-.house-card:hover {
+/* .house-card:hover {
     transform: translateY(-6px);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-}
+} */
 
 .house-img {
     width: 100%;
@@ -699,11 +709,11 @@ nav .login-btn a:hover {
 
 .price {
     font-size: 1.8rem;
-    /* Slightly larger */
     font-weight: 700;
-    color: #b8860b;
-    /* Dark goldenrod - good contrast on white */
+    color: var(--primary-blue);
     margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .info {
@@ -726,7 +736,7 @@ nav .login-btn a:hover {
 
 .address {
     font-weight: 600;
-    margin-top: 8px;
+    margin: 8px 0;
     font-size: 1rem;
     color: #222222;
 }
@@ -748,6 +758,74 @@ nav .login-btn a:hover {
     /* Darker red */
 }
 
+.price-history {
+    margin: 12px 0;
+    font-size: 0.9rem;
+    color: #444;
+    /* Dark but not black */
+}
+
+.price-history h3 {
+    margin: 0 0 6px 0;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #222;
+}
+
+.price-history ul {
+    padding-left: 18px;
+    margin: 0;
+    list-style-type: disc;
+}
+
+.price-history li {
+    margin-bottom: 4px;
+    line-height: 1.3;
+    display: flex;
+    justify-content: space-between;
+}
+
+.price-history li .hist-date {
+    font-size: 16px;
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.price-history li .colon {
+    font-weight: 700;
+}
+
+.price-history li .hist-price {
+    font-size: 16px;
+    color: var(--primary-blue);
+    font-weight: 700;
+}
+
+.details-btn {
+    display: inline-block;
+    background-color: var(--primary-blue);
+    color: var(--white);
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 6px 10px rgba(29, 53, 87, 0.15);
+    transition: 0.3s all;
+    user-select: none;
+    text-align: center;
+}
+
+.details-btn:hover,
+.details-btn:active {
+    background-color: #205bac;
+}
+
+.details-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 7px rgba(29, 53, 87, 0.1);
+}
 
 
 /* ----Map Styles---- */

@@ -69,10 +69,10 @@ function initializeMap(lat, lon) {
                 topPos = e.clientY - toolTipHeight - 15;
             }
 
-            if(leftPos < 0) {
+            if (leftPos < 0) {
                 leftPos = toolTipWidth / 2;
             }
-            if(topPos < 0) {
+            if (topPos < 0) {
                 topPos = toolTipHeight / 2;
             }
 
@@ -217,8 +217,8 @@ window.addEventListener('resize', drawAllHeatPoints);
 
 // Color scale
 function getInterpolatedColor(change, listingType) {
-    if(listingType === "Sold") {
-        return {r: 40, g: 40, b: 40};
+    if (listingType === "Sold") {
+        return { r: 40, g: 40, b: 40 };
     }
     if (change <= -80) return { r: 160, g: 0, b: 0 };
     if (change <= -20) return { r: 233, g: 62, b: 58 };
@@ -233,27 +233,43 @@ function getInterpolatedColor(change, listingType) {
 // House Showing Function
 function showHouses() {
     const houseListings = document.querySelector(".house-listings");
+    houseListings.innerHTML = ``;
 
     houseData.slice(0, 20).forEach((house, idx) => {
+        // Sort historical prices in ascending order
+        const sortedPrices = house.prices.map(price => {
+            const [dateStr, priceStr] = price.split(" | ");
+
+            return {
+                date: parseDate(dateStr),
+                displayDate: dateStr,
+                price: parseInt(priceStr)
+            };
+        }).sort((a, b) => a.date - b.date);
+
+        // Generating prices history
+        const priceHistoryHTML = sortedPrices.map(({ displayDate, price }) => 
+            `<li><span class="hist-date">${displayDate}</span> <span class="colon">:</span> <span class="hist-price">$${price.toLocaleString()}</span></li>`
+        ).join('');
+
         const priceChangeText = house.percentChange > 0 ? `<span class='increase'>⬆ ${house.percentChange.toFixed(2)}%</span>` : `<span class='decrease'>⬇ ${house.percentChange.toFixed(2)}%</span>`
+
         houseListings.innerHTML += `
             <div class="house-card" data-index="${idx}">
                 <img class="house-img" src="./images/house_image.webp" alt="House Image" />
                 <div class="house-content">
-                    <h2 class="price">$${house.currentPrice.toLocaleString()}</h2>
-    
+                    <h2 class="price">$${house.currentPrice.toLocaleString()} <p class="price-change">${priceChangeText}</p></h2>
                     <div class="info">
-                        <p><span>${house.beds}</span> Bed${house.beds > 1 ? "s" : ""}</p> | 
-                        <p><span>${house.baths}</span> Bath${house.baths > 1 ? "s" : ""}</p> | 
+                        <p><span>${house.beds}</span> Bed${house.beds > 1 ? 's' : ''}</p> | 
+                        <p><span>${house.baths}</span> Bath${house.baths > 1 ? 's' : ''}</p> | 
                         <p><span>${house.sizeSqft}</span> sqft</p> |
                         <p><span>${house.listingType}</span></p>
                     </div>
-    
                     <p class="address">${house.address}</p>
-    
-                    <p class="price-change">
-                    ${priceChangeText}
-                    </p>
+                    <hr />
+                    <ul class="price-history">${priceHistoryHTML}</ul>
+                    <hr />
+                    <button class="details-btn">Details</button>
                 </div>
             </div>
         `;
@@ -282,11 +298,11 @@ function openHouseDetails(house) {
 
 
 // Setting Event Listener to show House Details Page
-document.querySelectorAll(".house-card").forEach(card => {
-    card.addEventListener("click", () => {
-        const index = parseInt(card.getAttribute("data-index"));
-        const house = houseData[index];
+// document.querySelectorAll(".house-card").forEach(card => {
+//     card.addEventListener("click", () => {
+//         const index = parseInt(card.getAttribute("data-index"));
+//         const house = houseData[index];
 
-        openHouseDetails(house);
-    });
-});
+//         openHouseDetails(house);
+//     });
+// });
