@@ -327,7 +327,7 @@
 
     /* ----House Styles---- */
     .house-container {
-        margin-top: 286px;
+        margin-top: 258px;
     }
 
     .house-listings {
@@ -338,7 +338,7 @@
 
     /* ----Map Styles---- */
     #map {
-        top: 286px;
+        top: 258px;
     }
 
     #legend {
@@ -380,12 +380,22 @@
 
     /* ----House Styles---- */
     .house-container {
-        margin-top: 295px;
+        margin-top: 263px;
     }
 
     /* ----Map Styles---- */
     #map {
-        top: 295px;
+        top: 263px;
+    }
+}
+
+@media screen and (min-width: 1130px) and (max-width: 1199px) {
+    #map {
+        top: 278px;
+    }
+
+    .house-container {
+        margin-top: 278px;
     }
 }
 
@@ -417,11 +427,21 @@
 
     /* ----House Styles---- */
     .house-container {
-        margin-top: 190px;
+        margin-top: 255px;
     }
 
     /* ----Map Styles---- */
     #map {
-        top: 190px;
+        top: 255px;
+    }
+}
+
+@media screen and (min-width: 1280px) and (max-width: 1359px) {
+    #map {
+        top: 277px;
+    }
+
+    .house-container {
+        margin-top: 277px;
     }
 }
