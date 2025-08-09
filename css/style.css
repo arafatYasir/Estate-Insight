@@ -681,15 +681,8 @@ nav .login-btn a:hover {
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
-    /* Slightly stronger shadow */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
 }
 
-/* .house-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-} */
 
 .house-img {
     width: 100%;
@@ -701,10 +694,8 @@ nav .login-btn a:hover {
 
 .house-content {
     padding: 20px 18px;
-    /* Slightly more padding */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #222222;
-    /* Dark gray base for better readability */
 }
 
 .price {
@@ -720,7 +711,6 @@ nav .login-btn a:hover {
     display: flex;
     justify-content: space-between;
     color: #333333;
-    /* Darker gray for good contrast */
     font-size: 0.95rem;
     margin-bottom: 10px;
 }
@@ -750,19 +740,16 @@ nav .login-btn a:hover {
 
 .price-change .increase {
     color: #256d24;
-    /* Darker green for better contrast */
 }
 
 .price-change .decrease {
     color: #b71c1c;
-    /* Darker red */
 }
 
 .price-history {
     margin: 12px 0;
     font-size: 0.9rem;
     color: #444;
-    /* Dark but not black */
 }
 
 .price-history h3 {
@@ -807,6 +794,7 @@ nav .login-btn a:hover {
     color: var(--white);
     font-weight: 600;
     font-size: 1rem;
+    margin-top: 8px;
     padding: 10px 20px;
     border-radius: 12px;
     border: none;
@@ -826,6 +814,101 @@ nav .login-btn a:hover {
     transform: translateY(0);
     box-shadow: 0 4px 7px rgba(29, 53, 87, 0.1);
 }
+
+
+/* ----House Details Page Styles---- */
+#house-details-view {
+    display: none;
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto 100px auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #1d3557;
+}
+
+.house-details-wrapper {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+}
+
+
+
+.price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-blue);
+    margin-bottom: 20px;
+}
+
+.house-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 24px;
+    color: var(--primary-blue);
+}
+
+.house-info>div {
+    flex: 1 1 160px;
+}
+
+.house-details-img {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 14px;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+.price-history-section,
+.description-section {
+    margin-bottom: 24px;
+}
+
+.price-history-section h3,
+.description-section h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #264653;
+    margin-bottom: 12px;
+}
+
+.price-history-list {
+    list-style-type: disc;
+    padding-left: 20px;
+    color: #2f4858;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.price-history-list li {
+    margin-bottom: 6px;
+}
+
+.description-section p {
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #364f6b;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .house-info {
+        flex-direction: column;
+    }
+
+    .house-info>div {
+        flex: unset;
+        margin-bottom: 8px;
+    }
+}
+
 
 
 /* ----Map Styles---- */

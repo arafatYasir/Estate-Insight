@@ -248,7 +248,7 @@ function showHouses() {
         }).sort((a, b) => a.date - b.date);
 
         // Generating prices history
-        const priceHistoryHTML = sortedPrices.map(({ displayDate, price }) => 
+        const priceHistoryHTML = sortedPrices.map(({ displayDate, price }) =>
             `<li><span class="hist-date">${displayDate}</span> <span class="colon">:</span> <span class="hist-price">$${price.toLocaleString()}</span></li>`
         ).join('');
 
@@ -266,9 +266,6 @@ function showHouses() {
                         <p><span>${house.listingType}</span></p>
                     </div>
                     <p class="address">${house.address}</p>
-                    <hr />
-                    <ul class="price-history">${priceHistoryHTML}</ul>
-                    <hr />
                     <button class="details-btn">Details</button>
                 </div>
             </div>
@@ -287,22 +284,54 @@ function openHouseDetails(house) {
 
     const details = document.querySelector("#house-details-content");
 
+    const priceHistoryHTML = house.prices
+        .map(p => {
+            const [date, price] = p.split(" | ");
+            return `<li><strong>${date}</strong>: $${parseInt(price).toLocaleString()}</li>`;
+        })
+        .join("");
+
     details.innerHTML = `
-        <h2>${house.address}</h2>
-        <p>Price: $${house.currentPrice.toLocaleString()}</p>
-        <p>${house.beds} Beds | ${house.baths} Baths | ${house.sizeSqft} sqft</p>
-        <img src="./images/house_image.webp" alt="House Image" />
-        <p>${house.description || "No description provided."}</p>
-  `;
+      <div class="house-details-wrapper">
+        <h2 class="address">${house.address}</h2>
+        <div class="price">$${house.currentPrice.toLocaleString()}</div>
+        
+        <div class="house-info">
+          <div><strong>Beds:</strong> ${house.beds}</div>
+          <div><strong>Baths:</strong> ${house.baths}</div>
+          <div><strong>Size:</strong> ${house.sizeSqft} sqft</div>
+          <div><strong>Year Built:</strong> ${house.yearBuilt}</div>
+          <div><strong>Home Type:</strong> ${house.homeType}</div>
+          <div><strong>Garage:</strong> ${house.garage ? "Yes" : "No"}</div>
+          <div><strong>Garden:</strong> ${house.garden ? "Yes" : "No"}</div>
+          <div><strong>Status:</strong> ${house.listingType}</div>
+        </div>
+
+        <img class="house-details-img" src="./images/house_image.webp" alt="House Image" />
+
+        <section class="price-history-section">
+          <h3>Price History</h3>
+          <ul class="price-history-list">${priceHistoryHTML}</ul>
+        </section>
+
+        <section class="description-section">
+          <h3>Description</h3>
+          <p>${house.description || "No description provided."}</p>
+        </section>
+      </div>
+    `;
 }
 
 
-// Setting Event Listener to show House Details Page
-// document.querySelectorAll(".house-card").forEach(card => {
-//     card.addEventListener("click", () => {
-//         const index = parseInt(card.getAttribute("data-index"));
-//         const house = houseData[index];
 
-//         openHouseDetails(house);
-//     });
-// });
+// Setting Event Listener to show House Details Page
+document.querySelectorAll(".house-card").forEach(card => {
+    const detailsBtn = card.querySelector(".details-btn");
+
+    detailsBtn.addEventListener("click", () => {
+        const idx = parseInt(card.getAttribute("data-index"));
+        const house = houseData[idx];
+
+        openHouseDetails(house);
+    })
+});
