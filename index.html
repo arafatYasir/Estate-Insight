@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/responsive.css">
     <!-- Loading Leaflet css asynchronously -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" >
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 
     <!-- DNS Prefetch: starts DNS lookup early -->
@@ -306,6 +306,39 @@
                 <div class="house-listings">
                     <!-- All the house will render here -->
                 </div>
+
+
+                <!-- The footer will be at the bottom of the houses -->
+                <footer class="site-footer">
+                    <div class="footer-links">
+                        <a href="#">About Us</a>
+                        <a href="#">Contact</a>
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                    </div>
+                    <div class="footer-about">
+                        <p>Realestate Insight delivers up-to-date market trends, pricing analysis, and expert advice to
+                            help you make informed property decisions.</p>
+                    </div>
+                    <div class="footer-contact-social">
+                        <div class="contact-info">
+                            <p>Email: <a href="mailto:support@realestateinsight.com">support@realestateinsight.com</a>
+                            </p>
+                            <p>Phone: +1 (555) 123-4567</p>
+                        </div>
+                    </div>
+                    <div class="footer-newsletter">
+                        <form>
+                            <label for="newsletter-email" class="sr-only">Subscribe to newsletter</label>
+                            <input type="email" id="newsletter-email" placeholder="Your email address" required />
+                            <button type="submit">Subscribe</button>
+                        </form>
+                    </div>
+                    <div class="footer-copyright">
+                        <p>© 2025 Realestate Insight. All rights reserved.</p>
+                    </div>
+                </footer>
+
             </div>
 
             <!-- Right Map Container -->
@@ -323,11 +356,9 @@
                 </div>
                 <div id="tooltip" class="tooltip"></div>
             </div>
-
         </section>
 
-
-        <!-- House Details View -->
+        <!-- House Details View Modal -->
         <div id="house-details-modal" class="house-details-modal hidden">
             <div class="modal-content">
                 <button id="modal-close-btn" aria-label="Close details modal">&times;</button>
@@ -335,11 +366,6 @@
             </div>
         </div>
     </main>
-
-    <!-- ----Footer Part---- -->
-    <footer>
-        <!-- Footer content goes here -->
-    </footer>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="./js/map.js"></script>

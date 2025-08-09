@@ -140,6 +140,11 @@
     .slider-container input[type="range"] {
         height: 6px;
     }
+
+    /* ----Footer Section---- */
+    .site-footer {
+        display: none;
+    }
 }
 
 
@@ -286,6 +291,11 @@
     .slider-container input[type="range"] {
         height: 6px;
     }
+
+    /* ----Footer Section---- */
+    .site-footer {
+        display: none;
+    }
 }
 
 
@@ -332,6 +342,11 @@
     }
 
     #legend {
+        display: none;
+    }
+
+    /* ----Footer Section---- */
+    .site-footer {
         display: none;
     }
 }

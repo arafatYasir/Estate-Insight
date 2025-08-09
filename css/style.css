@@ -1011,3 +1011,128 @@ body.modal-open {
     justify-content: space-between;
     font-weight: 600;
 }
+
+
+/* ----Footer Section---- */
+.site-footer {
+    background-color: #faf9f6;
+    color: #555;
+    padding: 20px 24px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-top: 1px solid #ddd;
+    user-select: none;
+    margin-top: 20px;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.footer-links a {
+    color: #555;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover,
+.footer-links a:focus {
+    color: var(--accent-yellow);
+    outline: none;
+}
+
+.footer-links a:focus-visible {
+    outline: 2px solid var(--accent-yellow);
+    outline-offset: 2px;
+}
+
+.footer-about {
+    max-width: 600px;
+    margin: 0 auto 16px;
+    font-size: 0.9rem;
+    color: #666;
+    text-align: center;
+    line-height: 1.4;
+}
+
+.footer-contact-social {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.contact-info p {
+    margin: 4px 0;
+}
+
+.contact-info a {
+    color: #555;
+    text-decoration: underline;
+}
+
+.footer-newsletter form {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    max-width: 360px;
+    margin: 0 auto 20px;
+}
+
+.footer-newsletter input[type="email"] {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    flex: 1;
+    outline: none;
+}
+
+.footer-newsletter input[type="email"]:focus {
+    border-color: var(--accent-yellow);
+    box-shadow: 0 0 8px rgba(29, 53, 87, 0.2);
+}
+
+.footer-newsletter button {
+    background-color: var(--accent-yellow);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.footer-newsletter button:hover,
+.footer-newsletter button:focus {
+    background-color: #e6b800;
+    outline: none;
+}
+
+/* Copyright text */
+.footer-copyright p {
+    margin: 0;
+    font-size: 0.85rem;
+    text-align: center;
+    color: #888;
+}
+
+/* Accessibility helper class for screen readers */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+}
