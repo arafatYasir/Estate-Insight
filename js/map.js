@@ -289,8 +289,11 @@ function openHouseDetails(house) {
     <div class="house-details-wrapper">
     
       <img class="house-details-img" src="./images/house_image.webp" alt="House Image" />
+
+      <div class="price">$${house.currentPrice.toLocaleString()}</div>
+
       <h2 class="address">${house.address}</h2>
-       <div class="price">$${house.currentPrice.toLocaleString()}</div>
+      
       <div class="house-info">
         <div><strong>Beds:</strong> ${house.beds}</div>
         <div><strong>Baths:</strong> ${house.baths}</div>

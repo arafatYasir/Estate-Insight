@@ -647,7 +647,7 @@ nav .login-btn a:hover {
     }
 }
 
-/* ----House Styles---- */
+/* ----House Card Styles---- */
 .house-container {
     width: 49%;
     height: 100vh;
@@ -746,48 +746,6 @@ nav .login-btn a:hover {
     color: #b71c1c;
 }
 
-.price-history {
-    margin: 12px 0;
-    font-size: 0.9rem;
-    color: #444;
-}
-
-.price-history h3 {
-    margin: 0 0 6px 0;
-    font-weight: 600;
-    font-size: 1rem;
-    color: #222;
-}
-
-.price-history ul {
-    padding-left: 18px;
-    margin: 0;
-    list-style-type: disc;
-}
-
-.price-history li {
-    margin-bottom: 4px;
-    line-height: 1.3;
-    display: flex;
-    justify-content: space-between;
-}
-
-.price-history li .hist-date {
-    font-size: 16px;
-    color: var(--text-primary);
-    font-weight: 700;
-}
-
-.price-history li .colon {
-    font-weight: 700;
-}
-
-.price-history li .hist-price {
-    font-size: 16px;
-    color: var(--primary-blue);
-    font-weight: 700;
-}
-
 .details-btn {
     display: inline-block;
     background-color: var(--primary-blue);
@@ -822,7 +780,6 @@ nav .login-btn a:hover {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
     z-index: 10000;
     transition: opacity 0.3s ease;
     opacity: 1;
@@ -841,11 +798,9 @@ nav .login-btn a:hover {
     width: 100%;
     height: 100vh;
     overflow-y: auto;
-    padding: 24px 32px;
+    padding: 28px;
     position: relative;
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #2c2c2c;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -872,18 +827,18 @@ nav .login-btn a:hover {
 /* Address Heading */
 .house-details-wrapper h2.address {
     margin: 0;
-    font-size: 1.75rem;
+    font-size: 1.4rem;
     font-weight: 700;
-    color: var(--accent-yellow);
-    line-height: 1.2;
+    color: var(--text-primary);
+    line-height: 1.3;
 }
 
 /* Price */
 .price {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 700;
     color: var(--accent-yellow);
-    margin-top: -8px;
+    margin-top: -4px;
 }
 
 /* House Info Grid */
@@ -906,14 +861,12 @@ nav .login-btn a:hover {
 
 /* House Image */
 .house-details-img {
-    width: 1100px;
-    height: 50%;
-    margin: 0 auto;
+    width: 100%;
+    max-height: 600px;
+    margin-top: 24px;
     border-radius: 12px;
-    object-fit: cover;
+    object-fit: conver;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    display: flex;
-    justify-content: center;
 }
 
 /* Section Headings */
@@ -930,20 +883,20 @@ nav .login-btn a:hover {
 /* Price History List */
 .price-history-list {
     list-style: none;
-    padding-left: 0;
+    padding: 0;
     margin: 0;
-    max-height: 120px;
-    overflow-y: auto;
     border: 1px solid #ddd;
     border-radius: 8px;
     background: #fafafa;
 }
 
 .price-history-list li {
-    padding: 8px 12px;
-    font-size: 0.9rem;
+    padding: 10px 14px;
+    font-size: 0.95rem;
     color: #333;
     border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
 }
 
 .price-history-list li:last-child {
@@ -958,11 +911,15 @@ nav .login-btn a:hover {
     white-space: pre-wrap;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 600px) {
+/* Mobile/Tablet: Fullscreen modal */
+@media (max-width: 992px) {
     .modal-content {
-        max-width: 95vw;
-        padding: 16px 20px;
+        width: 100%;
+        height: 100%;
+        max-width: none;
+        max-height: none;
+        border-radius: 0;
+        padding: 20px;
     }
 
     .house-info {
@@ -972,10 +929,9 @@ nav .login-btn a:hover {
     #modal-close-btn {
         top: 10px;
         right: 10px;
-        font-size: 24px;
+        font-size: 26px;
     }
 }
-
 
 
 /* ----Map Styles---- */
