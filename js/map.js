@@ -275,14 +275,8 @@ function showHouses() {
 
 
 function openHouseDetails(house) {
-    const mainContent = document.querySelector(".main-content");
-    const houseDetails = document.querySelector("#house-details-view");
-
-    mainContent.style.display = "none";
-    houseDetails.style.display = "block";
-    houseDetails.style.marginTop = "200px";
-
-    const details = document.querySelector("#house-details-content");
+    const modal = document.getElementById("house-details-modal");
+    const details = document.getElementById("house-details-content");
 
     const priceHistoryHTML = house.prices
         .map(p => {
@@ -292,35 +286,53 @@ function openHouseDetails(house) {
         .join("");
 
     details.innerHTML = `
-      <div class="house-details-wrapper">
-        <h2 class="address">${house.address}</h2>
-        <div class="price">$${house.currentPrice.toLocaleString()}</div>
-        
-        <div class="house-info">
-          <div><strong>Beds:</strong> ${house.beds}</div>
-          <div><strong>Baths:</strong> ${house.baths}</div>
-          <div><strong>Size:</strong> ${house.sizeSqft} sqft</div>
-          <div><strong>Year Built:</strong> ${house.yearBuilt}</div>
-          <div><strong>Home Type:</strong> ${house.homeType}</div>
-          <div><strong>Garage:</strong> ${house.garage ? "Yes" : "No"}</div>
-          <div><strong>Garden:</strong> ${house.garden ? "Yes" : "No"}</div>
-          <div><strong>Status:</strong> ${house.listingType}</div>
-        </div>
-
-        <img class="house-details-img" src="./images/house_image.webp" alt="House Image" />
-
-        <section class="price-history-section">
-          <h3>Price History</h3>
-          <ul class="price-history-list">${priceHistoryHTML}</ul>
-        </section>
-
-        <section class="description-section">
-          <h3>Description</h3>
-          <p>${house.description || "No description provided."}</p>
-        </section>
+    <div class="house-details-wrapper">
+    
+      <img class="house-details-img" src="./images/house_image.webp" alt="House Image" />
+      <h2 class="address">${house.address}</h2>
+       <div class="price">$${house.currentPrice.toLocaleString()}</div>
+      <div class="house-info">
+        <div><strong>Beds:</strong> ${house.beds}</div>
+        <div><strong>Baths:</strong> ${house.baths}</div>
+        <div><strong>Size:</strong> ${house.sizeSqft} sqft</div>
+        <div><strong>Year Built:</strong> ${house.yearBuilt}</div>
+        <div><strong>Home Type:</strong> ${house.homeType}</div>
+        <div><strong>Garage:</strong> ${house.garage ? "Yes" : "No"}</div>
+        <div><strong>Garden:</strong> ${house.garden ? "Yes" : "No"}</div>
+        <div><strong>Status:</strong> ${house.listingType}</div>
       </div>
-    `;
+
+
+      <section class="price-history-section">
+        <h3>Price History</h3>
+        <ul class="price-history-list">${priceHistoryHTML}</ul>
+      </section>
+
+      <section class="description-section">
+        <h3>Description</h3>
+        <p>${house.description || "No description provided."}</p>
+      </section>
+    </div>
+  `;
+
+    modal.classList.remove("hidden");
+
+    // Close modal when clicking outside content
+    modal.onclick = (e) => {
+        if (e.target === modal) {
+            closeHouseDetails();
+        }
+    };
+
+    // Close modal with button
+    document.getElementById("modal-close-btn").onclick = closeHouseDetails;
 }
+
+function closeHouseDetails() {
+    const modal = document.getElementById("house-details-modal");
+    modal.classList.add("hidden");
+}
+
 
 
 

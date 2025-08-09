@@ -325,9 +325,11 @@
 
 
         <!-- House Details View -->
-        <div id="house-details-view" style="display: none;">
-            <button id="back-btn">← Back</button>
-            <div id="house-details-content"></div>
+        <div id="house-details-modal" class="house-details-modal hidden">
+            <div class="modal-content">
+                <button id="modal-close-btn" aria-label="Close details modal">&times;</button>
+                <div id="house-details-content"></div>
+            </div>
         </div>
     </main>
 
