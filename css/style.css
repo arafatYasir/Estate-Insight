@@ -826,19 +826,17 @@ nav .login-btn a:hover {
 
 /* Address Heading */
 .house-details-wrapper h2.address {
-    margin: 0;
     font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--text-primary);
+    color: rgba(0, 0, 0, 0.7);
     line-height: 1.3;
+    font-weight: 400;
+    margin-top: -7px;
 }
 
 /* Price */
-.price {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: var(--accent-yellow);
-    margin-top: -4px;
+.modal-content .price {
+    font-size: 2rem;
+    margin-top: 8px;
 }
 
 /* House Info Grid */
@@ -872,7 +870,7 @@ nav .login-btn a:hover {
 /* Section Headings */
 .price-history-section h3,
 .description-section h3 {
-    margin-bottom: 8px;
+    margin: 8px 0;
     font-size: 1.25rem;
     font-weight: 700;
     color: #222;

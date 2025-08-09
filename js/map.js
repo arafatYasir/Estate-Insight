@@ -281,7 +281,7 @@ function openHouseDetails(house) {
     const priceHistoryHTML = house.prices
         .map(p => {
             const [date, price] = p.split(" | ");
-            return `<li><strong>${date}</strong>: $${parseInt(price).toLocaleString()}</li>`;
+            return `<li><strong>${date}</strong> $${parseInt(price).toLocaleString()}</li>`;
         })
         .join("");
 
@@ -293,7 +293,7 @@ function openHouseDetails(house) {
       <div class="price">$${house.currentPrice.toLocaleString()}</div>
 
       <h2 class="address">${house.address}</h2>
-      
+
       <div class="house-info">
         <div><strong>Beds:</strong> ${house.beds}</div>
         <div><strong>Baths:</strong> ${house.baths}</div>
@@ -323,19 +323,18 @@ function openHouseDetails(house) {
     // Close modal when clicking outside content
     modal.onclick = (e) => {
         if (e.target === modal) {
-            closeHouseDetails();
+            setTimeout(closeHouseDetails, 150);
         }
     };
 
     // Close modal with button
-    document.getElementById("modal-close-btn").onclick = closeHouseDetails;
+    document.getElementById("modal-close-btn").onclick = () => setTimeout(closeHouseDetails, 150);
 }
 
 function closeHouseDetails() {
     const modal = document.getElementById("house-details-modal");
     modal.classList.add("hidden");
 }
-
 
 
 
