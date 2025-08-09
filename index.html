@@ -8,24 +8,26 @@
         content="Interactive real estate heatmap showing historical house price trends and drops. Mobile-friendly property search with advanced filters for price, bedrooms, bathrooms, and home types. Discover the best property deals and market insights with ease." />
 
     <title>EstateInsight – Visualizing Real Estate Trends with Precision</title>
+
     <!-- Favicon -->
     <link rel="icon" href="./images/favicon.webp" type="image/webp">
 
     <!-- CSS -->
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/responsive.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Loading Leaflet css asynchronously -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" media="print" onload="this.media='all'">
 
 
     <!-- DNS Prefetch: starts DNS lookup early -->
-    <link rel="dns-prefetch" href="https://a.tile.openstreetmap.de">
-    <link rel="dns-prefetch" href="https://b.tile.openstreetmap.de">
-    <link rel="dns-prefetch" href="https://c.tile.openstreetmap.de">
+    <link rel="dns-prefetch" href="https://a.tile.openstreetmap.org">
+    <link rel="dns-prefetch" href="https://b.tile.openstreetmap.org">
+    <link rel="dns-prefetch" href="https://c.tile.openstreetmap.org">
 
     <!-- Preconnect: establishes early TCP + TLS connection -->
-    <link rel="preconnect" href="https://a.tile.openstreetmap.de" crossorigin>
-    <link rel="preconnect" href="https://b.tile.openstreetmap.de" crossorigin>
-    <link rel="preconnect" href="https://c.tile.openstreetmap.de" crossorigin>
+    <link rel="preconnect" href="https://a.tile.openstreetmap.org" crossorigin>
+    <link rel="preconnect" href="https://b.tile.openstreetmap.org" crossorigin>
+    <link rel="preconnect" href="https://c.tile.openstreetmap.org" crossorigin>
 
     <link rel="preload" as="image" href="https://a.tile.openstreetmap.org/6/17/31.png" crossorigin>
 </head>
@@ -341,7 +343,7 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="./js/map.js"></script>
-    <script src="./js/main.js"></script>
+    <script src="./js/main.js" defer></script>
 </body>
 
 </html>
