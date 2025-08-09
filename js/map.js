@@ -30,9 +30,7 @@ function initializeMap(lat, lon) {
         zoomControl: false
     }).setView([lat, lon], 6);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.de/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors',
-    }).addTo(map);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
     map.on('move', drawAllHeatPoints);
     map.on('zoom', drawAllHeatPoints);

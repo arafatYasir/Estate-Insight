@@ -216,11 +216,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function updateRangeFill(input) {
         const value = (input.value - input.min) / (input.max - input.min) * 100;
-        input.style.background = `linear-gradient(to right,
-      var(--accent-yellow) 0%,
-      var(--accent-yellow) ${value}%,
-      var(--background-light) ${value}%,
-      var(--background-light) 100%)`;
+        input.style.background = `
+            linear-gradient(to right,
+            var(--accent-yellow) 0%,
+            var(--accent-yellow) ${value}%,
+            var(--background-light) ${value}%,
+            var(--background-light) 100%)
+        `;
     }
 
     const dropdown = document.querySelectorAll('.custom-dropdown[data-name="bedsBaths"]');
