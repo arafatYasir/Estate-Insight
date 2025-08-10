@@ -135,8 +135,6 @@ function loadHouseData() {
         initializeMap(lat, lon);
         drawAllHeatPoints();
         showHouses();
-
-        console.log(houseData);
     }
     else {
         // Calling fetch

@@ -179,10 +179,27 @@ const houseContainer = document.querySelector(".house-container");
 const switchToListBtn = document.querySelector(".switch-to-list");
 const switchToMapBtn = document.querySelector(".switch-to-map");
 const tooltip = document.getElementById('tooltip');
-let showingState = JSON.parse(localStorage.getItem("showingState")) || "";
+let showingState = localStorage.getItem("showingState") || "";
 
+// Checking if already state exists
+if (showingState === "list") {
+    realMap.style.display = "none";
+    houseContainer.style.display = "block";
+    switchToListBtn.style.display = "none";
+    switchToMapBtn.style.display = "inline";
+    mobileFilterBtn.style.display = "inline";
+    tooltip.style.display = "none";
+}
+else if (showingState === "map") {
+    realMap.style.display = "block";
+    houseContainer.style.display = "none";
+    switchToListBtn.style.display = "inline";
+    switchToMapBtn.style.display = "none";
+    mobileFilterBtn.style.display = "none";
+}
+
+// Event listener to switch
 switchToListBtn.addEventListener("click", () => {
-
     realMap.style.display = "none";
     houseContainer.style.display = "block";
     switchToListBtn.style.display = "none";
@@ -194,16 +211,14 @@ switchToListBtn.addEventListener("click", () => {
 })
 
 switchToMapBtn.addEventListener("click", () => {
-    let showingState = JSON.parse(localStorage.getItem("showingState")) || "";
     realMap.style.display = "block";
     houseContainer.style.display = "none";
     switchToListBtn.style.display = "inline";
     switchToMapBtn.style.display = "none";
     mobileFilterBtn.style.display = "none";
-
+    
     localStorage.setItem("showingState", "map");
 });
-
 
 
 // ----Beds & Baths Custom Slider Range----
