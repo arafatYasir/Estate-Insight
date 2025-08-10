@@ -181,44 +181,62 @@ const switchToMapBtn = document.querySelector(".switch-to-map");
 const tooltip = document.getElementById('tooltip');
 let showingState = localStorage.getItem("showingState") || "";
 
-// Checking if already state exists
-if (showingState === "list") {
-    realMap.style.display = "none";
-    houseContainer.style.display = "block";
-    switchToListBtn.style.display = "none";
-    switchToMapBtn.style.display = "inline";
-    mobileFilterBtn.style.display = "inline";
-    tooltip.style.display = "none";
+function changeLayout() {
+    // Checking if already state exists
+    if (window.innerWidth <= 768) {
+        if (showingState === "list") {
+            realMap.style.display = "none";
+            houseContainer.style.display = "block";
+            switchToListBtn.style.display = "none";
+            switchToMapBtn.style.display = "inline";
+            mobileFilterBtn.style.display = "inline";
+            tooltip.style.display = "none";
+        }
+        else if (showingState === "map") {
+            realMap.style.display = "block";
+            houseContainer.style.display = "none";
+            switchToListBtn.style.display = "inline";
+            switchToMapBtn.style.display = "none";
+            mobileFilterBtn.style.display = "none";
+        }
+
+
+        // Event listener to switch
+        switchToListBtn.addEventListener("click", () => {
+            realMap.style.display = "none";
+            houseContainer.style.display = "block";
+            switchToListBtn.style.display = "none";
+            switchToMapBtn.style.display = "inline";
+            mobileFilterBtn.style.display = "inline";
+            tooltip.style.display = "none";
+
+            localStorage.setItem("showingState", "list");
+        })
+
+        switchToMapBtn.addEventListener("click", () => {
+            realMap.style.display = "block";
+            houseContainer.style.display = "none";
+            switchToListBtn.style.display = "inline";
+            switchToMapBtn.style.display = "none";
+            mobileFilterBtn.style.display = "none";
+
+            localStorage.setItem("showingState", "map");
+        });
+    }
+    else {
+        switchToListBtn.style.display = "none";
+        switchToMapBtn.style.display = "none";
+        mobileFilterBtn.style.display = "none";
+        realMap.style.display = "block";
+        houseContainer.style.display = "block";
+    }
+
+
 }
-else if (showingState === "map") {
-    realMap.style.display = "block";
-    houseContainer.style.display = "none";
-    switchToListBtn.style.display = "inline";
-    switchToMapBtn.style.display = "none";
-    mobileFilterBtn.style.display = "none";
-}
 
-// Event listener to switch
-switchToListBtn.addEventListener("click", () => {
-    realMap.style.display = "none";
-    houseContainer.style.display = "block";
-    switchToListBtn.style.display = "none";
-    switchToMapBtn.style.display = "inline";
-    mobileFilterBtn.style.display = "inline";
-    tooltip.style.display = "none";
-
-    localStorage.setItem("showingState", "list");
-})
-
-switchToMapBtn.addEventListener("click", () => {
-    realMap.style.display = "block";
-    houseContainer.style.display = "none";
-    switchToListBtn.style.display = "inline";
-    switchToMapBtn.style.display = "none";
-    mobileFilterBtn.style.display = "none";
-    
-    localStorage.setItem("showingState", "map");
-});
+// Initial layout change call
+changeLayout();
+window.addEventListener("resize", changeLayout);
 
 
 // ----Beds & Baths Custom Slider Range----
