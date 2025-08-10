@@ -27,7 +27,9 @@ function initializeMap(lat, lon) {
         keyboard: true,
         tap: true,
         touchZoom: true,
-        zoomControl: false
+        zoomControl: false,    // starting zoom
+        minZoom: 5,                  // minimum zoom allowed (can't zoom out past this)
+        maxZoom: 9
     }).setView([lat, lon], 6);
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
