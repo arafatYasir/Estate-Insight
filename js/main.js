@@ -179,23 +179,32 @@ const houseContainer = document.querySelector(".house-container");
 const switchToListBtn = document.querySelector(".switch-to-list");
 const switchToMapBtn = document.querySelector(".switch-to-map");
 const tooltip = document.getElementById('tooltip');
+let showingState = JSON.parse(localStorage.getItem("showingState")) || "";
 
 switchToListBtn.addEventListener("click", () => {
+
     realMap.style.display = "none";
     houseContainer.style.display = "block";
     switchToListBtn.style.display = "none";
     switchToMapBtn.style.display = "inline";
     mobileFilterBtn.style.display = "inline";
     tooltip.style.display = "none";
+
+    localStorage.setItem("showingState", "list");
 })
 
 switchToMapBtn.addEventListener("click", () => {
+    let showingState = JSON.parse(localStorage.getItem("showingState")) || "";
     realMap.style.display = "block";
     houseContainer.style.display = "none";
     switchToListBtn.style.display = "inline";
     switchToMapBtn.style.display = "none";
     mobileFilterBtn.style.display = "none";
+
+    localStorage.setItem("showingState", "map");
 });
+
+
 
 // ----Beds & Baths Custom Slider Range----
 document.addEventListener("DOMContentLoaded", () => {

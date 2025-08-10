@@ -150,8 +150,8 @@ function loadHouseData() {
                 houseData = data.map(house => {
                     lat += house.lat;
                     lon += house.lon;
-                    const { percentChange, last } = calculatePercentChange(house.prices);
-                    return { ...house, percentChange, currentPrice: last };
+                    const { percentChange, last, sortedPrices } = calculatePercentChange(house.prices);
+                    return { ...house, percentChange, currentPrice: last, sortedPrices };
                 });
 
                 lat /= houseData.length;
