@@ -75,6 +75,10 @@
         justify-content: center;
     }
 
+    .house-details-wrapper h2.address {
+        font-size: 1.2rem;
+    }
+
     /* ----Map Styles---- */
     #map {
         width: 100%;

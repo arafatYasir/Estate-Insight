@@ -278,10 +278,19 @@ function openHouseDetails(house) {
     const modal = document.getElementById("house-details-modal");
     const details = document.getElementById("house-details-content");
 
-    const priceHistoryHTML = house.prices
-        .map(p => {
-            const [date, price] = p.split(" | ");
-            return `<li><strong>${date}</strong> $${parseInt(price).toLocaleString()}</li>`;
+    const sortedPrices = house.prices.map(price => {
+        const [dateStr, priceStr] = price.split(" | ");
+        return {
+            sortByDate: parseDate(dateStr),
+            date: dateStr,
+            price: parseInt(priceStr)
+        };
+    }).sort((a, b) => a.sortByDate - b.sortByDate);
+
+
+    const priceHistoryHTML = sortedPrices.map(item => {
+            const {date, price} = item;
+            return `<li><strong>${date}</strong> $${price.toLocaleString()}</li>`;
         })
         .join("");
 
