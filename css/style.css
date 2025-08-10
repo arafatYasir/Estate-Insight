@@ -746,6 +746,29 @@ nav .login-btn a:hover {
     color: #b71c1c;
 }
 
+.historical-prices {
+    display: flex;
+    flex-direction: column;
+    row-gap: 6px;
+    font-weight: bold;
+    margin: 6px 0;
+}
+
+
+.historical-prices li {
+    display: flex;
+    justify-content: space-between;
+}
+
+.historical-prices .hist-date {
+    color: var(--text-primary);
+    /* font-weight: 600; */
+}
+
+.historical-prices .hist-price {
+    color: var(--primary-blue);
+}
+
 .details-btn {
     display: inline-block;
     background-color: var(--primary-blue);
@@ -797,7 +820,6 @@ body.modal-open {
 /* Modal Content */
 .modal-content {
     background: #ffffff;
-    border-radius: 12px;
     max-width: 90%;
     width: 100%;
     height: 100vh;
@@ -920,7 +942,6 @@ body.modal-open {
         height: 100%;
         max-width: none;
         max-height: none;
-        border-radius: 0;
         padding: 20px;
     }
 

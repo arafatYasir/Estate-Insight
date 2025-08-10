@@ -100,16 +100,14 @@ function parseDate(dateStr) {
 function calculatePercentChange(pricesArray) {
     const parsed = pricesArray.map(p => {
         const [dateStr, priceStr] = p.split('|').map(x => x.trim());
-        return { date: parseDate(dateStr), price: parseInt(priceStr) };
-    });
-
-    parsed.sort((a, b) => a.date - b.date);
+        return { sortByDate: parseDate(dateStr), date: dateStr, price: parseInt(priceStr) };
+    }).sort((a, b) => a.sortByDate - b.sortByDate);
 
     const first = parsed[0].price;
     const last = parsed[parsed.length - 1].price;
 
     if (first === 0) return { percentChange: 0, last };
-    return { percentChange: ((last - first) / first) * 100, last, };
+    return { percentChange: ((last - first) / first) * 100, last, sortedPrices: parsed };
 }
 
 // Fetch house data
@@ -126,9 +124,9 @@ function loadHouseData() {
             lat += house.lat;
             lon += house.lon;
 
-            const { percentChange, last } = calculatePercentChange(house.prices);
+            const { percentChange, last, sortedPrices } = calculatePercentChange(house.prices);
 
-            return { ...house, percentChange, currentPrice: last };
+            return { ...house, percentChange, currentPrice: last, sortedPrices };
         })
 
         lat /= houseData.length;
@@ -137,6 +135,8 @@ function loadHouseData() {
         initializeMap(lat, lon);
         drawAllHeatPoints();
         showHouses();
+
+        console.log(houseData);
     }
     else {
         // Calling fetch
@@ -195,10 +195,6 @@ function drawAllHeatPoints() {
 
         const change = currentHouse.percentChange;
         const listingType = currentHouse.listingType;
-        const absChange = Math.min(Math.abs(change), 100);
-
-        const intensity = absChange + nearbyCount * 5;
-        const clampedIntensity = Math.min(intensity, 150);
 
         const radius = 5;
         const color = getInterpolatedColor(change, listingType);
@@ -235,20 +231,14 @@ function showHouses() {
 
     houseData.slice(0, 20).forEach((house, idx) => {
         // Sort historical prices in ascending order
-        const sortedPrices = house.prices.map(price => {
-            const [dateStr, priceStr] = price.split(" | ");
-
-            return {
-                date: parseDate(dateStr),
-                displayDate: dateStr,
-                price: parseInt(priceStr)
-            };
-        }).sort((a, b) => a.date - b.date);
+        const length = house.sortedPrices.length;
 
         // Generating prices history
-        const priceHistoryHTML = sortedPrices.map(({ displayDate, price }) =>
-            `<li><span class="hist-date">${displayDate}</span> <span class="colon">:</span> <span class="hist-price">$${price.toLocaleString()}</span></li>`
-        ).join('');
+        const priceHistoryHTML = `
+            <li><span class="hist-date">${house.sortedPrices[0].date}</span> <span class="colon">:</span> <span class="hist-price">$${house.sortedPrices[0].price}</span></li>
+        
+            <li><span class="hist-date">${house.sortedPrices[length - 1].date}</span> <span class="colon">:</span> <span class="hist-price">$${house.sortedPrices[length - 1].price}</span></li>
+        `;
 
         const priceChangeText = house.percentChange > 0 ? `<span class='increase'>⬆ ${house.percentChange.toFixed(2)}%</span>` : `<span class='decrease'>⬇ ${house.percentChange.toFixed(2)}%</span>`
 
@@ -264,6 +254,9 @@ function showHouses() {
                         <p><span>${house.listingType}</span></p>
                     </div>
                     <p class="address">${house.address}</p>
+                    <hr />
+                    <ul class="historical-prices">${priceHistoryHTML}</ul>
+                    <hr />
                     <button class="details-btn">Details</button>
                 </div>
             </div>
@@ -289,9 +282,9 @@ function openHouseDetails(house) {
 
 
     const priceHistoryHTML = sortedPrices.map(item => {
-            const {date, price} = item;
-            return `<li><strong>${date}</strong> $${price.toLocaleString()}</li>`;
-        })
+        const { date, price } = item;
+        return `<li><strong>${date}</strong> $${price.toLocaleString()}</li>`;
+    })
         .join("");
 
     details.innerHTML = `
@@ -347,7 +340,8 @@ function closeHouseDetails() {
 }
 
 function addFooter() {
-    const footer = document.querySelector(".site-footer");
+    const footer = document.querySelector("#footer");
+    footer.classList.add("site-footer");
 
     footer.innerHTML = `
         <div class="footer-links">
