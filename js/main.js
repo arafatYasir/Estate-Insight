@@ -184,7 +184,7 @@ let showingState = localStorage.getItem("showingState") || "";
 function changeLayout() {
     // Checking if already state exists
     if (window.innerWidth <= 768) {
-        if (showingState === "list") {
+        if (localStorage.getItem("showingState") === "list") {
             realMap.style.display = "none";
             houseContainer.style.display = "block";
             switchToListBtn.style.display = "none";
@@ -192,7 +192,7 @@ function changeLayout() {
             mobileFilterBtn.style.display = "inline";
             tooltip.style.display = "none";
         }
-        else if (showingState === "map") {
+        else if (localStorage.getItem("showingState") === "map") {
             realMap.style.display = "block";
             houseContainer.style.display = "none";
             switchToListBtn.style.display = "inline";
