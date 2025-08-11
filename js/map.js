@@ -2,10 +2,40 @@
 const canvas = document.getElementById('heatmap-canvas');
 const ctx = canvas.getContext('2d');
 
-// Resize canvas to match window
+// Debounce function for better perfromance
+function debounce(func, wait) {
+    let timeout;
+
+    return function executedFunc(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        }
+        clearTimeout(timeout);
+        setTimeout(later, wait);
+    }
+}
+
+// Throttle function for mouse events
+function throttle(func, limit) {
+    let inThrottle;
+
+    return function (...args) {
+        if (!inThrottle) {
+            func.apply(this, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit)
+        }
+    }
+}
+
+// Resize canvas to match map container
 function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    const mapContainer = document.getElementById("map");
+    const rect = mapContainer.getBoundingClientRect();
+
+    canvas.width = rect.width;
+    canvas.height = rect.height;
 }
 
 resizeCanvas();
@@ -16,34 +46,85 @@ const CACHE_KEY = "houseData";
 const CACHE_TIME_KEY = "houseDataTimestamp";
 const MAX_CACHE_AGE = 1000 * 60 * 60 * 6; // 6 hours
 
+// Flag to track if map is ready
+let mapReady = false;
+
 // Initializing the map
 let map;
 function initializeMap(lat, lon) {
+    // Detecting if it's a mobile device
+    const isMobile = window.innerWidth <= 768;
+
     map = L.map('map', {
         dragging: true,
-        scrollWheelZoom: true,
+        scrollWheelZoom: !isMobile,
         doubleClickZoom: true,
         boxZoom: true,
         keyboard: true,
         tap: true,
         touchZoom: true,
-        zoomControl: false,    // starting zoom
-        minZoom: 5,                  // minimum zoom allowed (can't zoom out past this)
-        maxZoom: 9
+        zoomControl: false,
+        minZoom: 5,
+        maxZoom: 9,
+        // Better mobile performance
+        preferCanvas: true,
+        updateWhenIdle: isMobile,
+        updateWhenZooming: !isMobile,
+        keepBuffer: isMobile ? 1 : 2
     }).setView([lat, lon], 6);
 
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    const tileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        minZoom: 1,
+        updateWhenIdle: false,
+        updateWhenZooming: true,
+        keepBuffer: 2,
+        errorTileUrl: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+    }).addTo(map);
 
-    map.on('move', drawAllHeatPoints);
-    map.on('zoom', drawAllHeatPoints);
+    // Waiting for tiles to load before drawing heat points
+    tileLayer.on('load', () => {
+        if (!mapReady) {
+            mapReady = true;
+            // Ensure canvas is properly sized and then draw heat points
+            setTimeout(() => {
+                resizeCanvas();
+                map.invalidateSize();
+                drawAllHeatPoints();
+            }, 100);
+        }
+    });
 
+    // Also triggering on map ready event as backup
+    map.whenReady(() => {
+        setTimeout(() => {
+            mapReady = true;
+            resizeCanvas();
+            drawAllHeatPoints();
+        }, 200);
+    });
 
-    // Tooltip on hover
+    // Drawing heat ponint by debouncing
+    const debouncedDraw = debounce(drawAllHeatPoints, 100);
+    map.on("move", debouncedDraw);
+    map.on("zoom", debouncedDraw);
+    map.on("moveend", drawAllHeatPoints);
+    map.on("zoomend", drawAllHeatPoints);
+
+    // Handling map resize
+    map.on("resize", () => {
+        resizeCanvas();
+        drawAllHeatPoints();
+    })
+
+    // Tooltip on hover - throttling for better performance
     const mapContainer = document.getElementById("map");
     const tooltip = document.getElementById('tooltip');
 
-    // Event listener to track hover on house point
-    mapContainer.addEventListener('mousemove', (e) => {
+    const handleMouseMove = throttle((e) => {
+        // Skip for mobile devices
+        if ("ontouchstart" in window) return;
+
         const mapRect = map.getContainer().getBoundingClientRect();
         const mouseX = e.clientX - mapRect.left;
         const mouseY = e.clientY - mapRect.top;
@@ -86,13 +167,50 @@ function initializeMap(lat, lon) {
         } else {
             tooltip.style.display = 'none';
         }
+    }, 50);
+
+    mapContainer.addEventListener("mousemove", handleMouseMove);
+
+    // Fixed mobile tooltip - use touchstart instead of click
+    mapContainer.addEventListener("touchstart", (e) => {
+        // Prevent default to avoid double triggering
+        e.preventDefault();
+
+        const touch = e.touches[0];
+        const mapRect = map.getContainer().getBoundingClientRect();
+        const touchX = touch.clientX - mapRect.left;
+        const touchY = touch.clientY - mapRect.top;
+
+        const hoverHouse = houseData.find(house => {
+            const point = map.latLngToContainerPoint([house.lat, house.lon]);
+            const dx = point.x - touchX;
+            const dy = point.y - touchY;
+            return Math.sqrt(dx * dx + dy * dy) < 20; // Slightly larger touch target
+        });
+
+        if (hoverHouse) {
+            tooltip.style.left = `${touch.clientX + 15}px`;
+            tooltip.style.top = `${touch.clientY + 15}px`;
+            tooltip.style.display = 'block';
+            tooltip.innerHTML = `
+                <strong>Price Change:</strong> ${hoverHouse.percentChange.toFixed(2)}% ${hoverHouse.percentChange > 0 ? "📈" : "📉"}<br>
+                <strong>Latest Price:</strong> $${hoverHouse.currentPrice}
+            `;
+
+            // Hide tooltip after 3 seconds on mobile
+            setTimeout(() => {
+                tooltip.style.display = 'none';
+            }, 3000);
+        } else {
+            tooltip.style.display = 'none';
+        }
     });
 }
 
 // House data store
 let houseData = [];
 
-// Utility: Parse "24/07/2012" into Date object
+// Parse Date into Date object
 function parseDate(dateStr) {
     const [day, month, year] = dateStr.split('/');
     return new Date(`${year}-${month}-${day}`);
@@ -119,95 +237,128 @@ function loadHouseData() {
     const now = Date.now();
 
     if (cached && timestamp && now - parseInt(timestamp) < MAX_CACHE_AGE) {
-        const data = JSON.parse(cached);
+        try {
+            const data = JSON.parse(cached);
 
-        let lat = 0, lon = 0;
-        houseData = data.map(house => {
-            lat += house.lat;
-            lon += house.lon;
+            let lat = 0, lon = 0;
+            houseData = data.map(house => {
+                lat += house.lat;
+                lon += house.lon;
 
-            const { percentChange, last, sortedPrices } = calculatePercentChange(house.prices);
+                const { percentChange, last, sortedPrices } = calculatePercentChange(house.prices);
 
-            return { ...house, percentChange, currentPrice: last, sortedPrices };
-        })
+                return { ...house, percentChange, currentPrice: last, sortedPrices };
+            })
 
-        lat /= houseData.length;
-        lon /= houseData.length;
+            lat /= houseData.length;
+            lon /= houseData.length;
 
-        initializeMap(lat, lon);
-        drawAllHeatPoints();
-        showHouses();
+            initializeMap(lat, lon);
+            // Don't call drawAllHeatPoints here - let the map load event handle it
+            showHouses();
+        }
+        catch (error) {
+            console.error("Error parsing cached data: ", error);
+            fetchFreshData();
+        }
     }
     else {
-        // Calling fetch
-        fetch('../dummy_ecuador_houses.json')
-            .then(res => {
-                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-                return res.json();
-            })
-            .then(data => {
-                let lat = 0, lon = 0;
-                houseData = data.map(house => {
-                    lat += house.lat;
-                    lon += house.lon;
-                    const { percentChange, last, sortedPrices } = calculatePercentChange(house.prices);
-                    return { ...house, percentChange, currentPrice: last, sortedPrices };
-                });
-
-                lat /= houseData.length;
-                lon /= houseData.length;
-
-                initializeMap(lat, lon);
-                drawAllHeatPoints();
-                showHouses();
-
-                localStorage.setItem(CACHE_KEY, JSON.stringify(data));
-                localStorage.setItem(CACHE_TIME_KEY, now.toString());
-            })
-            .catch(err => console.error('Error fetching house data:', err));
+        fetchFreshData();
     }
 
 }
 
-// Calling the loader function
-loadHouseData();
+function fetchFreshData() {
+    const now = Date.now();
+
+    // Calling fetch
+    fetch('../dummy_ecuador_houses.json')
+        .then(res => {
+            if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+            return res.json();
+        })
+        .then(data => {
+            let lat = 0, lon = 0;
+            houseData = data.map(house => {
+                lat += house.lat;
+                lon += house.lon;
+                const { percentChange, last, sortedPrices } = calculatePercentChange(house.prices);
+                return { ...house, percentChange, currentPrice: last, sortedPrices };
+            });
+
+            lat /= houseData.length;
+            lon /= houseData.length;
+
+            initializeMap(lat, lon);
+            // Don't call drawAllHeatPoints here - let the map load event handle it
+            showHouses();
+
+            try {
+                localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+                localStorage.setItem(CACHE_TIME_KEY, now.toString());
+            }
+            catch (e) {
+                console.warn("Failed to cache data: ", e);
+            }
+        })
+        .catch(err => console.error('Error fetching house data:', err));
+}
 
 
-// Draw heat points
+// Optimized draw function with requestAnimationFrame
+let drawAnimationFrame = null;
 function drawAllHeatPoints() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Don't draw if map is not ready
+    if (!mapReady || !map || !houseData || houseData.length === 0) return;
 
-    const threshold = 60;
+    if (drawAnimationFrame) {
+        cancelAnimationFrame(drawAnimationFrame);
+    }
 
-    houseData.forEach(currentHouse => {
-        const currentPoint = map.latLngToContainerPoint([currentHouse.lat, currentHouse.lon]);
+    drawAnimationFrame = requestAnimationFrame(() => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Count nearby points
-        let nearbyCount = 0;
-        houseData.forEach(otherHouse => {
-            if (otherHouse === currentHouse) return;
-            const otherPoint = map.latLngToContainerPoint([otherHouse.lat, otherHouse.lon]);
-            const dx = currentPoint.x - otherPoint.x;
-            const dy = currentPoint.y - otherPoint.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < threshold) nearbyCount++;
+        const points = [];
+
+        houseData.forEach(currentHouse => {
+            const currentPoint = map.latLngToContainerPoint([currentHouse.lat, currentHouse.lon]);
+
+            if (currentPoint.x < -50 || currentPoint.x > canvas.width + 50 || currentPoint.y < -50 || currentPoint.y > canvas.height + 50) {
+                return;
+            }
+
+            points.push({
+                x: currentPoint.x,
+                y: currentPoint.y,
+                change: currentHouse.percentChange,
+                listingType: currentHouse.listingType
+            });
         });
 
-        const change = currentHouse.percentChange;
-        const listingType = currentHouse.listingType;
+        // Draw all points
+        points.forEach(point => {
+            const radius = 5;
+            const color = getInterpolatedColor(point.change, point.listingType);
 
-        const radius = 5;
-        const color = getInterpolatedColor(change, listingType);
-
-        ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
-        ctx.beginPath();
-        ctx.arc(currentPoint.x, currentPoint.y, radius, 0, Math.PI * 2);
-        ctx.fill();
+            ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+            ctx.beginPath();
+            ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
+            ctx.fill();
+        });
     });
 }
 
-// Redraw map on view changes
-window.addEventListener('resize', drawAllHeatPoints);
+// Handling window resize with debouncing
+const handleResize = debounce(() => {
+    resizeCanvas();
+
+    if (map) {
+        map.invalidateSize();
+        drawAllHeatPoints();
+    }
+}, 250);
+
+window.addEventListener("resize", handleResize);
 
 // Color scale
 function getInterpolatedColor(change, listingType) {
@@ -262,6 +413,23 @@ function showHouses() {
             </div>
         `;
     })
+
+    // Re-attach event listeners after creating the house cards
+    attachHouseCardListeners();
+}
+
+// Separate function to attach event listeners
+function attachHouseCardListeners() {
+    document.querySelectorAll(".house-card").forEach(card => {
+        const detailsBtn = card.querySelector(".details-btn");
+
+        detailsBtn.addEventListener("click", () => {
+            const idx = parseInt(card.getAttribute("data-index"));
+            const house = houseData[idx];
+
+            openHouseDetails(house);
+        })
+    });
 }
 
 
@@ -374,18 +542,13 @@ function addFooter() {
     `;
 }
 
-
-// Setting Event Listener to show House Details Page
-document.querySelectorAll(".house-card").forEach(card => {
-    const detailsBtn = card.querySelector(".details-btn");
-
-    detailsBtn.addEventListener("click", () => {
-        const idx = parseInt(card.getAttribute("data-index"));
-        const house = houseData[idx];
-
-        openHouseDetails(house);
-    })
-});
+// Initialize on DOM is ready
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", loadHouseData);
+}
+else {
+    loadHouseData();
+}
 
 // Adding footer at the last
 addFooter();

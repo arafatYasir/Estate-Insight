@@ -959,7 +959,7 @@ body.modal-open {
 
 /* ----Map Styles---- */
 #map {
-    height: 100vh;
+    height: calc(100vh - 194px);
     width: 49%;
     position: fixed;
     top: 194px;
@@ -974,6 +974,7 @@ body.modal-open {
     left: 0;
     z-index: 999;
     pointer-events: none;
+    will-change: transform;
 }
 
 .tooltip {
@@ -1007,7 +1008,7 @@ body.modal-open {
     font-size: 14px;
     color: #333;
     user-select: none;
-    z-index: 10000;
+    z-index: 1000;
 }
 
 #legend-gradient {
