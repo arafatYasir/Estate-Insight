@@ -508,38 +508,11 @@ function closeHouseDetails() {
 }
 
 function addFooter() {
-    const footer = document.querySelector("#footer");
-    footer.classList.add("site-footer");
-
-    footer.innerHTML = `
-        <div class="footer-links">
-                        <a href="#">About Us</a>
-                        <a href="#">Contact</a>
-                        <a href="#">Privacy Policy</a>
-                        <a href="#">Terms of Service</a>
-                    </div>
-                    <div class="footer-about">
-                        <p>Realestate Insight delivers up-to-date market trends, pricing analysis, and expert advice to
-                            help you make informed property decisions.</p>
-                    </div>
-                    <div class="footer-contact-social">
-                        <div class="contact-info">
-                            <p>Email: <a href="mailto:support@realestateinsight.com">support@realestateinsight.com</a>
-                            </p>
-                            <p>Phone: +1 (555) 123-4567</p>
-                        </div>
-                    </div>
-                    <div class="footer-newsletter">
-                        <form>
-                            <label for="newsletter-email" class="sr-only">Subscribe to newsletter</label>
-                            <input type="email" id="newsletter-email" placeholder="Your email address" required />
-                            <button type="submit">Subscribe</button>
-                        </form>
-                    </div>
-                    <div class="footer-copyright">
-                        <p>© 2025 Realestate Insight. All rights reserved.</p>
-                    </div>
-    `;
+    const footer = document.querySelector("footer");
+    let timeout = setTimeout(() => {
+        footer.style.display = "block";
+        clearTimeout(timeout);
+    }, 100);
 }
 
 // Initialize on DOM is ready

@@ -1036,7 +1036,7 @@ body.modal-open {
 
 
 /* ----Footer Section---- */
-.site-footer {
+footer {
     background-color: #faf9f6;
     color: #555;
     padding: 20px 24px;
@@ -1044,6 +1044,7 @@ body.modal-open {
     border-top: 1px solid #ddd;
     user-select: none;
     margin-top: 20px;
+    display: none;
 }
 
 .footer-links {
