@@ -1045,8 +1045,8 @@ body.modal-open {
 }
 
 .page-btn {
-  background-color: var(--primary-blue);
-  color: var(--white);
+  background-color: var(--dropdown-bg);
+  color: var(--text-primary);
   border: none;
   padding: 8px 14px;
   font-size: 18px;
@@ -1065,7 +1065,7 @@ body.modal-open {
 .page-btn:disabled {
   background-color: var(--dropdown-bg);
   color: var(--text-primary);
-  cursor: not-allowed;
+  cursor: default;
 }
 
 .page-numbers {

@@ -255,7 +255,7 @@ function loadHouseData() {
             lat /= houseData.length;
             lon /= houseData.length;
 
-            if(!mapInitialized) {
+            if (!mapInitialized) {
                 initializeMap(lat, lon);
                 mapInitialized = true;
             }
@@ -307,7 +307,7 @@ function fetchFreshData(page) {
             lon /= houseData.length;
 
             // Initialize the map on first load
-            if(!mapInitialized) {
+            if (!mapInitialized) {
                 initializeMap(lat, lon);
                 mapInitialized = true;
             }
@@ -320,9 +320,9 @@ function fetchFreshData(page) {
 
             // Calling pagination
             addPagination();
-            
+
             // Call footer on the first load
-            if(page === 1) {
+            if (page === 1) {
                 addFooter();
             }
 
@@ -338,7 +338,7 @@ function fetchFreshData(page) {
         .catch(err => {
             console.error('Error fetching house data:', err);
 
-            if(!mapInitialized) {
+            if (!mapInitialized) {
                 addFooter();
             }
         });
@@ -547,40 +547,90 @@ function closeHouseDetails() {
     modal.classList.add("hidden");
 }
 
+let isPaginatinInitialized = false;
+
 function addPagination() {
+    if (totalPages > 0) {
+        if (!isPaginatinInitialized) {
+            createPagination();
+            isPaginatinInitialized = true;
+        }
+        else {
+            updatePagination();
+        }
+    }
+}
+
+function createPagination() {
     const paginationContainer = document.querySelector(".pagination");
     const pageNumbers = document.querySelector(".page-numbers");
 
-    if (totalPages > 0) {
-        paginationContainer.style.display = "flex";
-        pageNumbers.innerHTML = "";
+    paginationContainer.style.display = "flex";
+    pageNumbers.innerHTML = "";
 
-        for (let i = 1; i <= totalPages; i++) {
-            const pageButton = document.createElement("button");
-            pageButton.innerHTML = i;
-            pageButton.classList.add("page-number-btn");
-            pageButton.setAttribute("data-index", i);
+    for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement("button");
+        pageButton.innerHTML = i;
+        pageButton.classList.add("page-number-btn");
+        pageButton.setAttribute("data-index", i);
 
-            if(currentPage === i) {
-                pageButton.classList.add("active");
-            }
-
-            pageNumbers.appendChild(pageButton)
+        if (currentPage === i) {
+            pageButton.classList.add("active");
         }
 
-        // adding event listeners to page buttons
-        document.querySelectorAll(".page-number-btn").forEach(pageButton => {
-            pageButton.addEventListener("click", () => {
-                const pageNumber = parseInt(pageButton.getAttribute("data-index"));
-                if(currentPage !== pageNumber) {
-                    currentPage = pageNumber;
-                    fetchFreshData(pageNumber);
-                }
-            })
-        })
+        pageNumbers.appendChild(pageButton)
     }
-    else {
-        paginationContainer.style.display = "none";
+
+    console.log("This is the beginning of event listeners. Current Page: ", currentPage);
+    // adding event listeners to page buttons
+    document.querySelectorAll(".page-number-btn").forEach(pageButton => {
+        pageButton.addEventListener("click", () => {
+            const pageNumber = parseInt(pageButton.getAttribute("data-index"));
+            if (currentPage !== pageNumber) {
+                currentPage = pageNumber;
+                fetchFreshData(currentPage);
+            }
+        })
+    })
+
+    // adding event listeners for prev button
+    document.querySelector(".prev").addEventListener("click", () => {
+        if (currentPage > 1) {
+            currentPage -= 1;
+            fetchFreshData(currentPage);
+            console.log("I am running here.")
+        }
+    })
+
+    // adding event listener for next button
+    document.querySelector(".next").addEventListener("click", () => {
+        if (currentPage < totalPages) {
+            currentPage += 1;
+            fetchFreshData(currentPage);
+        }
+    })
+}
+
+function updatePagination() {
+    const pageButtons = document.querySelectorAll(".page-number-btn");
+
+    pageButtons.forEach(btn => btn.classList.remove("active"));
+
+    const currentActiveButton = document.querySelector(`.page-number-btn[data-index="${currentPage}"]`);
+
+    if(currentActiveButton) {
+        currentActiveButton.classList.add("active");
+    }
+
+    const prevBtn = document.querySelector(".prev");
+    const nextBtn = document.querySelector(".next");
+
+    if(prevBtn) {
+        prevBtn.disabled = currentPage <= 1;
+    }
+
+    if(nextBtn) {
+        nextBtn.disabled = currentPage >= totalPages;
     }
 }
 
