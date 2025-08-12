@@ -568,20 +568,29 @@ function createPagination() {
     paginationContainer.style.display = "flex";
     pageNumbers.innerHTML = "";
 
-    for (let i = 1; i <= totalPages; i++) {
-        const pageButton = document.createElement("button");
-        pageButton.innerHTML = i;
-        pageButton.classList.add("page-number-btn");
-        pageButton.setAttribute("data-index", i);
+    const visiblePages = calculateVisiblePages(currentPage, totalPages);
 
-        if (currentPage === i) {
-            pageButton.classList.add("active");
+    visiblePages.forEach(page => {
+        if(page === "...") {
+            const ellipsis = document.createElement("span");
+            ellipsis.innerHTML = "...";
+            ellipsis.classList.add("pagination-ellipsis");
+            pageNumbers.appendChild(ellipsis);   
         }
+        else {
+            const pageButton = document.createElement("button");
+            pageButton.innerHTML = page;
+            pageButton.classList.add("page-number-btn");
+            pageButton.setAttribute("data-index", page);
 
-        pageNumbers.appendChild(pageButton)
-    }
+            if(currentPage === page) {
+                pageButton.classList.add("active");
+            }
 
-    console.log("This is the beginning of event listeners. Current Page: ", currentPage);
+            pageNumbers.appendChild(pageButton);
+        }
+    })
+
     // adding event listeners to page buttons
     document.querySelectorAll(".page-number-btn").forEach(pageButton => {
         pageButton.addEventListener("click", () => {
@@ -612,15 +621,44 @@ function createPagination() {
 }
 
 function updatePagination() {
-    const pageButtons = document.querySelectorAll(".page-number-btn");
+    const pageNumbers = document.querySelector(".page-numbers");
 
-    pageButtons.forEach(btn => btn.classList.remove("active"));
+    pageNumbers.innerHTML = "";
 
-    const currentActiveButton = document.querySelector(`.page-number-btn[data-index="${currentPage}"]`);
+    const visiblePages = calculateVisiblePages(currentPage, totalPages);
 
-    if(currentActiveButton) {
-        currentActiveButton.classList.add("active");
-    }
+    
+    visiblePages.forEach(page => {
+        if(page === "...") {
+            const ellipsis = document.createElement("span");
+            ellipsis.innerHTML = "...";
+            ellipsis.classList.add("pagination-ellipsis");
+            pageNumbers.appendChild(ellipsis);   
+        }
+        else {
+            const pageButton = document.createElement("button");
+            pageButton.innerHTML = page;
+            pageButton.classList.add("page-number-btn");
+            pageButton.setAttribute("data-index", page);
+
+            if(currentPage === page) {
+                pageButton.classList.add("active");
+            }
+
+            pageNumbers.appendChild(pageButton);
+        }
+    });
+
+    document.querySelectorAll(".page-number-btn").forEach(pageButton => {
+        pageButton.addEventListener("click", () => {
+            const pageNumber = parseInt(pageButton.getAttribute("data-index"));
+
+            if(currentPage !== pageNumber) {
+                currentPage = pageNumber;
+                fetchFreshData(currentPage);
+            }
+        })
+    })   
 
     const prevBtn = document.querySelector(".prev");
     const nextBtn = document.querySelector(".next");
@@ -632,6 +670,53 @@ function updatePagination() {
     if(nextBtn) {
         nextBtn.disabled = currentPage >= totalPages;
     }
+}
+
+function calculateVisiblePages(currentPage, totalPages) {
+    const pagesToShowBeforeAfter = 1;
+    const windowSize = pagesToShowBeforeAfter * 2 + 1;
+    const hold = totalPages - windowSize;
+
+    const pages = [];
+
+    pages.push(1);
+
+    // If the pages are less than the max to show
+    if(totalPages <= 5) {
+        for(let i = 2; i <= totalPages; i++) pages.push(i);
+        return pages;
+    }
+
+    // When we are near the start part
+    if(currentPage <= windowSize) {
+        for(let i = 2; i <= windowSize + 1; i++) {
+            pages.push(i);
+        }
+        pages.push("...");
+    }
+    // When we are near the end part
+    else if(currentPage >= hold) {
+        pages.push("...");
+        for(let i = hold; i <= totalPages - 1; i++) {
+            pages.push(i);
+        }
+    }
+    // When we are in the middle part
+    else {
+        pages.push("...");
+
+        for(let i = currentPage - pagesToShowBeforeAfter; i <= currentPage + pagesToShowBeforeAfter; i++) {
+            pages.push(i);
+        }
+
+        pages.push("...");
+    }
+
+    if(totalPages > 1) {
+        pages.push(totalPages);
+    }
+
+    return pages;
 }
 
 function addFooter() {
