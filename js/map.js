@@ -232,6 +232,7 @@ function calculatePercentChange(pricesArray) {
 }
 
 // Load house data from localstorage or fetch
+let mapInitialized = false;
 function loadHouseData() {
     const cached = localStorage.getItem(CACHE_KEY);
     const timestamp = localStorage.getItem(CACHE_TIME_KEY);
@@ -254,7 +255,15 @@ function loadHouseData() {
             lat /= houseData.length;
             lon /= houseData.length;
 
-            initializeMap(lat, lon);
+            if(!mapInitialized) {
+                initializeMap(lat, lon);
+                mapInitialized = true;
+            }
+            else {
+                map.setView([lat, lon], map.getZoom());
+                drawAllHeatPoints();
+            }
+
             showHouses();
 
             // Calling pagination and footer
@@ -263,17 +272,17 @@ function loadHouseData() {
         }
         catch (error) {
             console.error("Error parsing cached data: ", error);
-            fetchFreshData();
+            fetchFreshData(currentPage);
         }
     }
     else {
-        fetchFreshData();
+        fetchFreshData(currentPage);
     }
 
 }
 
 // Fetch fresh house data
-function fetchFreshData(page = 1) {
+function fetchFreshData(page) {
     const now = Date.now();
 
     // Calling fetch
@@ -297,23 +306,42 @@ function fetchFreshData(page = 1) {
             lat /= houseData.length;
             lon /= houseData.length;
 
-            initializeMap(lat, lon);
+            // Initialize the map on first load
+            if(!mapInitialized) {
+                initializeMap(lat, lon);
+                mapInitialized = true;
+            }
+            else {
+                map.setView([lat, lon], map.getZoom());
+                drawAllHeatPoints();
+            }
+
             showHouses();
 
-            // Calling pagination and footer
+            // Calling pagination
             addPagination();
-            addFooter();
+            
+            // Call footer on the first load
+            if(page === 1) {
+                addFooter();
+            }
 
             try {
                 localStorage.setItem(CACHE_KEY, JSON.stringify(data));
                 localStorage.setItem(CACHE_TIME_KEY, now.toString());
-                localStorage.setItem("totalPages", "5");
+                localStorage.setItem("totalPages", totalPages.toString());
             }
             catch (e) {
                 console.warn("Failed to cache data: ", e);
             }
         })
-        .catch(err => console.error('Error fetching house data:', err));
+        .catch(err => {
+            console.error('Error fetching house data:', err);
+
+            if(!mapInitialized) {
+                addFooter();
+            }
+        });
 }
 
 
@@ -528,10 +556,28 @@ function addPagination() {
         pageNumbers.innerHTML = "";
 
         for (let i = 1; i <= totalPages; i++) {
-            pageNumbers.innerHTML += `
-            <button class="page-number-btn">${i}</button>
-        `
+            const pageButton = document.createElement("button");
+            pageButton.innerHTML = i;
+            pageButton.classList.add("page-number-btn");
+            pageButton.setAttribute("data-index", i);
+
+            if(currentPage === i) {
+                pageButton.classList.add("active");
+            }
+
+            pageNumbers.appendChild(pageButton)
         }
+
+        // adding event listeners to page buttons
+        document.querySelectorAll(".page-number-btn").forEach(pageButton => {
+            pageButton.addEventListener("click", () => {
+                const pageNumber = parseInt(pageButton.getAttribute("data-index"));
+                if(currentPage !== pageNumber) {
+                    currentPage = pageNumber;
+                    fetchFreshData(pageNumber);
+                }
+            })
+        })
     }
     else {
         alert("Pages not found due to some error in the server.");

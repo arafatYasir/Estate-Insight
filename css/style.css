@@ -1077,7 +1077,7 @@ body.modal-open {
   background-color: var(--background-light);
   color: var(--primary-blue);
   border: 2px solid var(--primary-blue);
-  padding: 8px 12px;
+  padding: 6px 12px;
   font-size: 18px;
   border-radius: 4px;
   cursor: pointer;
