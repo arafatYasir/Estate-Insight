@@ -272,12 +272,13 @@ function fetchFreshData() {
     const now = Date.now();
 
     // Calling fetch
-    fetch('../dummy_ecuador_houses.json')
+    fetch('https://estate-insight-backend.onrender.com/api/houses?page=5')
         .then(res => {
             if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
             return res.json();
         })
-        .then(data => {
+        .then(fullObj => {
+            const data = fullObj.data;
             let lat = 0, lon = 0;
             houseData = data.map(house => {
                 lat += house.lat;
@@ -507,6 +508,15 @@ function closeHouseDetails() {
     modal.classList.add("hidden");
 }
 
+function addPagination() {
+    const paginationContainer = document.querySelector(".pagination");
+
+    let timeout = setTimeout(() => {
+        paginationContainer.style.display = "flex";
+        clearTimeout(timeout);
+    }, 100)
+}
+
 function addFooter() {
     const footer = document.querySelector("footer");
     let timeout = setTimeout(() => {
@@ -522,6 +532,9 @@ if (document.readyState === "loading") {
 else {
     loadHouseData();
 }
+
+// Adding pagination
+addPagination();
 
 // Adding footer at the last
 addFooter();

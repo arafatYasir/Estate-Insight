@@ -18,8 +18,7 @@
     "address": "120 Av. de los Shyris, Santo Domingo, Ecuador",
     "homeType": "Condo",
     "yearBuilt": 1970,
-    "garage": false,
-    "garden": true
+    "garage": false
   },
   {
     "lat": -2.820924,
