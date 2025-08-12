@@ -580,7 +580,6 @@ function addPagination() {
         })
     }
     else {
-        alert("Pages not found due to some error in the server.");
         paginationContainer.style.display = "none";
     }
 }
