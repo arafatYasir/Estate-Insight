@@ -1,3 +1,5 @@
+import { drawAllHeatPoints } from "./map";
+
 // Elements to show mobile menu options
 let menuBtn = document.querySelector(".menu-btn");
 let searchIconBtn = document.querySelector(".search-icon-btn");
@@ -221,6 +223,8 @@ function changeLayout() {
             mobileFilterBtn.style.display = "none";
 
             localStorage.setItem("showingState", "map");
+
+            // drawAllHeatPoints();
         });
     }
     else {

@@ -1037,68 +1037,77 @@ body.modal-open {
 
 /* ----Pagination Part---- */
 .pagination {
-  display: none;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  margin: 20px 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 20px 0;
 }
 
 .page-btn {
-  background-color: var(--dropdown-bg);
-  color: var(--text-primary);
-  border: none;
-  padding: 8px 14px;
-  font-size: 18px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.25s ease;
-  user-select: none;
+    background-color: var(--dropdown-bg);
+    color: var(--text-primary);
+    border: none;
+    padding: 8px 14px;
+    font-size: 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.25s ease;
+    user-select: none;
 }
 
 .page-btn:hover:not(:disabled) {
-  background: var(--accent-yellow);
-  color: var(--black);
+    background: var(--accent-yellow);
+    color: var(--black);
 }
 
 
 .page-btn:disabled {
-  background-color: var(--dropdown-bg);
-  color: var(--text-primary);
-  cursor: default;
+    background-color: var(--dropdown-bg);
+    color: var(--text-primary);
+    cursor: default;
 }
 
 .page-numbers {
-  display: flex;
-  gap: 6px;
+    display: flex;
+    gap: 6px;
 }
 
 .page-number-btn {
-  background-color: var(--background-light);
-  color: var(--primary-blue);
-  border: 2px solid var(--primary-blue);
-  padding: 6px 12px;
-  font-size: 18px;
-  border-radius: 4px;
-  cursor: pointer;
-  user-select: none;
-  transition: background 0.25s ease, color 0.25s ease;
+    background-color: var(--background-light);
+    color: var(--primary-blue);
+    border: 2px solid var(--primary-blue);
+    padding: 6px 12px;
+    font-size: 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.25s ease, color 0.25s ease;
 }
 
 .page-number-btn:hover {
-  background: var(--accent-yellow);
-  color: var(--black);
-  border-color: var(--accent-yellow);
+    background: var(--accent-yellow);
+    color: var(--black);
+    border-color: var(--accent-yellow);
 }
 
 .page-number-btn.active {
-  background: var(--primary-blue);
-  color: var(--white);
-  border-color: var(--primary-blue);
-  cursor: default;
+    background: var(--primary-blue);
+    color: var(--white);
+    border-color: var(--primary-blue);
+    cursor: default;
 }
 
-
+.pagination-ellipsis {
+    color: var(--text-primary);
+    font-size: 1rem;
+    padding: 0.5rem;
+    background-color: transparent;
+    cursor: default;
+    user-select: none;
+    font-weight: bold;
+    opacity: 0.7;
+}
 
 /* ----Footer Section---- */
 footer {

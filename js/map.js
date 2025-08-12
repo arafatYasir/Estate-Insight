@@ -733,3 +733,5 @@ if (document.readyState === "loading") {
 else {
     loadHouseData();
 }
+
+export default drawAllHeatPoints;

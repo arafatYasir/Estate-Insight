@@ -149,6 +149,11 @@
     .site-footer {
         display: none;
     }
+
+    /* ----Pagination Styles---- */
+    .page-number-btn {
+        padding: 4px 8px;
+    }
 }
 
 
