@@ -209,6 +209,7 @@ function initializeMap(lat, lon) {
 
 // House data store
 let houseData = [];
+let totalPages = JSON.parse(localStorage.getItem("totalPages")) || null, currentPage = 1;
 
 // Parse Date into Date object
 function parseDate(dateStr) {
@@ -230,7 +231,7 @@ function calculatePercentChange(pricesArray) {
     return { percentChange: ((last - first) / first) * 100, last, sortedPrices: parsed };
 }
 
-// Fetch house data
+// Load house data from localstorage or fetch
 function loadHouseData() {
     const cached = localStorage.getItem(CACHE_KEY);
     const timestamp = localStorage.getItem(CACHE_TIME_KEY);
@@ -254,8 +255,11 @@ function loadHouseData() {
             lon /= houseData.length;
 
             initializeMap(lat, lon);
-            // Don't call drawAllHeatPoints here - let the map load event handle it
             showHouses();
+
+            // Calling pagination and footer
+            addPagination();
+            addFooter();
         }
         catch (error) {
             console.error("Error parsing cached data: ", error);
@@ -268,17 +272,20 @@ function loadHouseData() {
 
 }
 
-function fetchFreshData() {
+// Fetch fresh house data
+function fetchFreshData(page = 1) {
     const now = Date.now();
 
     // Calling fetch
-    fetch('https://estate-insight-backend.onrender.com/api/houses?page=5')
+    fetch(`https://estate-insight-backend.onrender.com/api/houses?page=${page}`)
         .then(res => {
             if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
             return res.json();
         })
         .then(fullObj => {
+            totalPages = fullObj.totalPages;
             const data = fullObj.data;
+
             let lat = 0, lon = 0;
             houseData = data.map(house => {
                 lat += house.lat;
@@ -291,12 +298,16 @@ function fetchFreshData() {
             lon /= houseData.length;
 
             initializeMap(lat, lon);
-            // Don't call drawAllHeatPoints here - let the map load event handle it
             showHouses();
+
+            // Calling pagination and footer
+            addPagination();
+            addFooter();
 
             try {
                 localStorage.setItem(CACHE_KEY, JSON.stringify(data));
                 localStorage.setItem(CACHE_TIME_KEY, now.toString());
+                localStorage.setItem("totalPages", "5");
             }
             catch (e) {
                 console.warn("Failed to cache data: ", e);
@@ -510,31 +521,35 @@ function closeHouseDetails() {
 
 function addPagination() {
     const paginationContainer = document.querySelector(".pagination");
+    const pageNumbers = document.querySelector(".page-numbers");
 
-    let timeout = setTimeout(() => {
+    if (totalPages > 0) {
         paginationContainer.style.display = "flex";
-        clearTimeout(timeout);
-    }, 100)
+        pageNumbers.innerHTML = "";
+
+        for (let i = 1; i <= totalPages; i++) {
+            pageNumbers.innerHTML += `
+            <button class="page-number-btn">${i}</button>
+        `
+        }
+    }
+    else {
+        alert("Pages not found due to some error in the server.");
+        paginationContainer.style.display = "none";
+    }
 }
 
 function addFooter() {
     const footer = document.querySelector("footer");
-    let timeout = setTimeout(() => {
-        footer.style.display = "block";
-        clearTimeout(timeout);
-    }, 100);
+    footer.style.display = "block";
 }
 
 // Initialize on DOM is ready
 if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", loadHouseData);
+    document.addEventListener("DOMContentLoaded", () => {
+        loadHouseData();
+    });
 }
 else {
     loadHouseData();
 }
-
-// Adding pagination
-addPagination();
-
-// Adding footer at the last
-addFooter();
