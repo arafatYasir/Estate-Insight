@@ -665,6 +665,15 @@ nav .login-btn a:hover {
     text-align: center;
 }
 
+.house-container .showing-info {
+  color: var(--text-primary); /* Neutral text color */
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+
 .house-listings {
     display: flex;
     flex-wrap: wrap;
@@ -673,6 +682,8 @@ nav .login-btn a:hover {
     gap: 14px;
     row-gap: 14px;
 }
+
+
 
 .house-card {
     width: 100%;

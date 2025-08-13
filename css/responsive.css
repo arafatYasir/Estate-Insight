@@ -178,9 +178,10 @@
         color: var(--black);
     }
 
-    .page-btn:active:not(:disabled) {
-        background: var(--accent-yellow);
-        color: var(--black);
+    .page-number-btn:hover {
+        background: var(--background-light);
+        color: var(--primary-blue);
+        border-color: var(--primary-blue);
     }
 }
 
@@ -332,6 +333,18 @@
     /* ----Footer Section---- */
     .site-footer {
         display: none;
+    }
+
+    /* ----Pagination Styles */
+    .page-btn:hover:not(:disabled) {
+        background: var(--dropdown-bg);
+        color: var(--black);
+    }
+
+    .page-number-btn:hover {
+        background: var(--background-light);
+        color: var(--primary-blue);
+        border-color: var(--primary-blue);
     }
 }
 

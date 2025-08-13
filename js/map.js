@@ -278,7 +278,7 @@ function loadHouseData() {
     const timestamp = localStorage.getItem(CACHE_TIME_KEY);
     const now = Date.now();
 
-    if (cached && timestamp && now - parseInt(timestamp) < MAX_CACHE_AGE) {
+    if (cached && timestamp && now - parseInt(timestamp) <= MAX_CACHE_AGE) {
         try {
             const data = JSON.parse(cached);
 
@@ -327,7 +327,7 @@ function fetchFreshData(page) {
         const now = Date.now();
 
         // Calling fetch
-        fetch(`https://estate-insight-backend.onrender.com/api/houses?limit=500`)
+        fetch(`https://estate-insight-backend.onrender.com/api/houses?limit=300`)
             .then(res => {
                 if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
                 return res.json();
@@ -471,6 +471,10 @@ function showHouses(startIdx, endIdx) {
         // Sort historical prices in ascending order
         const length = house.sortedPrices.length;
 
+        // Number of cards showing
+        const showingInfo = document.querySelector(".showing-info");
+        showingInfo.innerHTML = `Showing ${startIdx + 1} - ${endIdx} of ${houseData.length} houses`;
+        
         // Generating prices history
         const priceHistoryHTML = `
             <li><span class="hist-date">${house.sortedPrices[0].date}</span> <span class="colon">:</span> <span class="hist-price">$${house.sortedPrices[0].price}</span></li>
