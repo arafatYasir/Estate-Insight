@@ -1,5 +1,3 @@
-import { drawAllHeatPoints } from "./map";
-
 // Elements to show mobile menu options
 let menuBtn = document.querySelector(".menu-btn");
 let searchIconBtn = document.querySelector(".search-icon-btn");
@@ -174,6 +172,26 @@ function closeFilterModal() {
     }, 300);
 }
 
+// Map refreshing function
+function forceMapRefresh() {
+    if (!map || !mapInitialized) return;
+
+    setTimeout(() => {
+        map.invalidateSize(true);
+
+        resizeCanvas();
+
+        const currentCenter = map.getCenter();
+
+        map.panTo([currentCenter.lat + 0.0001, currentCenter.lng + 0.0001]);
+
+        setTimeout(() => {
+            map.panTo(currentCenter);
+            drawAllHeatPoints();
+        }, 50);
+    }, 100);
+}
+
 
 // Switching from map to list for mobile and tablet
 const realMap = document.querySelector("#map");
@@ -182,6 +200,7 @@ const switchToListBtn = document.querySelector(".switch-to-list");
 const switchToMapBtn = document.querySelector(".switch-to-map");
 const tooltip = document.getElementById('tooltip');
 let showingState = localStorage.getItem("showingState") || "";
+let switchEventListenersAdded = false;
 
 function changeLayout() {
     // Checking if already state exists
@@ -200,32 +219,40 @@ function changeLayout() {
             switchToListBtn.style.display = "inline";
             switchToMapBtn.style.display = "none";
             mobileFilterBtn.style.display = "none";
+
+            // Refresh the map
+            forceMapRefresh();
         }
 
 
-        // Event listener to switch
-        switchToListBtn.addEventListener("click", () => {
-            realMap.style.display = "none";
-            houseContainer.style.display = "block";
-            switchToListBtn.style.display = "none";
-            switchToMapBtn.style.display = "inline";
-            mobileFilterBtn.style.display = "inline";
-            tooltip.style.display = "none";
+        if (!switchEventListenersAdded) {
+            // Event listener to switch
+            switchToListBtn.addEventListener("click", () => {
+                realMap.style.display = "none";
+                houseContainer.style.display = "block";
+                switchToListBtn.style.display = "none";
+                switchToMapBtn.style.display = "inline";
+                mobileFilterBtn.style.display = "inline";
+                tooltip.style.display = "none";
 
-            localStorage.setItem("showingState", "list");
-        })
+                localStorage.setItem("showingState", "list");
+            })
 
-        switchToMapBtn.addEventListener("click", () => {
-            realMap.style.display = "block";
-            houseContainer.style.display = "none";
-            switchToListBtn.style.display = "inline";
-            switchToMapBtn.style.display = "none";
-            mobileFilterBtn.style.display = "none";
+            switchToMapBtn.addEventListener("click", () => {
+                realMap.style.display = "block";
+                houseContainer.style.display = "none";
+                switchToListBtn.style.display = "inline";
+                switchToMapBtn.style.display = "none";
+                mobileFilterBtn.style.display = "none";
 
-            localStorage.setItem("showingState", "map");
+                localStorage.setItem("showingState", "map");
 
-            // drawAllHeatPoints();
-        });
+                // Refresh map
+                forceMapRefresh();
+            });
+
+            switchEventListenersAdded = true;
+        }
     }
     else {
         switchToListBtn.style.display = "none";
@@ -233,8 +260,10 @@ function changeLayout() {
         mobileFilterBtn.style.display = "none";
         realMap.style.display = "block";
         houseContainer.style.display = "block";
-    }
 
+        // Refresh map
+        forceMapRefresh();
+    }
 
 }
 

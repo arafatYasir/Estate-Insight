@@ -29,13 +29,27 @@ function throttle(func, limit) {
     }
 }
 
+
 // Resize canvas to match map container
 function resizeCanvas() {
-    const mapContainer = document.getElementById("map");
-    const rect = mapContainer.getBoundingClientRect();
+    try {
+        const mapContainer = document.getElementById("map");
 
-    canvas.width = rect.width;
-    canvas.height = rect.height;
+        if (mapContainer.style.display === "none" || mapContainer.offsetWidth === 0 || mapContainer.offsetHeight === 0) {
+            console.log("Map container is not visible");
+            return;
+        }
+
+        const rect = mapContainer.getBoundingClientRect();
+
+        if (rect.width > 0 && rect.height > 0) {
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+        }
+    }
+    catch (e) {
+        console.error("Error resizing canvas: ", e)
+    }
 }
 
 resizeCanvas();
@@ -571,11 +585,11 @@ function createPagination() {
     const visiblePages = calculateVisiblePages(currentPage, totalPages);
 
     visiblePages.forEach(page => {
-        if(page === "...") {
+        if (page === "...") {
             const ellipsis = document.createElement("span");
             ellipsis.innerHTML = "...";
             ellipsis.classList.add("pagination-ellipsis");
-            pageNumbers.appendChild(ellipsis);   
+            pageNumbers.appendChild(ellipsis);
         }
         else {
             const pageButton = document.createElement("button");
@@ -583,7 +597,7 @@ function createPagination() {
             pageButton.classList.add("page-number-btn");
             pageButton.setAttribute("data-index", page);
 
-            if(currentPage === page) {
+            if (currentPage === page) {
                 pageButton.classList.add("active");
             }
 
@@ -627,13 +641,13 @@ function updatePagination() {
 
     const visiblePages = calculateVisiblePages(currentPage, totalPages);
 
-    
+
     visiblePages.forEach(page => {
-        if(page === "...") {
+        if (page === "...") {
             const ellipsis = document.createElement("span");
             ellipsis.innerHTML = "...";
             ellipsis.classList.add("pagination-ellipsis");
-            pageNumbers.appendChild(ellipsis);   
+            pageNumbers.appendChild(ellipsis);
         }
         else {
             const pageButton = document.createElement("button");
@@ -641,7 +655,7 @@ function updatePagination() {
             pageButton.classList.add("page-number-btn");
             pageButton.setAttribute("data-index", page);
 
-            if(currentPage === page) {
+            if (currentPage === page) {
                 pageButton.classList.add("active");
             }
 
@@ -653,21 +667,21 @@ function updatePagination() {
         pageButton.addEventListener("click", () => {
             const pageNumber = parseInt(pageButton.getAttribute("data-index"));
 
-            if(currentPage !== pageNumber) {
+            if (currentPage !== pageNumber) {
                 currentPage = pageNumber;
                 fetchFreshData(currentPage);
             }
         })
-    })   
+    })
 
     const prevBtn = document.querySelector(".prev");
     const nextBtn = document.querySelector(".next");
 
-    if(prevBtn) {
+    if (prevBtn) {
         prevBtn.disabled = currentPage <= 1;
     }
 
-    if(nextBtn) {
+    if (nextBtn) {
         nextBtn.disabled = currentPage >= totalPages;
     }
 }
@@ -682,22 +696,22 @@ function calculateVisiblePages(currentPage, totalPages) {
     pages.push(1);
 
     // If the pages are less than the max to show
-    if(totalPages <= 5) {
-        for(let i = 2; i <= totalPages; i++) pages.push(i);
+    if (totalPages <= 5) {
+        for (let i = 2; i <= totalPages; i++) pages.push(i);
         return pages;
     }
 
     // When we are near the start part
-    if(currentPage <= windowSize) {
-        for(let i = 2; i <= windowSize + 1; i++) {
+    if (currentPage <= windowSize) {
+        for (let i = 2; i <= windowSize + 1; i++) {
             pages.push(i);
         }
         pages.push("...");
     }
     // When we are near the end part
-    else if(currentPage >= hold) {
+    else if (currentPage >= hold) {
         pages.push("...");
-        for(let i = hold; i <= totalPages - 1; i++) {
+        for (let i = hold; i <= totalPages - 1; i++) {
             pages.push(i);
         }
     }
@@ -705,14 +719,14 @@ function calculateVisiblePages(currentPage, totalPages) {
     else {
         pages.push("...");
 
-        for(let i = currentPage - pagesToShowBeforeAfter; i <= currentPage + pagesToShowBeforeAfter; i++) {
+        for (let i = currentPage - pagesToShowBeforeAfter; i <= currentPage + pagesToShowBeforeAfter; i++) {
             pages.push(i);
         }
 
         pages.push("...");
     }
 
-    if(totalPages > 1) {
+    if (totalPages > 1) {
         pages.push(totalPages);
     }
 
@@ -733,5 +747,3 @@ if (document.readyState === "loading") {
 else {
     loadHouseData();
 }
-
-export default drawAllHeatPoints;
