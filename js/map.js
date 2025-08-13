@@ -134,6 +134,7 @@ function initializeMap(lat, lon) {
     // Tooltip on hover - throttling for better performance
     const mapContainer = document.getElementById("map");
     const tooltip = document.getElementById('tooltip');
+    let tooltipTimeout;
 
     const handleMouseMove = throttle((e) => {
         // Skip for mobile devices
@@ -166,6 +167,7 @@ function initializeMap(lat, lon) {
 
             if (leftPos < 0) {
                 leftPos = toolTipWidth / 2;
+                console.log("Hello I am width");
             }
             if (topPos < 0) {
                 topPos = toolTipHeight / 2;
@@ -203,16 +205,39 @@ function initializeMap(lat, lon) {
         });
 
         if (hoverHouse) {
-            tooltip.style.left = `${touch.clientX + 15}px`;
-            tooltip.style.top = `${touch.clientY + 15}px`;
+            const toolTipWidth = 200;
+            const toolTipHeight = 95;
+
+            let leftPos = touch.clientX + 15;
+            let topPos = touch.clientY + 15;
+
+            if (leftPos + toolTipWidth > window.innerWidth) {
+                leftPos = touch.clientX - toolTipWidth - 15;
+            }
+            if (topPos + toolTipHeight > window.innerHeight) {
+                topPos = touch.clientY - toolTipHeight - 15;
+            }
+
+            if (leftPos < 0) {
+                leftPos = toolTipWidth / 2;
+                console.log("Hello I am width");
+            }
+            if (topPos < 0) {
+                topPos = toolTipHeight / 2;
+            }
+
+            tooltip.style.left = `${leftPos}px`;
+            tooltip.style.top = `${topPos}px`;
             tooltip.style.display = 'block';
             tooltip.innerHTML = `
-                <strong>Price Change:</strong> ${hoverHouse.percentChange.toFixed(2)}% ${hoverHouse.percentChange > 0 ? "📈" : "📉"}<br>
+                <strong>Price Change:</strong> ${hoverHouse.percentChange.toFixed(2)}% ${hoverHouse.percentChange   > 0 ? "📈" : "📉"}<br>
                 <strong>Latest Price:</strong> $${hoverHouse.currentPrice}
             `;
 
             // Hide tooltip after 3 seconds on mobile
-            setTimeout(() => {
+            if(tooltipTimeout) clearTimeout(tooltipTimeout);
+            
+            tooltipTimeout = setTimeout(() => {
                 tooltip.style.display = 'none';
             }, 3000);
         } else {
