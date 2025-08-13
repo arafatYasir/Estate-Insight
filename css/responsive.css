@@ -1,3 +1,17 @@
+:root {
+    /* Core Theme Colors */
+    --primary-blue: #1D3557;
+    --accent-yellow: #F4A261;
+    --background-light: #fff;
+    --dropdown-bg: #DDD;
+    --text-primary: #333333;
+
+    /* Optional Extras */
+    --white: #ffffff;
+    --black: #000000;
+}
+
+
 /* Screen Size Up to 575px */
 @media screen and (max-width: 575px) {
     .container {
@@ -152,7 +166,21 @@
 
     /* ----Pagination Styles---- */
     .page-number-btn {
-        padding: 4px 8px;
+        padding: 4px 6px;
+    }
+
+    .page-btn {
+        padding: 8px;
+    }
+
+    .page-btn:hover:not(:disabled) {
+        background: var(--dropdown-bg);
+        color: var(--black);
+    }
+
+    .page-btn:active:not(:disabled) {
+        background: var(--accent-yellow);
+        color: var(--black);
     }
 }
 
