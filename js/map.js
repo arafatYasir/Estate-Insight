@@ -58,7 +58,7 @@ window.addEventListener("resize", resizeCanvas);
 // Setting Cache Details for Local Storage
 const CACHE_KEY = "houseData";
 const CACHE_TIME_KEY = "houseDataTimestamp";
-const MAX_CACHE_AGE = 1000 * 60 * 60 * 1; // 6 hours
+const MAX_CACHE_AGE = 120000; // 6 hours
 
 // Flag to track if map is ready
 let mapReady = false;
@@ -251,8 +251,6 @@ let totalPages = JSON.parse(localStorage.getItem("totalPages")) || null, current
 let maxHouseCardsToShow = 30;
 let start = (currentPage * maxHouseCardsToShow) - maxHouseCardsToShow, end = currentPage * maxHouseCardsToShow;
 
-// Page 1: 0 - 30 -> formula: start = (currentPage * maxHouseCardsToShow) - 30, end = currentPage * maxHouseCardsToShow
-
 // Parse Date into Date object
 function parseDate(dateStr) {
     const [day, month, year] = dateStr.split('/');
@@ -306,7 +304,7 @@ function loadHouseData() {
                 drawAllHeatPoints();
             }
 
-            showHouses();
+            showHouses(start, end);
 
             // Calling pagination and footer
             addPagination();
@@ -325,67 +323,71 @@ function loadHouseData() {
 
 // Fetch fresh house data
 function fetchFreshData(page) {
-    if (!isFirstLoad) return;
+    if (isFirstLoad) {
+        const now = Date.now();
 
-    const now = Date.now();
+        // Calling fetch
+        fetch(`https://estate-insight-backend.onrender.com/api/houses?limit=500`)
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                return res.json();
+            })
+            .then(fullObj => {
+                totalPages = Math.ceil(parseInt(fullObj.count) / maxHouseCardsToShow);
+                const data = fullObj.data;
 
-    // Calling fetch
-    fetch(`https://estate-insight-backend.onrender.com/api/houses?limit=200`)
-        .then(res => {
-            if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-            return res.json();
-        })
-        .then(fullObj => {
-            totalPages = Math.ceil(parseInt(fullObj.count) / maxHouseCardsToShow);
-            const data = fullObj.data;
+                let lat = 0, lon = 0;
+                houseData = data.map(house => {
+                    lat += house.lat;
+                    lon += house.lon;
+                    const { percentChange, last, sortedPrices } = calculatePercentChange(house.prices);
+                    return { ...house, percentChange, currentPrice: last, sortedPrices };
+                });
 
-            let lat = 0, lon = 0;
-            houseData = data.map(house => {
-                lat += house.lat;
-                lon += house.lon;
-                const { percentChange, last, sortedPrices } = calculatePercentChange(house.prices);
-                return { ...house, percentChange, currentPrice: last, sortedPrices };
-            });
+                lat /= houseData.length;
+                lon /= houseData.length;
 
-            lat /= houseData.length;
-            lon /= houseData.length;
+                // Initialize the map on first load
+                if (!mapInitialized) {
+                    initializeMap(lat, lon);
+                    mapInitialized = true;
+                }
+                else {
+                    map.setView([lat, lon], map.getZoom());
+                    drawAllHeatPoints();
+                }
 
-            // Initialize the map on first load
-            if (!mapInitialized) {
-                initializeMap(lat, lon);
-                mapInitialized = true;
-            }
-            else {
-                map.setView([lat, lon], map.getZoom());
-                drawAllHeatPoints();
-            }
+                showHouses(start, end);
 
-            showHouses();
+                // Calling pagination
+                addPagination();
 
-            // Calling pagination
-            addPagination();
+                // Call footer on the first load
+                if (page === 1) {
+                    addFooter();
+                }
 
-            // Call footer on the first load
-            if (page === 1) {
-                addFooter();
-            }
+                try {
+                    localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+                    localStorage.setItem(CACHE_TIME_KEY, now.toString());
+                    localStorage.setItem("totalPages", totalPages.toString());
+                }
+                catch (e) {
+                    console.warn("Failed to cache data: ", e);
+                }
+            })
+            .catch(err => {
+                console.error('Error fetching house data:', err);
 
-            try {
-                localStorage.setItem(CACHE_KEY, JSON.stringify(data));
-                localStorage.setItem(CACHE_TIME_KEY, now.toString());
-                localStorage.setItem("totalPages", totalPages.toString());
-            }
-            catch (e) {
-                console.warn("Failed to cache data: ", e);
-            }
-        })
-        .catch(err => {
-            console.error('Error fetching house data:', err);
-
-            if (!mapInitialized) {
-                addFooter();
-            }
-        });
+                if (!mapInitialized) {
+                    addFooter();
+                }
+            })
+            .finally(() => isFirstLoad = false)
+    }
+    else {
+        // then do the map api call or something right???
+    }
 }
 
 
@@ -460,11 +462,12 @@ function getInterpolatedColor(change, listingType) {
 
 
 // House Showing Function
-function showHouses() {
+function showHouses(startIdx, endIdx) {
     const houseListings = document.querySelector(".house-listings");
     houseListings.innerHTML = ``;
+    let demoHtml = ``;
 
-    houseData.slice(start, end).forEach((house, idx) => {
+    houseData.slice(startIdx, endIdx).forEach((house, idx) => {
         // Sort historical prices in ascending order
         const length = house.sortedPrices.length;
 
@@ -477,7 +480,7 @@ function showHouses() {
 
         const priceChangeText = house.percentChange > 0 ? `<span class='increase'>⬆ ${house.percentChange.toFixed(2)}%</span>` : `<span class='decrease'>⬇ ${house.percentChange.toFixed(2)}%</span>`
 
-        houseListings.innerHTML += `
+        demoHtml += `
             <div class="house-card" data-index="${idx}">
                 <img class="house-img" src="./images/house_image.webp" alt="House Image" />
                 <div class="house-content">
@@ -497,6 +500,8 @@ function showHouses() {
             </div>
         `;
     })
+
+    houseListings.innerHTML = demoHtml;
 
     // Re-attach event listeners after creating the house cards
     attachHouseCardListeners();
@@ -643,6 +648,7 @@ function createPagination() {
                 currentPage = pageNumber;
                 start = (currentPage * maxHouseCardsToShow) - maxHouseCardsToShow;
                 end = currentPage * maxHouseCardsToShow;
+                showHouses(start, end);
                 updatePagination();
             }
         })
@@ -654,6 +660,7 @@ function createPagination() {
             currentPage -= 1;
             start = (currentPage * maxHouseCardsToShow) - maxHouseCardsToShow;
             end = currentPage * maxHouseCardsToShow;
+            showHouses(start, end);
             updatePagination();
         }
     })
@@ -664,6 +671,7 @@ function createPagination() {
             currentPage += 1;
             start = (currentPage * maxHouseCardsToShow) - maxHouseCardsToShow;
             end = currentPage * maxHouseCardsToShow;
+            showHouses(start, end);
             updatePagination();
         }
     })
@@ -704,7 +712,10 @@ function updatePagination() {
 
             if (currentPage !== pageNumber) {
                 currentPage = pageNumber;
-                fetchFreshData(currentPage);
+                start = (currentPage * maxHouseCardsToShow) - maxHouseCardsToShow;
+                end = currentPage * maxHouseCardsToShow;
+                showHouses(start, end);
+                updatePagination();
             }
         })
     })
