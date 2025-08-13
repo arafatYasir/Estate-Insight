@@ -58,7 +58,7 @@ window.addEventListener("resize", resizeCanvas);
 // Setting Cache Details for Local Storage
 const CACHE_KEY = "houseData";
 const CACHE_TIME_KEY = "houseDataTimestamp";
-const MAX_CACHE_AGE = 1000 * 60 * 60 * 6; // 6 hours
+const MAX_CACHE_AGE = 1000 * 60 * 60 * 1; // 6 hours
 
 // Flag to track if map is ready
 let mapReady = false;
@@ -167,7 +167,6 @@ function initializeMap(lat, lon) {
 
             if (leftPos < 0) {
                 leftPos = toolTipWidth / 2;
-                console.log("Hello I am width");
             }
             if (topPos < 0) {
                 topPos = toolTipHeight / 2;
@@ -230,13 +229,13 @@ function initializeMap(lat, lon) {
             tooltip.style.top = `${topPos}px`;
             tooltip.style.display = 'block';
             tooltip.innerHTML = `
-                <strong>Price Change:</strong> ${hoverHouse.percentChange.toFixed(2)}% ${hoverHouse.percentChange   > 0 ? "📈" : "📉"}<br>
+                <strong>Price Change:</strong> ${hoverHouse.percentChange.toFixed(2)}% ${hoverHouse.percentChange > 0 ? "📈" : "📉"}<br>
                 <strong>Latest Price:</strong> $${hoverHouse.currentPrice}
             `;
 
             // Hide tooltip after 3 seconds on mobile
-            if(tooltipTimeout) clearTimeout(tooltipTimeout);
-            
+            if (tooltipTimeout) clearTimeout(tooltipTimeout);
+
             tooltipTimeout = setTimeout(() => {
                 tooltip.style.display = 'none';
             }, 3000);
@@ -249,6 +248,10 @@ function initializeMap(lat, lon) {
 // House data store
 let houseData = [];
 let totalPages = JSON.parse(localStorage.getItem("totalPages")) || null, currentPage = 1;
+let maxHouseCardsToShow = 30;
+let start = (currentPage * maxHouseCardsToShow) - maxHouseCardsToShow, end = currentPage * maxHouseCardsToShow;
+
+// Page 1: 0 - 30 -> formula: start = (currentPage * maxHouseCardsToShow) - 30, end = currentPage * maxHouseCardsToShow
 
 // Parse Date into Date object
 function parseDate(dateStr) {
@@ -271,7 +274,7 @@ function calculatePercentChange(pricesArray) {
 }
 
 // Load house data from localstorage or fetch
-let mapInitialized = false;
+let mapInitialized = false, isFirstLoad = true;
 function loadHouseData() {
     const cached = localStorage.getItem(CACHE_KEY);
     const timestamp = localStorage.getItem(CACHE_TIME_KEY);
@@ -322,16 +325,18 @@ function loadHouseData() {
 
 // Fetch fresh house data
 function fetchFreshData(page) {
+    if (!isFirstLoad) return;
+
     const now = Date.now();
 
     // Calling fetch
-    fetch(`https://estate-insight-backend.onrender.com/api/houses?page=${page}`)
+    fetch(`https://estate-insight-backend.onrender.com/api/houses?limit=200`)
         .then(res => {
             if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
             return res.json();
         })
         .then(fullObj => {
-            totalPages = fullObj.totalPages;
+            totalPages = Math.ceil(parseInt(fullObj.count) / maxHouseCardsToShow);
             const data = fullObj.data;
 
             let lat = 0, lon = 0;
@@ -459,7 +464,7 @@ function showHouses() {
     const houseListings = document.querySelector(".house-listings");
     houseListings.innerHTML = ``;
 
-    houseData.slice(0, 20).forEach((house, idx) => {
+    houseData.slice(start, end).forEach((house, idx) => {
         // Sort historical prices in ascending order
         const length = house.sortedPrices.length;
 
@@ -636,7 +641,9 @@ function createPagination() {
             const pageNumber = parseInt(pageButton.getAttribute("data-index"));
             if (currentPage !== pageNumber) {
                 currentPage = pageNumber;
-                fetchFreshData(currentPage);
+                start = (currentPage * maxHouseCardsToShow) - maxHouseCardsToShow;
+                end = currentPage * maxHouseCardsToShow;
+                updatePagination();
             }
         })
     })
@@ -645,8 +652,9 @@ function createPagination() {
     document.querySelector(".prev").addEventListener("click", () => {
         if (currentPage > 1) {
             currentPage -= 1;
-            fetchFreshData(currentPage);
-            console.log("I am running here.")
+            start = (currentPage * maxHouseCardsToShow) - maxHouseCardsToShow;
+            end = currentPage * maxHouseCardsToShow;
+            updatePagination();
         }
     })
 
@@ -654,7 +662,9 @@ function createPagination() {
     document.querySelector(".next").addEventListener("click", () => {
         if (currentPage < totalPages) {
             currentPage += 1;
-            fetchFreshData(currentPage);
+            start = (currentPage * maxHouseCardsToShow) - maxHouseCardsToShow;
+            end = currentPage * maxHouseCardsToShow;
+            updatePagination();
         }
     })
 }
