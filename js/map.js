@@ -58,13 +58,29 @@ window.addEventListener("resize", resizeCanvas);
 // Setting Cache Details for Local Storage
 const CACHE_KEY = "houseData";
 const CACHE_TIME_KEY = "houseDataTimestamp";
-const MAX_CACHE_AGE = 120000; // 6 hours
+const MAX_CACHE_AGE = 60000; // 6 hours
 
 // Flag to track if map is ready
 let mapReady = false;
 
 // Initializing the map
 let map;
+let isFetchingBounds = false;
+let lastReqId = 0;
+
+function getBoundsParams() {
+    const b = map.getBounds();
+    const ne = b.getNorthEast();
+    const sw = b.getSouthWest();
+
+    return {
+        minLat: sw.lat.toFixed(6),
+        maxLat: ne.lat.toFixed(6),
+        minLng: sw.lng.toFixed(6),
+        maxLng: ne.lng.toFixed(6)
+    };
+}
+
 function initializeMap(lat, lon) {
     // Detecting if it's a mobile device
     const isMobile = window.innerWidth <= 768;
@@ -79,13 +95,13 @@ function initializeMap(lat, lon) {
         touchZoom: true,
         zoomControl: false,
         minZoom: 5,
-        maxZoom: 9,
+        maxZoom: 11,
         // Better mobile performance
         preferCanvas: true,
         updateWhenIdle: isMobile,
         updateWhenZooming: !isMobile,
         keepBuffer: isMobile ? 1 : 2
-    }).setView([lat, lon], 6);
+    }).setView([lat, lon], 8);
 
     const tileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
@@ -120,10 +136,17 @@ function initializeMap(lat, lon) {
 
     // Drawing heat ponint by debouncing
     const debouncedDraw = debounce(drawAllHeatPoints, 100);
+    const debouncedBoundsFetch = debounce(() => fetchHousesForCurrentBounds(), 250);
+
     map.on("move", debouncedDraw);
     map.on("zoom", debouncedDraw);
-    map.on("moveend", drawAllHeatPoints);
-    map.on("zoomend", drawAllHeatPoints);
+    map.on("moveend", () => {
+        debouncedBoundsFetch();
+    });
+    map.on("zoomend", () => {
+        debouncedBoundsFetch();
+    });
+
 
     // Handling map resize
     map.on("resize", () => {
@@ -323,71 +346,109 @@ function loadHouseData() {
 
 // Fetch fresh house data
 function fetchFreshData(page) {
-    if (isFirstLoad) {
-        const now = Date.now();
+    if (!isFirstLoad) return;
+    const now = Date.now();
 
-        // Calling fetch
-        fetch(`https://estate-insight-backend.onrender.com/api/houses?limit=300`)
-            .then(res => {
-                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-                return res.json();
-            })
-            .then(fullObj => {
-                totalPages = Math.ceil(parseInt(fullObj.count) / maxHouseCardsToShow);
-                const data = fullObj.data;
+    // Calling fetch
+    fetch(`https://estate-insight-backend.onrender.com/api/houses?limit=200`)
+        .then(res => {
+            if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+            return res.json();
+        })
+        .then(fullObj => {
+            totalPages = Math.ceil(parseInt(fullObj.count) / maxHouseCardsToShow);
+            const data = fullObj.data;
 
-                let lat = 0, lon = 0;
-                houseData = data.map(house => {
-                    lat += house.lat;
-                    lon += house.lon;
-                    const { percentChange, last, sortedPrices } = calculatePercentChange(house.prices);
-                    return { ...house, percentChange, currentPrice: last, sortedPrices };
-                });
+            let lat = 0, lon = 0;
+            houseData = data.map(house => {
+                lat += house.lat;
+                lon += house.lon;
+                const { percentChange, last, sortedPrices } = calculatePercentChange(house.prices);
+                return { ...house, percentChange, currentPrice: last, sortedPrices };
+            });
 
-                lat /= houseData.length;
-                lon /= houseData.length;
+            lat /= houseData.length;
+            lon /= houseData.length;
 
-                // Initialize the map on first load
-                if (!mapInitialized) {
-                    initializeMap(lat, lon);
-                    mapInitialized = true;
-                }
-                else {
-                    map.setView([lat, lon], map.getZoom());
-                    drawAllHeatPoints();
-                }
+            // Initialize the map on first load
+            if (!mapInitialized) {
+                initializeMap(lat, lon);
+                mapInitialized = true;
+            }
+            else {
+                map.setView([lat, lon], map.getZoom());
+                drawAllHeatPoints();
+            }
 
-                showHouses(start, end);
+            showHouses(start, end);
 
-                // Calling pagination
-                addPagination();
+            // Calling pagination
+            addPagination();
 
-                // Call footer on the first load
-                if (page === 1) {
-                    addFooter();
-                }
+            // Call footer on the first load
+            if (page === 1) {
+                addFooter();
+            }
 
-                try {
-                    localStorage.setItem(CACHE_KEY, JSON.stringify(data));
-                    localStorage.setItem(CACHE_TIME_KEY, now.toString());
-                    localStorage.setItem("totalPages", totalPages.toString());
-                }
-                catch (e) {
-                    console.warn("Failed to cache data: ", e);
-                }
-            })
-            .catch(err => {
-                console.error('Error fetching house data:', err);
+            try {
+                localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+                localStorage.setItem(CACHE_TIME_KEY, now.toString());
+                localStorage.setItem("totalPages", totalPages.toString());
+            }
+            catch (e) {
+                console.warn("Failed to cache data: ", e);
+            }
+        })
+        .catch(err => {
+            console.error('Error fetching house data:', err);
 
-                if (!mapInitialized) {
-                    addFooter();
-                }
-            })
-            .finally(() => isFirstLoad = false)
-    }
-    else {
-        // then do the map api call or something right???
-    }
+            if (!mapInitialized) {
+                addFooter();
+            }
+        })
+        .finally(() => isFirstLoad = false)
+}
+
+// Fetch data when map changes
+function fetchHousesForCurrentBounds() {
+    // Don’t run during first-load fetch
+    // if (isFirstLoad) return;
+
+    console.log("I am here in the fetch function!");
+
+    const reqId = ++lastReqId;
+    const { minLat, maxLat, minLng, maxLng } = getBoundsParams();
+
+    const url = `https://estate-insight-backend.onrender.com/api/houses` +
+        `?minLat=${minLat}&maxLat=${maxLat}&minLng=${minLng}&maxLng=${maxLng}`;
+
+    isFetchingBounds = true;
+    fetch(url)
+        .then(r => {
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            return r.json();
+        })
+        .then(fullObj => {
+            // Ignore stale responses
+            if (reqId !== lastReqId) return;
+
+
+            totalPages = Math.ceil(parseInt(fullObj.count) / maxHouseCardsToShow);
+            const data = fullObj.data;
+
+            let lat = 0, lon = 0;
+            houseData = data.map(house => {
+                const { percentChange, last, sortedPrices } = calculatePercentChange(house.prices);
+                return { ...house, percentChange, currentPrice: last, sortedPrices };
+            });
+
+
+            console.log("[Bounds Fetch] URL:", url);
+            console.log("[Bounds Fetch] Returned:", fullObj.data.length, "of total", fullObj.count);
+            drawAllHeatPoints();
+        })
+        .catch(err => console.error("[Bounds Fetch] Error:", err))
+        .finally(() => { if (reqId === lastReqId) isFetchingBounds = false; });
 }
 
 
@@ -474,7 +535,7 @@ function showHouses(startIdx, endIdx) {
         // Number of cards showing
         const showingInfo = document.querySelector(".showing-info");
         showingInfo.innerHTML = `Showing ${startIdx + 1} - ${endIdx} of ${houseData.length} houses`;
-        
+
         // Generating prices history
         const priceHistoryHTML = `
             <li><span class="hist-date">${house.sortedPrices[0].date}</span> <span class="colon">:</span> <span class="hist-price">$${house.sortedPrices[0].price}</span></li>
