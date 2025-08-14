@@ -134,18 +134,15 @@ function initializeMap(lat, lon) {
         }, 200);
     });
 
-    // Drawing heat ponint by debouncing
-    const debouncedDraw = debounce(drawAllHeatPoints, 100);
-    const debouncedBoundsFetch = debounce(() => fetchHousesForCurrentBounds(), 250);
+    const debouncedDraw = debounce(drawAllHeatPoints, 50);
+    const debouncedBoundsFetch = debounce(() => fetchHousesForCurrentBounds(), 400);
 
     map.on("move", debouncedDraw);
     map.on("zoom", debouncedDraw);
-    map.on("moveend", () => {
-        debouncedBoundsFetch();
-    });
-    map.on("zoomend", () => {
-        debouncedBoundsFetch();
-    });
+
+    // fetching new data for map events
+    map.on("moveend", debouncedBoundsFetch);
+    map.on("zoomend", debouncedBoundsFetch);
 
 
     // Handling map resize
@@ -275,13 +272,25 @@ let maxHouseCardsToShow = 30;
 let start = (currentPage * maxHouseCardsToShow) - maxHouseCardsToShow, end = currentPage * maxHouseCardsToShow;
 
 // Parse Date into Date object
+const dateCache = new Map();
 function parseDate(dateStr) {
+    if (dateCache.has(dateStr)) {
+        return dateCache.get(dateStr);
+    }
+
     const [day, month, year] = dateStr.split('/');
-    return new Date(`${year}-${month}-${day}`);
+    const date = new Date(`${year}-${month}-${day}`);
+    dateCache.set(dateStr, date);
+    return date;
 }
 
 // Calculate % change and last price from price history
-function calculatePercentChange(pricesArray) {
+function calculatePercentChange(pricesArray, houseId) {
+    // Use house ID as cache key
+    if (processedHouseCache.has(houseId)) {
+        return processedHouseCache.get(houseId);
+    }
+
     const parsed = pricesArray.map(p => {
         const [dateStr, priceStr] = p.split('|').map(x => x.trim());
         return { sortByDate: parseDate(dateStr), date: dateStr, price: parseInt(priceStr) };
@@ -290,8 +299,38 @@ function calculatePercentChange(pricesArray) {
     const first = parsed[0].price;
     const last = parsed[parsed.length - 1].price;
 
-    if (first === 0) return { percentChange: 0, last };
-    return { percentChange: ((last - first) / first) * 100, last, sortedPrices: parsed };
+    const result = first === 0
+        ? { percentChange: 0, last, sortedPrices: parsed }
+        : { percentChange: ((last - first) / first) * 100, last, sortedPrices: parsed };
+
+    // Cache the result
+    processedHouseCache.set(houseId, result);
+    return result;
+}
+
+function processHouseData(data, calculateCenter = false) {
+    let lat = 0, lon = 0;
+
+    const processed = data.map(house => {
+        if (calculateCenter) {
+            lat += house.lat;
+            lon += house.lon;
+        }
+
+        // Use house ID for caching (assuming house has id/address as unique key)
+        const houseId = house.id || house.address || `${house.lat}-${house.lon}`;
+        const { percentChange, last, sortedPrices } = calculatePercentChange(house.prices, houseId);
+
+        return { ...house, percentChange, currentPrice: last, sortedPrices };
+    });
+
+    if (calculateCenter) {
+        lat /= data.length;
+        lon /= data.length;
+        return { processed, centerLat: lat, centerLon: lon };
+    }
+
+    return { processed };
 }
 
 // Load house data from localstorage or fetch
@@ -411,18 +450,22 @@ function fetchFreshData(page) {
 
 // Fetch data when map changes
 function fetchHousesForCurrentBounds() {
-    // Don’t run during first-load fetch
-    // if (isFirstLoad) return;
-
-    console.log("I am here in the fetch function!");
+    if (isFetchingBounds) return;
 
     const reqId = ++lastReqId;
     const { minLat, maxLat, minLng, maxLng } = getBoundsParams();
+
+    // Create cache key for bounds
+    const boundsKey = `${minLat}-${maxLat}-${minLng}-${maxLng}`;
 
     const url = `https://estate-insight-backend.onrender.com/api/houses` +
         `?minLat=${minLat}&maxLat=${maxLat}&minLng=${minLng}&maxLng=${maxLng}`;
 
     isFetchingBounds = true;
+
+    // Show loading indicator (optional)
+    // showLoadingIndicator();
+
     fetch(url)
         .then(r => {
             if (!r.ok) throw new Error(`HTTP ${r.status}`);
@@ -432,26 +475,20 @@ function fetchHousesForCurrentBounds() {
             // Ignore stale responses
             if (reqId !== lastReqId) return;
 
-
             totalPages = Math.ceil(parseInt(fullObj.count) / maxHouseCardsToShow);
             const data = fullObj.data;
 
-            let lat = 0, lon = 0;
-            houseData = data.map(house => {
-                const { percentChange, last, sortedPrices } = calculatePercentChange(house.prices);
-                return { ...house, percentChange, currentPrice: last, sortedPrices };
-            });
+            // Optimized: No need to calculate center for bounds updates
+            const { processed } = processHouseData(data, false);
+            houseData = processed;
 
             drawAllHeatPoints();
 
+            start = 0;
+            end = maxHouseCardsToShow;
+
             showHouses(start, end);
-
             addPagination();
-
-            console.log("[Bounds Fetch] URL:", url);
-            console.log("[Bounds Fetch] Returned:", fullObj.data.length, "of total", fullObj.count);
-
-            
         })
         .catch(err => console.error("[Bounds Fetch] Error:", err))
         .finally(() => { if (reqId === lastReqId) isFetchingBounds = false; });
