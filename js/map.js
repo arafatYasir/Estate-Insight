@@ -94,14 +94,14 @@ function initializeMap(lat, lon) {
         tap: true,
         touchZoom: true,
         zoomControl: false,
-        minZoom: 5,
-        maxZoom: 11,
+        minZoom: isMobile ? 8 : 7,
+        maxZoom: 12,
         // Better mobile performance
         preferCanvas: true,
         updateWhenIdle: isMobile,
         updateWhenZooming: !isMobile,
         keepBuffer: isMobile ? 1 : 2
-    }).setView([lat, lon], 8);
+    }).setView([lat, lon], isMobile ? 10 : 8);
 
     const tileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
@@ -442,10 +442,16 @@ function fetchHousesForCurrentBounds() {
                 return { ...house, percentChange, currentPrice: last, sortedPrices };
             });
 
+            drawAllHeatPoints();
+
+            showHouses(start, end);
+
+            addPagination();
 
             console.log("[Bounds Fetch] URL:", url);
             console.log("[Bounds Fetch] Returned:", fullObj.data.length, "of total", fullObj.count);
-            drawAllHeatPoints();
+
+            
         })
         .catch(err => console.error("[Bounds Fetch] Error:", err))
         .finally(() => { if (reqId === lastReqId) isFetchingBounds = false; });
@@ -534,7 +540,7 @@ function showHouses(startIdx, endIdx) {
 
         // Number of cards showing
         const showingInfo = document.querySelector(".showing-info");
-        showingInfo.innerHTML = `Showing ${startIdx + 1} - ${endIdx} of ${houseData.length} houses`;
+        showingInfo.innerHTML = `Showing ${startIdx + 1} - ${Math.min(endIdx, houseData.length)} of ${houseData.length} houses`;
 
         // Generating prices history
         const priceHistoryHTML = `
