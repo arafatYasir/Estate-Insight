@@ -74,7 +74,6 @@
 
     /* ----House Styles---- */
     .house-container {
-        display: none;
         width: 100%;
         margin-left: 0;
         margin-top: 100px;
@@ -95,6 +94,7 @@
 
     /* ----Map Styles---- */
     #map {
+        display: none;
         width: 100%;
         height: 100vh;
         top: 0;
@@ -105,7 +105,11 @@
     }
 
     /* ----Switch to List Btn---- */
-    .switch-to-list {
+    .switch-to-map {
+        display: inline;
+    }
+
+    .mobile-filter-btn {
         display: inline;
     }
 

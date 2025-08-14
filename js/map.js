@@ -345,21 +345,11 @@ function loadHouseData() {
         try {
             const data = JSON.parse(cached);
 
-            let lat = 0, lon = 0;
-            houseData = data.map(house => {
-                lat += house.lat;
-                lon += house.lon;
-
-                const { percentChange, last, sortedPrices } = calculatePercentChange(house.prices);
-
-                return { ...house, percentChange, currentPrice: last, sortedPrices };
-            })
-
-            lat /= houseData.length;
-            lon /= houseData.length;
+            const { processed, centerLat, centerLon } = processHouseData(data, true);
+            houseData = processed;
 
             if (!mapInitialized) {
-                initializeMap(lat, lon);
+                initializeMap(centerLat, centerLon);
                 mapInitialized = true;
             }
             else {
@@ -385,7 +375,6 @@ function loadHouseData() {
 }
 
 // Fetch fresh house data
-// Fetch fresh house data
 function fetchFreshData(page) {
     if (!isFirstLoad) return;
     const now = Date.now();
@@ -400,7 +389,6 @@ function fetchFreshData(page) {
             totalPages = Math.ceil(parseInt(fullObj.count) / maxHouseCardsToShow);
             const data = fullObj.data;
 
-            // Use the consistent processHouseData function instead of manual processing
             const { processed, centerLat, centerLon } = processHouseData(data, true);
             houseData = processed;
 
