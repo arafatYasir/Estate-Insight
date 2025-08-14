@@ -68,6 +68,8 @@ let map;
 let isFetchingBounds = false;
 let lastReqId = 0;
 
+const processedHouseCache = new Map();
+
 function getBoundsParams() {
     const b = map.getBounds();
     const ne = b.getNorthEast();
