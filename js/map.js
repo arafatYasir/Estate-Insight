@@ -36,7 +36,6 @@ function resizeCanvas() {
         const mapContainer = document.getElementById("map");
 
         if (mapContainer.style.display === "none" || mapContainer.offsetWidth === 0 || mapContainer.offsetHeight === 0) {
-            console.log("Map container is not visible");
             return;
         }
 
@@ -74,12 +73,14 @@ function getBoundsParams() {
     const b = map.getBounds();
     const ne = b.getNorthEast();
     const sw = b.getSouthWest();
+    const currentZoom = map.getZoom();
 
     return {
         minLat: sw.lat.toFixed(6),
         maxLat: ne.lat.toFixed(6),
         minLng: sw.lng.toFixed(6),
-        maxLng: ne.lng.toFixed(6)
+        maxLng: ne.lng.toFixed(6),
+        zoomLevel: currentZoom
     };
 }
 
@@ -96,14 +97,12 @@ function initializeMap(lat, lon) {
         tap: true,
         touchZoom: true,
         zoomControl: false,
-        minZoom: isMobile ? 8 : 7,
-        maxZoom: 12,
         // Better mobile performance
         preferCanvas: true,
         updateWhenIdle: isMobile,
         updateWhenZooming: !isMobile,
         keepBuffer: isMobile ? 1 : 2
-    }).setView([lat, lon], isMobile ? 10 : 8);
+    }).setView([lat, lon], 5);
 
     const tileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
@@ -386,6 +385,7 @@ function loadHouseData() {
 }
 
 // Fetch fresh house data
+// Fetch fresh house data
 function fetchFreshData(page) {
     if (!isFirstLoad) return;
     const now = Date.now();
@@ -400,24 +400,17 @@ function fetchFreshData(page) {
             totalPages = Math.ceil(parseInt(fullObj.count) / maxHouseCardsToShow);
             const data = fullObj.data;
 
-            let lat = 0, lon = 0;
-            houseData = data.map(house => {
-                lat += house.lat;
-                lon += house.lon;
-                const { percentChange, last, sortedPrices } = calculatePercentChange(house.prices);
-                return { ...house, percentChange, currentPrice: last, sortedPrices };
-            });
-
-            lat /= houseData.length;
-            lon /= houseData.length;
+            // Use the consistent processHouseData function instead of manual processing
+            const { processed, centerLat, centerLon } = processHouseData(data, true);
+            houseData = processed;
 
             // Initialize the map on first load
             if (!mapInitialized) {
-                initializeMap(lat, lon);
+                initializeMap(centerLat, centerLon);
                 mapInitialized = true;
             }
             else {
-                map.setView([lat, lon], map.getZoom());
+                map.setView([centerLat, centerLon], map.getZoom());
                 drawAllHeatPoints();
             }
 
@@ -455,18 +448,15 @@ function fetchHousesForCurrentBounds() {
     if (isFetchingBounds) return;
 
     const reqId = ++lastReqId;
-    const { minLat, maxLat, minLng, maxLng } = getBoundsParams();
+    const { minLat, maxLat, minLng, maxLng, zoomLevel } = getBoundsParams();
 
     // Create cache key for bounds
-    const boundsKey = `${minLat}-${maxLat}-${minLng}-${maxLng}`;
+    const boundsKey = `${minLat}-${maxLat}-${minLng}-${maxLng}-${zoomLevel}`;
 
     const url = `https://estate-insight-backend.onrender.com/api/houses` +
-        `?minLat=${minLat}&maxLat=${maxLat}&minLng=${minLng}&maxLng=${maxLng}`;
+        `?minLat=${minLat}&maxLat=${maxLat}&minLng=${minLng}&maxLng=${maxLng}&zoomLevel=${zoomLevel}`;
 
     isFetchingBounds = true;
-
-    // Show loading indicator (optional)
-    // showLoadingIndicator();
 
     fetch(url)
         .then(r => {
@@ -480,7 +470,6 @@ function fetchHousesForCurrentBounds() {
             totalPages = Math.ceil(parseInt(fullObj.count) / maxHouseCardsToShow);
             const data = fullObj.data;
 
-            // Optimized: No need to calculate center for bounds updates
             const { processed } = processHouseData(data, false);
             houseData = processed;
 
