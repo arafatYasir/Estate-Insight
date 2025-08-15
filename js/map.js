@@ -90,7 +90,7 @@ function initializeMap(lat, lon) {
 
     map = L.map('map', {
         dragging: true,
-        scrollWheelZoom: !isMobile,
+        scrollWheelZoom: true,
         doubleClickZoom: true,
         boxZoom: true,
         keyboard: true,
@@ -142,8 +142,14 @@ function initializeMap(lat, lon) {
     map.on("zoom", debouncedDraw);
 
     // fetching new data for map events
-    map.on("moveend", debouncedBoundsFetch);
-    map.on("zoomend", debouncedBoundsFetch);
+    map.on("moveend", () => {
+        debouncedBoundsFetch();
+        console.log(" I am moving end.");
+    });
+    map.on("zoomend", () => {
+        debouncedBoundsFetch();
+        console.log("I am zooming end");
+    });
 
 
     // Handling map resize
@@ -437,12 +443,25 @@ function fetchHousesForCurrentBounds() {
 
     const reqId = ++lastReqId;
     const { minLat, maxLat, minLng, maxLng, zoomLevel } = getBoundsParams();
+    const filterParams = getFilterValues();
 
-    // Create cache key for bounds
-    const boundsKey = `${minLat}-${maxLat}-${minLng}-${maxLng}-${zoomLevel}`;
+    console.log(filterParams)
 
-    const url = `https://estate-insight-backend.onrender.com/api/houses` +
-        `?minLat=${minLat}&maxLat=${maxLat}&minLng=${minLng}&maxLng=${maxLng}&zoomLevel=${zoomLevel}`;
+    // Creating url with all the parameters
+    const urlParams = new URLSearchParams({
+        minLat,
+        maxLat,
+        minLng,
+        maxLng,
+        zoomLevel,
+        ...filterParams
+    });
+
+    console.log(urlParams.toString());
+
+    const url = `https://estate-insight-backend.onrender.com/api/houses?${urlParams.toString()}`;
+
+    console.log(url)
 
     isFetchingBounds = true;
 
@@ -452,7 +471,6 @@ function fetchHousesForCurrentBounds() {
             return r.json();
         })
         .then(fullObj => {
-            // Ignore stale responses
             if (reqId !== lastReqId) return;
 
             totalPages = Math.ceil(parseInt(fullObj.count) / maxHouseCardsToShow);
@@ -461,13 +479,22 @@ function fetchHousesForCurrentBounds() {
             const { processed } = processHouseData(data, false);
             houseData = processed;
 
-            drawAllHeatPoints();
 
-            start = 0;
-            end = maxHouseCardsToShow;
+            if (houseData.length > 0) {
+                drawAllHeatPoints();
 
-            showHouses(start, end);
-            addPagination();
+                start = 0;
+                end = maxHouseCardsToShow;
+
+                showHouses(start, end);
+                addPagination();
+            }
+            else {
+                start = 0;
+                end = 0;
+                showHouses(start, end);
+                addPagination();
+            }
         })
         .catch(err => console.error("[Bounds Fetch] Error:", err))
         .finally(() => { if (reqId === lastReqId) isFetchingBounds = false; });
@@ -550,13 +577,21 @@ function showHouses(startIdx, endIdx) {
     houseListings.innerHTML = ``;
     let demoHtml = ``;
 
+    // Number of cards showing
+    if (startIdx === 0 && endIdx === 0) {
+        const showingInfo = document.querySelector(".showing-info");
+        showingInfo.innerHTML = `Showing 0 of 0 houses`;
+        return;
+    }
+
+    // Number of cards showing
+    const showingInfo = document.querySelector(".showing-info");
+    showingInfo.innerHTML = `Showing ${startIdx + 1} - ${Math.min(endIdx, houseData.length)} of ${houseData.length} houses`;
+
+
     houseData.slice(startIdx, endIdx).forEach((house, idx) => {
         // Sort historical prices in ascending order
         const length = house.sortedPrices.length;
-
-        // Number of cards showing
-        const showingInfo = document.querySelector(".showing-info");
-        showingInfo.innerHTML = `Showing ${startIdx + 1} - ${Math.min(endIdx, houseData.length)} of ${houseData.length} houses`;
 
         // Generating prices history
         const priceHistoryHTML = `

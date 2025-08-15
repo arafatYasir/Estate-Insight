@@ -100,10 +100,6 @@
         top: 0;
     }
 
-    #legend {
-        display: none;
-    }
-
     /* ----Switch to List Btn---- */
     .switch-to-map {
         display: inline;
@@ -274,11 +270,7 @@
         height: 100vh;
         top: 0;
     }
-
-    #legend {
-        display: none;
-    }
-
+    
     /* ----Switch to List Btn---- */
     .switch-to-list {
         display: inline;

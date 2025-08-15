@@ -507,7 +507,7 @@ nav .login-btn a:hover {
     margin-top: 20px;
 }
 
-.custom-dropdown[data-name="price"] .custom-dropdown-options {
+.custom-dropdown[data-name="pricePC"] .custom-dropdown-options {
     padding: 14px;
 }
 
@@ -1004,45 +1004,6 @@ body.modal-open {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     max-width: 250px;
     line-height: 1.4;
-}
-
-/* Legend */
-#legend {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 200px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 8px;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-    padding: 12px 16px;
-    font-size: 14px;
-    color: #333;
-    user-select: none;
-    z-index: 1000;
-}
-
-#legend-gradient {
-    height: 20px;
-    border-radius: 10px;
-    background: linear-gradient(to right,
-            rgba(233, 62, 58, 1),
-            /* Red -100% */
-            rgba(255, 165, 0, 1),
-            /* Orange -50% */
-            rgba(255, 255, 0, 1),
-            /* Yellow 0% */
-            rgba(27, 138, 90, 1)
-            /* Green +100% */
-        );
-    margin-bottom: 8px;
-    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1);
-}
-
-#legend-labels {
-    display: flex;
-    justify-content: space-between;
-    font-weight: 600;
 }
 
 

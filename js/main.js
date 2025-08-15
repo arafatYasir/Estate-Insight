@@ -51,6 +51,7 @@ backBtn.addEventListener("click", () => {
 })
 
 
+
 // Custom Filter Dropdowns
 filterDropdowns.forEach(dropdown => {
     const selected = dropdown.querySelector(".custom-dropdown-selected");
@@ -69,6 +70,9 @@ filterDropdowns.forEach(dropdown => {
             selected.innerHTML = option.innerHTML;
             dropdown.classList.remove("active");
             dropdown.setAttribute("data-selected", option.dataset.value);
+
+            // calling api when dropdown changes
+            fetchHousesForCurrentBounds();
         })
     })
 })
@@ -271,10 +275,11 @@ function changeLayout() {
 changeLayout();
 window.addEventListener("resize", changeLayout);
 
+const debouncedBoundsFetch = debounce(() => fetchHousesForCurrentBounds(), 400);
 
 // ----Beds & Baths Custom Slider Range----
 document.addEventListener("DOMContentLoaded", () => {
-    function updateBedsBathsSlider(bedsSlider, bathsSlider, bedsValue, bathsValue, selected) {
+    function updateBedsBathsSlider(bedsSlider, bathsSlider, bedsValue, bathsValue, selected, callAPI) {
         const beds = bedsSlider.value;
         const baths = bathsSlider.value;
 
@@ -286,6 +291,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         else {
             selected.innerHTML = `${beds} Bed${beds > 1 ? "s" : ""}, ${baths} Bath${baths > 1 ? "s" : ""}`;
+        }
+
+        if (callAPI) {
+            // calling api with debounce
+            debouncedBoundsFetch();
         }
     }
 
@@ -300,20 +310,20 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
     }
 
-    const dropdown = document.querySelectorAll('.custom-dropdown[data-name="bedsBaths"]');
+    const dropdownB = document.querySelectorAll('.custom-dropdown[data-name="bedsBaths"]');
 
-    dropdown.forEach(d => {
+    dropdownB.forEach(d => {
         const selected = d.querySelector(".custom-dropdown-selected");
         const bedsSlider = d.querySelector("#bedsRange");
         const bathsSlider = d.querySelector("#bathsRange");
         const bedsValue = d.querySelector("#bedsValue");
         const bathsValue = d.querySelector("#bathsValue");
 
-        bedsSlider.addEventListener("input", () => updateBedsBathsSlider(bedsSlider, bathsSlider, bedsValue, bathsValue, selected));
-        bathsSlider.addEventListener("input", () => updateBedsBathsSlider(bedsSlider, bathsSlider, bedsValue, bathsValue, selected));
+        bedsSlider.addEventListener("input", () => updateBedsBathsSlider(bedsSlider, bathsSlider, bedsValue, bathsValue, selected, true));
+        bathsSlider.addEventListener("input", () => updateBedsBathsSlider(bedsSlider, bathsSlider, bedsValue, bathsValue, selected, true));
 
         // Initial Call
-        updateBedsBathsSlider(bedsSlider, bathsSlider, bedsValue, bathsValue, selected);
+        updateBedsBathsSlider(bedsSlider, bathsSlider, bedsValue, bathsValue, selected, false);
 
         // Apply it to both sliders
         [bedsSlider, bathsSlider].forEach(slider => {
@@ -321,12 +331,9 @@ document.addEventListener("DOMContentLoaded", () => {
             slider.addEventListener('input', () => updateRangeFill(slider));
         });
     })
-})
 
-
-// ----Price Dropdown Custom Slider----
-document.addEventListener("DOMContentLoaded", () => {
-    function updateRange(min, max, minInput, maxInput, fill, minValueEl, maxValueEl, selectedPriceDropdown) {
+    // ----Price Dropdown Custom Slider----
+    function updateRange(min, max, minInput, maxInput, fill, minValueEl, maxValueEl, selectedPriceDropdown, callAPI) {
         let minVal = parseInt(minInput.value);
         let maxVal = parseInt(maxInput.value);
 
@@ -348,12 +355,17 @@ document.addEventListener("DOMContentLoaded", () => {
         minValueEl.innerHTML = `$${Number(minVal).toLocaleString()}`;
         maxValueEl.innerHTML = `$${Number(maxVal).toLocaleString()}`;
         selectedPriceDropdown.innerHTML = `$${parseInt(minVal).toLocaleString()} - $${parseInt(maxVal).toLocaleString()}`;
+
+        if (callAPI) {
+            // calling api with debounce
+            debouncedBoundsFetch();
+        }
     }
 
-    const dropdown = document.querySelectorAll('.custom-dropdown[data-name="price"]');
+    const dropdownP = document.querySelectorAll('.custom-dropdown[data-name="pricePC"]');
 
 
-    dropdown.forEach(d => {
+    dropdownP.forEach(d => {
         const minInput = d.querySelector("#minPrice");
         const maxInput = d.querySelector("#maxPrice");
         const selectedPriceDropdown = d.querySelector(".custom-dropdown-selected");
@@ -373,10 +385,91 @@ document.addEventListener("DOMContentLoaded", () => {
         const min = parseInt(minInput.min);
         const max = parseInt(maxInput.max);
 
-        minInput.addEventListener("input", () => updateRange(min, max, minInput, maxInput, fill, minValueEl, maxValueEl, selectedPriceDropdown));
-        maxInput.addEventListener("input", () => updateRange(min, max, minInput, maxInput, fill, minValueEl, maxValueEl, selectedPriceDropdown));
+        minInput.addEventListener("input", () => updateRange(min, max, minInput, maxInput, fill, minValueEl, maxValueEl, selectedPriceDropdown, true));
+        maxInput.addEventListener("input", () => updateRange(min, max, minInput, maxInput, fill, minValueEl, maxValueEl, selectedPriceDropdown, true));
 
         // Initial update on load
-        updateRange(min, max, minInput, maxInput, fill, minValueEl, maxValueEl, selectedPriceDropdown);
+        updateRange(min, max, minInput, maxInput, fill, minValueEl, maxValueEl, selectedPriceDropdown, false);
     })
-});
+})
+
+
+// Get all filter values
+function getFilterValues() {
+    const params = {};
+
+    // getting dropdown values
+    document.querySelectorAll(".custom-dropdown").forEach(dropdown => {
+        const name = dropdown.getAttribute("data-name");
+        const selectedValue = dropdown.querySelector(".custom-dropdown-selected").innerHTML;
+
+        if (name && selectedValue) {
+            switch (name) {
+                case "listingType":
+                    if (selectedValue !== "All") {
+                        params.listingType = selectedValue;
+                    }
+                    break;
+                case "homeType":
+                    if (selectedValue !== "All") {
+                        params.homeType = selectedValue;
+                    }
+                    break;
+                case "sortBy":
+                    // sortHouses(selectedValue);
+                    break;
+                // case "source":
+                //     if(selectedValue !== "source1") {
+                //         params.source = selectedValue;
+                //     }
+                //     break;
+            }
+        }
+
+    });
+
+    // Getting value of price ranges
+    // Listen Arafat when the slider is changing both desktop and mobile slider is changing and mobile slider has the upper hand in this case and thats why it is not working. So you have to fix that.
+    const priceDropdowns = document.querySelectorAll('.custom-dropdown[data-name="price"]');
+    console.log("I am here at price");
+
+    priceDropdowns.forEach(dropdown => {
+        const minPrice = dropdown.querySelector("#minPrice");
+        const maxPrice = dropdown.querySelector("#maxPrice");
+
+        if (minPrice && maxPrice) {
+            params.minPrice = minPrice.value;
+            params.maxPrice = maxPrice.value;
+            console.log("I am here too in side the condition where value is set // for debugging");
+            console.log("Price values:", params.minPrice, params.maxPrice);
+        }
+    })
+
+    // Getting value of beds & baths ranges
+    const bedsDropdowns = document.querySelectorAll('.custom-dropdown[data-name="bedsBaths"]');
+
+    bedsDropdowns.forEach(dropdown => {
+        const beds = dropdown.querySelector('#bedsRange');
+        const baths = dropdown.querySelector('#bathsRange');
+
+        if (beds && baths) {
+            if (beds.value !== "0") {
+                params.beds = beds.value;
+            }
+            if (baths.value !== "0") {
+                params.baths = baths.value;
+            }
+        }
+    });
+
+    return params;
+}
+
+// Sort by dropdown event listener
+/// I was doing the sorting feature
+// document.querySelector(".custom-dropdown[")
+
+
+// function sortHouses(type) {
+    
+// }

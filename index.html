@@ -57,7 +57,7 @@
                     <button class="back-btn">
                         <img src="./images/prev_icon.webp" alt="Previous Icon">
                     </button>
-                    <input class="nav-input" type="text" placeholder="Search Chicago, Dallas..." />
+                    <input class="nav-input" type="text" placeholder="Search Guayaquil, Quito..." />
                     <img class="search-icon" src="./images/search_icon.webp" alt="Search Icon">
                 </div>
                 <ul class="nav-options">
@@ -97,11 +97,11 @@
                 <!-- Filter: Price -->
                 <div class="filter-group">
                     <label>Price</label>
-                    <div class="custom-dropdown" data-name="price">
-                        <div class="custom-dropdown-selected">Any</div>
+                    <div class="custom-dropdown" data-name="pricePC">
+                        <div class="custom-dropdown-selected"></div>
                         <ul class="custom-dropdown-options">
                             <div class="price-range-slider-wrapper">
-                                <input type="range" id="minPrice" min="10000" max="1000000" step="10000" value="10000">
+                                <input type="range" id="minPrice" min="0" max="1000000" step="10000" value="2000">
                                 <input type="range" id="maxPrice" min="10000" max="1000000" step="10000"
                                     value="1000000">
                             </div>
@@ -130,28 +130,27 @@
                 <div class="filter-group">
                     <label>Beds & Baths</label>
                     <div class="custom-dropdown" data-name="bedsBaths">
-                        <div class="custom-dropdown-selected">Beds & Baths</div>
+                        <div class="custom-dropdown-selected"></div>
                         <div class="custom-dropdown-options">
                             <div class="slider-container">
                                 <label for="bedsRange">Beds: <span id="bedsValue">0</span></label>
-                                <input type="range" id="bedsRange" min="0" max="10" value="2">
+                                <input type="range" id="bedsRange" min="0" max="10" value="0">
                             </div>
                             <div class="slider-container">
                                 <label for="bathsRange">Baths: <span id="bathsValue">0</span></label>
-                                <input type="range" id="bathsRange" min="0" max="10" value="2">
+                                <input type="range" id="bathsRange" min="0" max="10" value="0">
                             </div>
                         </div>
                     </div>
                 </div>
 
-
                 <!-- Filter: Home Type -->
                 <div class="filter-group">
                     <label>Home Type</label>
                     <div class="custom-dropdown" data-name="homeType">
-                        <div class="custom-dropdown-selected">All Types</div>
+                        <div class="custom-dropdown-selected">All</div>
                         <ul class="custom-dropdown-options">
-                            <li data-value="all">All Types</li>
+                            <li data-value="all">All</li>
                             <li data-value="house">House</li>
                             <li data-value="apartment">Apartment</li>
                             <li data-value="condo">Condo</li>
@@ -159,7 +158,6 @@
                         </ul>
                     </div>
                 </div>
-
 
                 <!-- Filter: Sort By -->
                 <div class="filter-group">
@@ -227,11 +225,10 @@
                         <div class="filter-group">
                             <label>Price</label>
                             <div class="custom-dropdown" data-name="price">
-                                <div class="custom-dropdown-selected">Any</div>
+                                <div class="custom-dropdown-selected"></div>
                                 <ul class="custom-dropdown-options">
                                     <div class="price-range-slider-wrapper">
-                                        <input type="range" id="minPrice" min="10000" max="1000000" step="10000"
-                                            value="10000">
+                                        <input type="range" id="minPrice" min="0" max="1000000" step="10000" value="0">
                                         <input type="range" id="maxPrice" min="10000" max="1000000" step="10000"
                                             value="1000000">
                                     </div>
@@ -247,15 +244,15 @@
                         <div class="filter-group">
                             <label>Beds & Baths</label>
                             <div class="custom-dropdown" data-name="bedsBaths">
-                                <div class="custom-dropdown-selected">Beds & Baths</div>
+                                <div class="custom-dropdown-selected"></div>
                                 <div class="custom-dropdown-options">
                                     <div class="slider-container">
                                         <label for="bedsRange">Beds: <span id="bedsValue">0</span></label>
-                                        <input type="range" id="bedsRange" min="0" max="10" value="2">
+                                        <input type="range" id="bedsRange" min="0" max="10" value="0">
                                     </div>
                                     <div class="slider-container">
                                         <label for="bathsRange">Baths: <span id="bathsValue">0</span></label>
-                                        <input type="range" id="bathsRange" min="0" max="10" value="2">
+                                        <input type="range" id="bathsRange" min="0" max="10" value="0">
                                     </div>
                                 </div>
                             </div>
@@ -265,9 +262,9 @@
                         <div class="filter-group">
                             <label>Home Type</label>
                             <div class="custom-dropdown" data-name="homeType">
-                                <div class="custom-dropdown-selected">All Types</div>
+                                <div class="custom-dropdown-selected">All</div>
                                 <ul class="custom-dropdown-options">
-                                    <li data-value="all">All Types</li>
+                                    <li data-value="all">All</li>
                                     <li data-value="house">House</li>
                                     <li data-value="apartment">Apartment</li>
                                     <li data-value="condo">Condo</li>
@@ -318,8 +315,6 @@
                     <button class="page-btn next">&gt;</button>
                 </div>
 
-
-
                 <!-- The footer will be at the bottom of the houses -->
                 <footer>
                     <div class="footer-links">
@@ -350,21 +345,12 @@
                         <p>© 2025 Realestate Insight. All rights reserved.</p>
                     </div>
                 </footer>
-
             </div>
 
             <!-- Right Map Container -->
             <div class="map-container">
                 <div id="map">
                     <canvas id="heatmap-canvas"></canvas>
-                    <!-- <div id="legend">
-                        <div id="legend-gradient"></div>
-                        <div id="legend-labels">
-                            <span>-100%</span>
-                            <span>0%</span>
-                            <span>+100%</span>
-                        </div>
-                    </div> -->
                 </div>
                 <div id="tooltip" class="tooltip"></div>
             </div>
