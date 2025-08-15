@@ -275,7 +275,7 @@ function initializeMap(lat, lon) {
 // House data store
 let houseData = [];
 let totalPages = JSON.parse(localStorage.getItem("totalPages")) || null, currentPage = 1;
-let maxHouseCardsToShow = 30;
+let maxHouseCardsToShow = 20;
 let start = (currentPage * maxHouseCardsToShow) - maxHouseCardsToShow, end = currentPage * maxHouseCardsToShow;
 
 // Parse Date into Date object
