@@ -507,7 +507,7 @@ nav .login-btn a:hover {
     margin-top: 20px;
 }
 
-.custom-dropdown[data-name="pricePC"] .custom-dropdown-options {
+.custom-dropdown[data-name="price"] .custom-dropdown-options {
     padding: 14px;
 }
 

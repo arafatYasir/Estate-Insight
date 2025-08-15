@@ -102,7 +102,7 @@ function initializeMap(lat, lon) {
         updateWhenIdle: isMobile,
         updateWhenZooming: !isMobile,
         keepBuffer: isMobile ? 1 : 2
-    }).setView([lat, lon], 5);
+    }).setView([lat, lon], isMobile ? 4 : 5);
 
     const tileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
@@ -315,27 +315,14 @@ function calculatePercentChange(pricesArray, houseId) {
     return result;
 }
 
-function processHouseData(data, calculateCenter = false) {
-    let lat = 0, lon = 0;
-
+function processHouseData(data) {
     const processed = data.map(house => {
-        if (calculateCenter) {
-            lat += house.lat;
-            lon += house.lon;
-        }
-
         // Use house ID for caching (assuming house has id/address as unique key)
         const houseId = house.id || house.address || `${house.lat}-${house.lon}`;
         const { percentChange, last, sortedPrices } = calculatePercentChange(house.prices, houseId);
 
         return { ...house, percentChange, currentPrice: last, sortedPrices };
     });
-
-    if (calculateCenter) {
-        lat /= data.length;
-        lon /= data.length;
-        return { processed, centerLat: lat, centerLon: lon };
-    }
 
     return { processed };
 }
@@ -351,15 +338,15 @@ function loadHouseData() {
         try {
             const data = JSON.parse(cached);
 
-            const { processed, centerLat, centerLon } = processHouseData(data, true);
+            const { processed } = processHouseData(data);
             houseData = processed;
 
             if (!mapInitialized) {
-                initializeMap(centerLat, centerLon);
+                initializeMap(-1.45, -78.4);
                 mapInitialized = true;
             }
             else {
-                map.setView([lat, lon], map.getZoom());
+                map.setView([-1.45, -78.4], map.getZoom());
                 drawAllHeatPoints();
             }
 
@@ -395,16 +382,16 @@ function fetchFreshData(page) {
             totalPages = Math.ceil(parseInt(fullObj.count) / maxHouseCardsToShow);
             const data = fullObj.data;
 
-            const { processed, centerLat, centerLon } = processHouseData(data, true);
+            const { processed } = processHouseData(data);
             houseData = processed;
 
             // Initialize the map on first load
             if (!mapInitialized) {
-                initializeMap(centerLat, centerLon);
+                initializeMap(-1.45, -78.4);
                 mapInitialized = true;
             }
             else {
-                map.setView([centerLat, centerLon], map.getZoom());
+                map.setView([-1.45, -78.4], map.getZoom());
                 drawAllHeatPoints();
             }
 
@@ -476,7 +463,7 @@ function fetchHousesForCurrentBounds() {
             totalPages = Math.ceil(parseInt(fullObj.count) / maxHouseCardsToShow);
             const data = fullObj.data;
 
-            const { processed } = processHouseData(data, false);
+            const { processed } = processHouseData(data);
             houseData = processed;
 
 
@@ -490,8 +477,12 @@ function fetchHousesForCurrentBounds() {
                 addPagination();
             }
             else {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                console.log("Total Pagse", totalPages);
+                
                 start = 0;
                 end = 0;
+                console.log("I am here after clearing the canvas.");
                 showHouses(start, end);
                 addPagination();
             }
@@ -729,6 +720,10 @@ function addPagination() {
         else {
             updatePagination();
         }
+    }
+    else {
+        const pageNumbers = document.querySelector(".page-numbers");
+        pageNumbers.innerHTML = "";
     }
 }
 

@@ -277,8 +277,9 @@ window.addEventListener("resize", changeLayout);
 
 const debouncedBoundsFetch = debounce(() => fetchHousesForCurrentBounds(), 400);
 
-// ----Beds & Baths Custom Slider Range----
+// Custom Sliders
 document.addEventListener("DOMContentLoaded", () => {
+    // ----Beds & Baths Custom Slider Range----
     function updateBedsBathsSlider(bedsSlider, bathsSlider, bedsValue, bathsValue, selected, callAPI) {
         const beds = bedsSlider.value;
         const baths = bathsSlider.value;
@@ -362,25 +363,26 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    const dropdownP = document.querySelectorAll('.custom-dropdown[data-name="pricePC"]');
+    // handling price dropdown for mobile or pc
+    if(window.innerWidth <= 768) {
+        const dropdownMobile = document.querySelector('.custom-dropdown.mobile[data-name="price"]');
+        console.log(dropdownMobile);
 
-
-    dropdownP.forEach(d => {
-        const minInput = d.querySelector("#minPrice");
-        const maxInput = d.querySelector("#maxPrice");
-        const selectedPriceDropdown = d.querySelector(".custom-dropdown-selected");
+        const minInput = dropdownMobile.querySelector("#minPrice");
+        const maxInput = dropdownMobile.querySelector("#maxPrice");
+        const selectedPriceDropdown = dropdownMobile.querySelector(".custom-dropdown-selected");
 
         selectedPriceDropdown.innerHTML = `$${parseInt(minInput.value).toLocaleString()} - $${parseInt(maxInput.value).toLocaleString()}`;
 
         // Inject range-fill into the DOM dynamically
-        const rangeWrapper = d.querySelector(".price-range-slider-wrapper");
+        const rangeWrapper = dropdownMobile.querySelector(".price-range-slider-wrapper");
         let fill = document.createElement("div");
         fill.classList.add("range-fill");
         rangeWrapper.appendChild(fill);
 
 
-        const minValueEl = d.querySelector("#minPriceValue");
-        const maxValueEl = d.querySelector("#maxPriceValue");
+        const minValueEl = dropdownMobile.querySelector("#minPriceValue");
+        const maxValueEl = dropdownMobile.querySelector("#maxPriceValue");
 
         const min = parseInt(minInput.min);
         const max = parseInt(maxInput.max);
@@ -390,7 +392,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Initial update on load
         updateRange(min, max, minInput, maxInput, fill, minValueEl, maxValueEl, selectedPriceDropdown, false);
-    })
+    }
+    else {
+        const dropdownPC = document.querySelector('.custom-dropdown.pc[data-name="price"]');
+        console.log(dropdownPC)
+
+        const minInput = dropdownPC.querySelector("#minPrice");
+        const maxInput = dropdownPC.querySelector("#maxPrice");
+        const selectedPriceDropdown = dropdownPC.querySelector(".custom-dropdown-selected");
+
+        selectedPriceDropdown.innerHTML = `$${parseInt(minInput.value).toLocaleString()} - $${parseInt(maxInput.value).toLocaleString()}`;
+
+        // Inject range-fill into the DOM dynamically
+        const rangeWrapper = dropdownPC.querySelector(".price-range-slider-wrapper");
+        let fill = document.createElement("div");
+        fill.classList.add("range-fill");
+        rangeWrapper.appendChild(fill);
+
+
+        const minValueEl = dropdownPC.querySelector("#minPriceValue");
+        const maxValueEl = dropdownPC.querySelector("#maxPriceValue");
+
+        const min = parseInt(minInput.min);
+        const max = parseInt(maxInput.max);
+
+        minInput.addEventListener("input", () => updateRange(min, max, minInput, maxInput, fill, minValueEl, maxValueEl, selectedPriceDropdown, true));
+        maxInput.addEventListener("input", () => updateRange(min, max, minInput, maxInput, fill, minValueEl, maxValueEl, selectedPriceDropdown, true));
+
+        // Initial update on load
+        updateRange(min, max, minInput, maxInput, fill, minValueEl, maxValueEl, selectedPriceDropdown, false);
+
+    }
 })
 
 
@@ -430,20 +462,35 @@ function getFilterValues() {
 
     // Getting value of price ranges
     // Listen Arafat when the slider is changing both desktop and mobile slider is changing and mobile slider has the upper hand in this case and thats why it is not working. So you have to fix that.
-    const priceDropdowns = document.querySelectorAll('.custom-dropdown[data-name="price"]');
-    console.log("I am here at price");
 
-    priceDropdowns.forEach(dropdown => {
-        const minPrice = dropdown.querySelector("#minPrice");
-        const maxPrice = dropdown.querySelector("#maxPrice");
+    if(window.innerWidth <= 768) {
+        const priceMobile = document.querySelector('.custom-dropdown.mobile[data-name="price"]')
+        console.log("I am here at price for mobile!!!!");
+
+        const minPrice = priceMobile.querySelector("#minPrice");
+        const maxPrice = priceMobile.querySelector("#maxPrice");
 
         if (minPrice && maxPrice) {
             params.minPrice = minPrice.value;
             params.maxPrice = maxPrice.value;
-            console.log("I am here too in side the condition where value is set // for debugging");
+            console.log("I am here too in side the condition where value is set // for debugging it's for mobile!!!");
             console.log("Price values:", params.minPrice, params.maxPrice);
         }
-    })
+    }
+    else {
+        const pricePc = document.querySelector('.custom-dropdown.pc[data-name="price"]')
+        console.log("I am here at price for pc!!!!");
+
+        const minPrice = pricePc.querySelector("#minPrice");
+        const maxPrice = pricePc.querySelector("#maxPrice");
+
+        if (minPrice && maxPrice) {
+            params.minPrice = minPrice.value;
+            params.maxPrice = maxPrice.value;
+            console.log("I am here too in side the condition where value is set // for debugging it's for pc");
+            console.log("Price values:", params.minPrice, params.maxPrice);
+        }
+    }
 
     // Getting value of beds & baths ranges
     const bedsDropdowns = document.querySelectorAll('.custom-dropdown[data-name="bedsBaths"]');
