@@ -373,7 +373,7 @@ function fetchFreshData(page) {
     const now = Date.now();
 
     // Calling fetch
-    fetch(`https://estate-insight-backend.onrender.com/api/houses?limit=200`)
+    fetch(`https://estate-insight-backend-z4p1.vercel.app/api/houses?limit=200`)
         .then(res => {
             if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
             return res.json();
@@ -446,7 +446,7 @@ function fetchHousesForCurrentBounds() {
 
     console.log(urlParams.toString());
 
-    const url = `https://estate-insight-backend.onrender.com/api/houses?${urlParams.toString()}`;
+    const url = `https://estate-insight-backend-z4p1.vercel.app/api/houses?${urlParams.toString()}`;
 
     console.log(url)
 
